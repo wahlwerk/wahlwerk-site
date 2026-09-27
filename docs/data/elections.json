@@ -1,0 +1,353 @@
+{
+ "engine": "0.1.0",
+ "elections": [
+  {
+   "key": "de.landtag.st.2026",
+   "body": "de.st.landtag",
+   "date": "2026-09-06",
+   "law": {
+    "id": "de.st.lwg.2021",
+    "title": "Wahlgesetz des Landes Sachsen-Anhalt (LWG)",
+    "citation": "LWG in der Fassung der Bekanntmachung vom 18. Februar 2010 (GVBl. LSA S. 80), zuletzt geändert durch Artikel 2 des Gesetzes vom 19. März 2021 (GVBl. LSA S. 98); Sec. 1, 32, 33, 35 unchanged in substance up to the Gesetz vom 7. Februar 2025 (GVBl. LSA S. 316)"
+   },
+   "source": {
+    "publisher": "Statistisches Landesamt Sachsen-Anhalt",
+    "title": "Landtagswahl in Sachsen-Anhalt am 6. September 2026: endgültige Ergebnisse",
+    "url": "https://wahlergebnisse.sachsen-anhalt.de/wahlen/lt26/downloads/Ergebnisse_LT_2026.xlsx",
+    "licence": "dl-de/by-2-0",
+    "attribution": "Statistisches Landesamt Sachsen-Anhalt, Halle (Saale) 2026, eigene Berechnung; Datenlizenz Deutschland Namensnennung Version 2.0 (dl-de/by-2-0), www.govdata.de/dl-de/by-2-0; Datensatz: https://wahlergebnisse.sachsen-anhalt.de/wahlen/lt26/downloads/Ergebnisse_LT_2026.xlsx; die Daten wurden geändert (in eine lange Tabelle je Wahlbezirk umgeformt)."
+   },
+   "seats": 83,
+   "valid_votes": 1315282,
+   "parties": [
+    {
+     "id": "afd",
+     "name": "Alternative für Deutschland",
+     "short_name": "AfD",
+     "votes": 575971,
+     "seats": 39,
+     "wahlkreis": 38,
+     "list": 1
+    },
+    {
+     "id": "cdu",
+     "name": "Christlich Demokratische Union Deutschlands",
+     "short_name": "CDU",
+     "votes": 226605,
+     "seats": 15,
+     "wahlkreis": 0,
+     "list": 15
+    },
+    {
+     "id": "spd",
+     "name": "Sozialdemokratische Partei Deutschlands",
+     "short_name": "SPD",
+     "votes": 122296,
+     "seats": 8,
+     "wahlkreis": 0,
+     "list": 8
+    },
+    {
+     "id": "gruene",
+     "name": "BÜNDNIS 90/DIE GRÜNEN",
+     "short_name": "GRÜNE",
+     "votes": 117494,
+     "seats": 8,
+     "wahlkreis": 0,
+     "list": 8
+    },
+    {
+     "id": "linke",
+     "name": "Die Linke",
+     "short_name": "Die Linke",
+     "votes": 112558,
+     "seats": 8,
+     "wahlkreis": 3,
+     "list": 5
+    },
+    {
+     "id": "bsw",
+     "name": "Bündnis Sahra Wagenknecht",
+     "short_name": "BSW",
+     "votes": 69355,
+     "seats": 5,
+     "wahlkreis": 0,
+     "list": 5
+    }
+   ]
+  },
+  {
+   "key": "de.landtag.st.2021",
+   "body": "de.st.landtag",
+   "date": "2021-06-06",
+   "law": {
+    "id": "de.st.lwg.2021",
+    "title": "Wahlgesetz des Landes Sachsen-Anhalt (LWG)",
+    "citation": "LWG in der Fassung der Bekanntmachung vom 18. Februar 2010 (GVBl. LSA S. 80), zuletzt geändert durch Artikel 2 des Gesetzes vom 19. März 2021 (GVBl. LSA S. 98); Sec. 1, 32, 33, 35 unchanged in substance up to the Gesetz vom 7. Februar 2025 (GVBl. LSA S. 316)"
+   },
+   "source": {
+    "publisher": "Statistisches Landesamt Sachsen-Anhalt",
+    "title": "Wahl des 8. Landtages von Sachsen-Anhalt am 6. Juni 2021: endgültiges Wahlergebnis",
+    "url": "https://wahlergebnisse.sachsen-anhalt.de/wahlen/lt21/erg/csv/LT2021_WBZ.xlsx",
+    "licence": "dl-de/by-2-0",
+    "attribution": "Statistisches Landesamt Sachsen-Anhalt, Halle (Saale) 2021, eigene Berechnung; Datenlizenz Deutschland Namensnennung Version 2.0 (dl-de/by-2-0), www.govdata.de/dl-de/by-2-0; Datensatz: https://wahlergebnisse.sachsen-anhalt.de/wahlen/lt21/erg/csv/LT2021_WBZ.xlsx; die Daten wurden geändert (in eine lange Tabelle je Wahlbezirk umgeformt)."
+   },
+   "seats": 97,
+   "valid_votes": 1063697,
+   "parties": [
+    {
+     "id": "cdu",
+     "name": "Christlich Demokratische Union Deutschlands",
+     "short_name": "CDU",
+     "votes": 394810,
+     "seats": 40,
+     "wahlkreis": 40,
+     "list": 0
+    },
+    {
+     "id": "afd",
+     "name": "Alternative für Deutschland",
+     "short_name": "AfD",
+     "votes": 221487,
+     "seats": 23,
+     "wahlkreis": 1,
+     "list": 22
+    },
+    {
+     "id": "linke",
+     "name": "Die Linke",
+     "short_name": "Die Linke",
+     "votes": 116927,
+     "seats": 12,
+     "wahlkreis": 0,
+     "list": 12
+    },
+    {
+     "id": "spd",
+     "name": "Sozialdemokratische Partei Deutschlands",
+     "short_name": "SPD",
+     "votes": 89475,
+     "seats": 9,
+     "wahlkreis": 0,
+     "list": 9
+    },
+    {
+     "id": "fdp",
+     "name": "Freie Demokratische Partei",
+     "short_name": "FDP",
+     "votes": 68277,
+     "seats": 7,
+     "wahlkreis": 0,
+     "list": 7
+    },
+    {
+     "id": "gruene",
+     "name": "BÜNDNIS 90/DIE GRÜNEN",
+     "short_name": "GRÜNE",
+     "votes": 63145,
+     "seats": 6,
+     "wahlkreis": 0,
+     "list": 6
+    }
+   ]
+  },
+  {
+   "key": "de.landtag.mv.2021",
+   "body": "de.mv.landtag",
+   "date": "2021-09-26",
+   "law": {
+    "id": "de.mv.lkwg.2011",
+    "title": "Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)",
+    "citation": "LKWG M-V vom 16. Dezember 2010 (GVOBl. M-V S. 690), Fassung gültig vom 1. September 2026 bis 31. Dezember 2028, zuletzt geändert durch Artikel 12 des Gesetzes vom 8. Juli 2026 (GVOBl. M-V S. 719, 731); Sec. 54, 57, 58 unchanged since 1 January 2011"
+   },
+   "source": {
+    "publisher": "Die Landeswahlleiterin Mecklenburg-Vorpommern",
+    "title": "Wahl zum Landtag von Mecklenburg-Vorpommern am 26. September 2021: endgültiges Ergebnis der Wahlbezirke (04.10.2021, 14:19:48 Uhr)",
+    "url": "https://www.laiv-mv.de/static/LAIV/Wahlen/2-Landtagswahlen/2021/Ergebnisse/l_wahlbezirke.csv",
+    "licence": "keine Lizenz angegeben",
+    "attribution": "(c) Die Landeswahlleiterin Mecklenburg-Vorpommern; Datensatz: https://www.laiv-mv.de/static/LAIV/Wahlen/2-Landtagswahlen/2021/Ergebnisse/l_wahlbezirke.csv; die Daten wurden geändert (in eine lange Tabelle je Wahlbezirk umgeformt)."
+   },
+   "seats": 79,
+   "valid_votes": 913863,
+   "parties": [
+    {
+     "id": "spd",
+     "name": "Sozialdemokratische Partei Deutschlands",
+     "short_name": "SPD",
+     "votes": 361769,
+     "seats": 34,
+     "wahlkreis": 34,
+     "list": 0
+    },
+    {
+     "id": "afd",
+     "name": "Alternative für Deutschland",
+     "short_name": "AfD",
+     "votes": 152775,
+     "seats": 14,
+     "wahlkreis": 1,
+     "list": 13
+    },
+    {
+     "id": "cdu",
+     "name": "Christlich Demokratische Union Deutschlands",
+     "short_name": "CDU",
+     "votes": 121583,
+     "seats": 12,
+     "wahlkreis": 1,
+     "list": 11
+    },
+    {
+     "id": "linke",
+     "name": "Die Linke",
+     "short_name": "Die Linke",
+     "votes": 90881,
+     "seats": 9,
+     "wahlkreis": 0,
+     "list": 9
+    },
+    {
+     "id": "gruene",
+     "name": "BÜNDNIS 90/DIE GRÜNEN",
+     "short_name": "GRÜNE",
+     "votes": 57554,
+     "seats": 5,
+     "wahlkreis": 0,
+     "list": 5
+    },
+    {
+     "id": "fdp",
+     "name": "Freie Demokratische Partei",
+     "short_name": "FDP",
+     "votes": 52963,
+     "seats": 5,
+     "wahlkreis": 0,
+     "list": 5
+    }
+   ]
+  },
+  {
+   "key": "de.landtag.mv.2016",
+   "body": "de.mv.landtag",
+   "date": "2016-09-04",
+   "law": {
+    "id": "de.mv.lkwg.2011",
+    "title": "Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)",
+    "citation": "LKWG M-V vom 16. Dezember 2010 (GVOBl. M-V S. 690), Fassung gültig vom 1. September 2026 bis 31. Dezember 2028, zuletzt geändert durch Artikel 12 des Gesetzes vom 8. Juli 2026 (GVOBl. M-V S. 719, 731); Sec. 54, 57, 58 unchanged since 1 January 2011"
+   },
+   "source": {
+    "publisher": "Landesamt für innere Verwaltung Mecklenburg-Vorpommern",
+    "title": "Wahl zum Landtag von Mecklenburg-Vorpommern am 4. September 2016: endgültiges Ergebnis der Wahlbezirke (09.09.2016, 10:44:53 Uhr)",
+    "url": "https://www.laiv-mv.de/static/LAIV/Wahlen/2-Landtagswahlen/2016/Ergebnisseite/L_Wahlbezirke.csv",
+    "licence": "keine Lizenz angegeben",
+    "attribution": "Landesamt für innere Verwaltung Mecklenburg-Vorpommern; Datensatz: https://www.laiv-mv.de/static/LAIV/Wahlen/2-Landtagswahlen/2016/Ergebnisseite/L_Wahlbezirke.csv; die Daten wurden geändert (in eine lange Tabelle je Wahlbezirk umgeformt)."
+   },
+   "seats": 71,
+   "valid_votes": 806419,
+   "parties": [
+    {
+     "id": "spd",
+     "name": "Sozialdemokratische Partei Deutschlands",
+     "short_name": "SPD",
+     "votes": 246395,
+     "seats": 26,
+     "wahlkreis": 26,
+     "list": 0
+    },
+    {
+     "id": "afd",
+     "name": "Alternative für Deutschland",
+     "short_name": "AfD",
+     "votes": 167852,
+     "seats": 18,
+     "wahlkreis": 3,
+     "list": 15
+    },
+    {
+     "id": "cdu",
+     "name": "Christlich Demokratische Union Deutschlands",
+     "short_name": "CDU",
+     "votes": 153115,
+     "seats": 16,
+     "wahlkreis": 7,
+     "list": 9
+    },
+    {
+     "id": "linke",
+     "name": "Die Linke",
+     "short_name": "Die Linke",
+     "votes": 106256,
+     "seats": 11,
+     "wahlkreis": 0,
+     "list": 11
+    }
+   ]
+  },
+  {
+   "key": "de.landtag.mv.2011",
+   "body": "de.mv.landtag",
+   "date": "2011-09-04",
+   "law": {
+    "id": "de.mv.lkwg.2011",
+    "title": "Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)",
+    "citation": "LKWG M-V vom 16. Dezember 2010 (GVOBl. M-V S. 690), Fassung gültig vom 1. September 2026 bis 31. Dezember 2028, zuletzt geändert durch Artikel 12 des Gesetzes vom 8. Juli 2026 (GVOBl. M-V S. 719, 731); Sec. 54, 57, 58 unchanged since 1 January 2011"
+   },
+   "source": {
+    "publisher": "Landesamt für innere Verwaltung Mecklenburg-Vorpommern",
+    "title": "Wahl zum Landtag von Mecklenburg-Vorpommern am 4. September 2011: endgültiges Ergebnis der Wahlbezirke (20.09.2011, 10:28 Uhr)",
+    "url": "https://www.laiv-mv.de/static/LAIV/Wahlen/2-Landtagswahlen/2011/Ergebnisse/L_Wahlbezirke.csv",
+    "licence": "keine Lizenz angegeben",
+    "attribution": "Landesamt für innere Verwaltung Mecklenburg-Vorpommern; Datensatz: https://www.laiv-mv.de/static/LAIV/Wahlen/2-Landtagswahlen/2011/Ergebnisse/L_Wahlbezirke.csv; die Daten wurden geändert (in eine lange Tabelle je Wahlbezirk umgeformt)."
+   },
+   "seats": 71,
+   "valid_votes": 681375,
+   "parties": [
+    {
+     "id": "spd",
+     "name": "Sozialdemokratische Partei Deutschlands",
+     "short_name": "SPD",
+     "votes": 242251,
+     "seats": 27,
+     "wahlkreis": 24,
+     "list": 3
+    },
+    {
+     "id": "cdu",
+     "name": "Christlich Demokratische Union Deutschlands",
+     "short_name": "CDU",
+     "votes": 156969,
+     "seats": 18,
+     "wahlkreis": 12,
+     "list": 6
+    },
+    {
+     "id": "linke",
+     "name": "Die Linke",
+     "short_name": "Die Linke",
+     "votes": 125528,
+     "seats": 14,
+     "wahlkreis": 0,
+     "list": 14
+    },
+    {
+     "id": "gruene",
+     "name": "BÜNDNIS 90/DIE GRÜNEN",
+     "short_name": "GRÜNE",
+     "votes": 59004,
+     "seats": 7,
+     "wahlkreis": 0,
+     "list": 7
+    },
+    {
+     "id": "npd",
+     "name": "Nationaldemokratische Partei Deutschlands",
+     "short_name": "NPD",
+     "votes": 40642,
+     "seats": 5,
+     "wahlkreis": 0,
+     "list": 5
+    }
+   ]
+  }
+ ]
+}
