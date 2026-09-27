@@ -31,6 +31,7 @@ export const COLORS: Record<string, ColorToken> = {
   accent:        { light: '#b8860b', dark: '#e0b54a', usage: 'Eyebrows, legal citations, the process node, focus' },
   'accent-soft': { light: '#f3e7c4', dark: '#3a3222', usage: 'Badges and active controls' },
   'code-bg':     { light: '#efede6', dark: '#23252b', usage: 'Inline code and code blocks' },
+  shadow:        { light: 'rgba(29, 31, 36, 0.10)', dark: 'rgba(0, 0, 0, 0.45)', usage: 'Lift of a hovered card' },
 };
 
 /**
@@ -59,9 +60,13 @@ export const FONTS = {
 export const LAYOUT = {
   /** Width of the reading column. */
   'page-width': '860px',
+  /** Width of the home page and the top bar, where cards sit four abreast. */
+  'wide-width': '1100px',
   /** Side gutter at phone width. */
   gutter: '16px',
   radius: '6px',
+  /** Home cards and link cards. */
+  'radius-lg': '12px',
 };
 
 /** The CSS variable a party is drawn with. */

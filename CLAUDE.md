@@ -10,7 +10,7 @@ elections the engine reproduces exactly. It is one of six sibling repositories:
 
 ```
 CODE/wahlwerk_/
-  wahlwerk/                  the engine       Apache-2.0
+  wahlwerk/                  the engine       GPL-3.0
   wahlwerk-data/             the archive      GPL-3.0; data: its source's licence
   wahlwerk-data-processing/  bundle makers
   wahlwerk-execute/          notebooks
@@ -56,16 +56,22 @@ docs/                     <- GitHub Pages root, committed
 frontend/src/
   main.ts                 <- installs the tokens, mounts App
   app.css                 <- global element styles; colours and fonts via var(--...)
-  App.svelte              <- loads elections.json, lays out the sections
+  App.svelte              <- loads elections.json, follows the hash route, top bar and footer
   components/
-    Pieces.svelte         <- the four roles (input, protocol, process, state) and the modules
-    Protocol.svelte       <- the LWG LSA as the engine's protocol (law/de/st/lwg.py)
-    Results.svelte        <- election tabs, seat grid, result table, note, source
+    Home.svelte           <- hero, live stats, one card per component
+    Icon.svelte           <- one symbol per component, in currentColor
+    Hierarchies.svelte    <- Vote page: unit ids and the administrative tree
+    Protocol.svelte       <- Law page: the LWG LSA as the engine's protocol (law/de/st/lwg.py)
+    Pieces.svelte         <- Allocation page: the four roles and the modules
+    Results.svelte        <- Chamber page: election tabs, seat grid, result table, note, source
     SeatGrid.svelte       <- one square per seat: solid Wahlkreis, outlined list
-    Hierarchies.svelte    <- unit ids and the administrative tree
+    Impressum.svelte      <- § 5 DDG, sources and licences, privacy, disclaimer
+    StyleGuide.svelte     <- every token, read from tokens.ts, and the rules
     ThemeToggle.svelte    <- auto / light / dark
   lib/
     tokens.ts             <- DESIGN TOKENS: every colour (light and dark), party colour, font
+    pages.ts              <- the pages, hash routes (#/vote ...) and the four components in order
+    impressum.ts          <- the operator's name, address and contact for the Impressum
     types.ts              <- the shape of elections.json
     elections.ts          <- per-election labels and notes (prose only)
 ```

@@ -8,7 +8,7 @@ body {
   color: var(--ink);
   font: 16px/1.6 var(--sans);
   padding-inline: var(--gutter);
-  padding-block: 40px 64px;
+  padding-block: 0 48px;
 }
 
 h1, h2, h3 {
@@ -46,6 +46,11 @@ a { color: inherit; text-decoration-color: var(--accent); text-underline-offset:
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 section { display: flex; flex-direction: column; gap: 14px; }
+
+/* A content page: its title block, then its sections. */
+.page { display: flex; flex-direction: column; gap: 48px; }
+.page-head { display: flex; flex-direction: column; gap: 10px; }
+.lede { color: var(--muted); font-size: 1.06rem; }
 
 .eyebrow {
   font: 500 0.76rem/1 var(--sans);
