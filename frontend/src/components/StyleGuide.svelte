@@ -305,7 +305,6 @@
     display: grid;
     grid-template-columns: minmax(8em, 13em) minmax(0, 1fr);
     gap: 10px 18px;
-    max-width: 68ch;
   }
   .rules dt {
     font-weight: 600;

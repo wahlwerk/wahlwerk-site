@@ -23,7 +23,7 @@
       <h3>Literature</h3>
       <ol>
         {#each literature as key (key)}
-          <li id="ref-{key}">{@html referenceHtml(references.literature[key], key)}</li>
+          <li class="prose" id="ref-{key}">{@html referenceHtml(references.literature[key], key)}</li>
         {/each}
       </ol>
     {/if}
@@ -31,7 +31,7 @@
       <h3>Statutes</h3>
       <ul>
         {#each statutes as id (id)}
-          <li id="law-{id}">{@html statuteHtml(references.statutes[id], id)}</li>
+          <li class="prose" id="law-{id}">{@html statuteHtml(references.statutes[id], id)}</li>
         {/each}
       </ul>
     {/if}
@@ -39,7 +39,7 @@
       <h3>Data</h3>
       <ul>
         {#each data as key (key)}
-          <li id="data-{key}">{@html dataHtml(references.data[key], key)}</li>
+          <li class="prose" id="data-{key}">{@html dataHtml(references.data[key], key)}</li>
         {/each}
       </ul>
     {/if}
@@ -60,6 +60,19 @@
     color: var(--muted);
     gap: 6px;
     overflow-wrap: anywhere;
+  }
+  /* Sources are set like the text above them: full column, justified (.prose), markers
+     hanging outside the column. */
+  .refs ol,
+  .refs ul {
+    padding-left: 0;
+    list-style-position: outside;
+  }
+  @media (max-width: 599px) {
+    .refs ol,
+    .refs ul {
+      padding-left: 1.2em;
+    }
   }
   .refs li :global(em) {
     color: var(--ink);

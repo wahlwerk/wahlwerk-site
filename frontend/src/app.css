@@ -22,7 +22,30 @@ h1 { font-size: clamp(1.9rem, 4.5vw, 2.6rem); }
 h2 { font-size: 1.45rem; }
 h3 { font-size: 1.08rem; }
 
-p, ul, ol { margin: 0; max-width: 68ch; }
+p, ul, ol { margin: 0; }
+
+/* One column, one measure: on a content page every block spans the column (--page-width)
+   and running prose is justified to both edges, so text, drawings, tables and sources
+   share their left and right edge. Prose is a section's own paragraphs and plain lists,
+   a plate's source line and the sources list; cards, tables and swatches keep their own
+   alignment. List markers hang outside the column, so a list's text starts on the edge
+   of a paragraph. Narrow screens set prose ragged and keep the markers inside, where a
+   16 px gutter would clip them. */
+.page section > p,
+.page section > :is(ul, ol):not([class]) > li,
+.page .prose {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.page section > :is(ul, ol):not([class]) { padding-left: 0; list-style-position: outside; }
+@media (max-width: 599px) {
+  .page section > p,
+  .page section > :is(ul, ol):not([class]) > li,
+  .page .prose { text-align: left; hyphens: manual; -webkit-hyphens: manual; }
+  .page section > :is(ul, ol):not([class]) { padding-left: 1.2em; }
+}
+
 ul, ol { padding-left: 1.2em; display: flex; flex-direction: column; gap: 6px; }
 
 code {
@@ -93,7 +116,6 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   background: var(--surface);
   border-radius: 0 var(--radius) var(--radius) 0;
   font-size: 0.94rem;
-  max-width: 68ch;
 }
 
 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }

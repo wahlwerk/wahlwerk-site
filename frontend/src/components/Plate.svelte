@@ -9,9 +9,9 @@
 <figure class="plate" aria-label={plate.title}>
   <div class="panels">
     {#each plate.panels as p (p.name)}
-      <figure class="panel" style="flex-basis:{Math.round(p.width * 0.85)}px; max-width:{Math.round(p.width * 1.25)}px">
+      <figure class="panel" style="flex-basis:{Math.round(p.width * 0.85)}px">
         <div class="ptitle"><span class="n">{p.number}</span>{p.title}</div>
-        <div class="art">{@html p.svg}</div>
+        <div class="art" style="--w:{Math.round(p.width * 1.15)}px">{@html p.svg}</div>
         <figcaption>
           {#if p.caption.length}<b>{p.caption[0]}</b>{/if}
           {#each p.caption.slice(1) as line}<span>{line}</span>{/each}
@@ -19,7 +19,7 @@
       </figure>
     {/each}
   </div>
-  {#if $$slots.default}<figcaption class="source"><slot /></figcaption>{/if}
+  {#if $$slots.default}<figcaption class="source prose"><slot /></figcaption>{/if}
 </figure>
 
 <style>
@@ -29,15 +29,19 @@
     flex-direction: column;
     gap: 12px;
   }
+  /* The panels of a row share the column's full width: each grows from its drawn width,
+     its art centred and scaled up at most 1.15 times, so labels stay near their drawn size. */
   .panels {
     display: flex;
     flex-wrap: wrap;
     gap: 24px 28px;
     align-items: flex-start;
+    width: 100%;
   }
   .panel {
     margin: 0;
-    flex: 1 1 auto;
+    flex-grow: 1;
+    flex-shrink: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -59,6 +63,7 @@
   }
   .art :global(svg) {
     width: 100%;
+    max-width: var(--w);
     height: auto;
     overflow: visible;
   }
@@ -76,7 +81,6 @@
   }
   .source {
     display: block;
-    text-align: left;
     font: 0.82rem/1.5 var(--sans);
     border-top: 1px solid var(--line);
     padding-top: 8px;

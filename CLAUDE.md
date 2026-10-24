@@ -103,6 +103,11 @@ frontend/src/
 - **Tokens only.** No component hard-codes a colour, font or radius; add a token to
   `lib/tokens.ts` with a `usage` note. Party colours encode parties in data and nothing else.
 - **Both themes.** Every colour token has a light and a dark value; check both.
+- **One column, one measure.** A content page is one column, `--page-width`; text,
+  drawings, tables and sources all span it, so every left and right edge is the same.
+  Running prose (a section's paragraphs and plain lists, `.prose`) is justified with
+  hyphenation, list markers hang outside the column; below 600 px prose is ragged and
+  markers sit inside. No component sets its own `max-width` on prose.
 - **Phone width.** The page works at 390 px with a 16 px gutter and no sideways page scroll;
   wide tables scroll inside `.table-wrap`.
 - **Sources are named.** Every result shows its publisher, title, licence and attribution

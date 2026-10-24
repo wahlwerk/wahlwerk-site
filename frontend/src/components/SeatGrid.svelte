@@ -31,7 +31,6 @@
     display: grid;
     grid-template-columns: repeat(21, 1fr);
     gap: 3px;
-    max-width: 560px;
   }
   .seat {
     aspect-ratio: 1;
