@@ -8,7 +8,8 @@ The plates, in the order the page shows them:
 
 - ``vote``: from the electorate to a tally, the four steps of a popular vote
 - ``who``: who votes; the electorate or the members of a body
-- ``what``: what is voted on; a list, a person, an option, several marks, an order
+- ``what``: what is voted on, by anyone; a list, a person, an option, several marks,
+  x out of y, an order: examples, not a closed list
 - ``recorded``: what a tally records; one row, the kinds, the two hierarchies
 """
 
@@ -135,7 +136,8 @@ def vote_plate(vote: PopularVote) -> Plate:
 
 
 def who_plate() -> Plate:
-    """Who votes: the electorate, counted per unit; the members of a body, per mandate."""
+    """Who votes: the electorate, counted per unit; the members of a body, per mandate. The
+    chamber vote is drawn on a motion (yes, no, abstain), one of the things it can be on."""
     plate = Plate("who", "who votes")
     p = plate.panel(
         "popular",
@@ -161,8 +163,8 @@ def who_plate() -> Plate:
         height=170,
         caption=(
             "the members of a body",
-            "one choice per mandate, named",
-            "or secret; not modelled yet",
+            "one ballot per mandate, on",
+            "anything; here a motion",
         ),
     )
     a = p.art
@@ -177,7 +179,8 @@ def who_plate() -> Plate:
 
 
 def what_plate() -> Plate:
-    """What is voted on: five forms a choice takes, and whether a tally can hold it."""
+    """What is voted on, in a popular or a chamber vote: six forms a choice takes. Examples,
+    not a closed list; the engine limits neither kind of vote to any of them."""
     plate = Plate("what", "what is voted on")
     w, h = 170, 120
 
@@ -225,6 +228,23 @@ def what_plate() -> Plate:
         sk.text(a, 8, y + 4, name, anchor="start")
         for k in range(3):
             sk.mark(a, 108 + k * 18, y, is_marked=k < crossed)
+
+    p = plate.panel(
+        "select",
+        "x out of y",
+        width=w,
+        height=h,
+        caption=("x out of y", "choose up to x options,", "one count each"),
+    )
+    a = p.art
+    sk.box(a, 1, 10, 168, 100)
+    sk.text(a, 85, 10 + FONT_SIZE_PX + 3, "choose up to 2", ink="faint")
+    for j, (name, marked) in enumerate(
+        (("person a", True), ("person b", False), ("person c", True), ("person d", False))
+    ):
+        y = 40 + j * 17
+        sk.mark(a, 16, y, is_marked=marked)
+        sk.text(a, 28, y + 4, name, anchor="start")
 
     p = plate.panel(
         "order",

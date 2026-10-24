@@ -68,12 +68,14 @@
     </li>
     <li>
       <b>The members of a body</b> cast a <b>chamber vote</b>: a handful to several hundred people,
-      each holding a mandate. Every mandate has one choice (yes, no, abstain or none), and the
-      result is reckoned against the members, not the voters. A recorded vote names each member's
-      choice; a secret vote keeps only the counts. In the example the <Term t="Bundeskanzler" />
-      needs a majority of the <Term t="Bundestag" />'s members
-      (<Law id="de.bund.gg">Art. 63 (2) GG</Law>), and a <Term t="namentliche Abstimmung" /> names
-      each member's choice (<Law id="de.bund.gobt">Sec. 52 GO-BT</Law>).
+      each holding a mandate. Each mandate casts one ballot, on anything a popular vote can be on: a
+      motion (yes, no, abstain), a person, an order of preference, x out of y. The result is
+      reckoned against the members, not the voters, and a mandate that casts nothing counts too. A
+      recorded vote names each member's ballot; a secret vote keeps only the counts. In the example
+      the <Term t="Bundeskanzler" /> is elected, a vote on a person, with a majority of the
+      <Term t="Bundestag" />'s members (<Law id="de.bund.gg">Art. 63 (2) GG</Law>), and a
+      <Term t="namentliche Abstimmung" /> on a motion names each member's choice
+      (<Law id="de.bund.gobt">Sec. 52 GO-BT</Law>).
     </li>
   </ul>
   {#if sketches}<Plate plate={sketches.plates.who} />{/if}
@@ -87,9 +89,8 @@
   </p>
   <h3>One model or two?</h3>
   <p>
-    Open. What the two kinds share is what is voted on: sections, options, marks. What they do not
-    share is the record. A tally has no identities and is summed along units; a chamber vote has
-    one choice per mandate and is reckoned against the chamber that cast it. The engine keeps them
+    Open. What the two kinds share is everything that is voted on: sections, options, marks, any
+    form a choice takes. Neither kind limits it. What they do not share is the record. A tally has no identities and is summed along units; a chamber vote has one ballot per mandate and is reckoned against the chamber that cast it. The engine keeps them
     apart for now, the popular vote in <code>vote/popular/</code> and the chamber vote in
     <code>vote/chamber/</code>, and will share what is the same once the second is written.
   </p>
@@ -99,16 +100,18 @@
 <section>
   <h2>What is voted on</h2>
   <p>
-    A ballot paper has one or more <b>sections</b>, each a question of its own and counted apart.
+    Whoever votes, a ballot has one or more <b>sections</b>, each a question of its own and counted
+    apart.
     Two questions on one paper are two sections of one vote, like the
     <Term t="Erststimme" /> and the <Term t="Zweitstimme" /> of a <Term t="Landtagswahl" />; two
     papers on one day, an election and a <Term t="Volksentscheid" />, are two votes. Within a
-    section the voter chooses among <b>options</b>:
+    section the voter chooses among <b>options</b>, and the form the choice takes is open. Some of
+    the forms:
   </p>
   {#if sketches}<Plate plate={sketches.plates.what} />{/if}
   <p>
-    The first four are counts per option, which is what a tally holds: a person is a candidate's
-    row, an option a row for yes or for no, and several marks are a bigger count
+    In a tally, all but the ranking are counts per option: a person is a candidate's row, an option
+    a row for yes or for no, x out of y a row for each one chosen, and several marks a bigger count
     (<Term t="Kumulieren" />) or more rows (<Term t="Panaschieren" />). A ranking is not. It needs
     one count for every distinct order, a ballot profile, which the tally does not hold yet. German
     public elections do not rank; the Irish <Term t="Dáil" />, elected by single transferable
