@@ -142,6 +142,14 @@
         what its steps need from outside and writes what they write.
       </p>
       <p>
+        The laws here are written in stage order, and each stage is one step or one sequence:
+        first what needs nothing but the law and the tally (the size of the chamber, and
+        <i>count the votes</i>: the sums per <Term t="Wahlkreis" /> and for the Land), then what
+        the counts decide (<i>decide the Wahlkreise and who takes part</i>: each Wahlkreis winner
+        and the threshold), then the seats, then the chamber. Inside a stage the order does not
+        matter, which the table above shows: the steps of one stage could trade places.
+      </p>
+      <p>
         A <b>loop</b> holds the steps it repeats. When parties win more <Term t="Wahlkreis">Wahlkreise</Term>
         than their share (<Term t="Überhang" />), the loop raises the size of the chamber and runs the
         sequence again, so the sequence is written once even though it runs several times.

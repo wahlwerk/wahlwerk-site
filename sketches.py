@@ -403,21 +403,23 @@ def home_plate(vote: PopularVote, law: Law) -> tuple[Plate, dict[str, list[Link]
     links["tally"] = [_link("#/vote", "the tally a vote leaves", 0, 0, 190, height)]
 
     steps = law.protocol
-    p = plate.panel("allocation", "the allocation", width=230, height=height,
+    width = 300
+    p = plate.panel("allocation", "the allocation", width=width, height=height,
                     caption=("what the law does", "a list of steps, one record"))
     a = p.art
-    sk.unit(a, 1, 1, 228, height - 2, law.id)
+    sk.unit(a, 1, 1, width - 2, height - 2, law.id)
     top, gap = 24.0, 4.0
     step_h = (height - top - 8 - gap * (len(steps) - 1)) / len(steps)
     step_links = []
     for i, step in enumerate(steps):
         y = top + i * (step_h + gap)
-        sk.box(a, 10, y, 210, step_h)
-        sk.text(a, 18, y + step_h / 2 + FONT_SIZE_PX / 2 - 2, type(step).__name__, ink="strong", is_name=True, anchor="start")
-        if step.citation and (len(type(step).__name__) + len(step.citation) + 3) * CHAR_WIDTH_PX < 194:
-            sk.text(a, 212, y + step_h / 2 + FONT_SIZE_PX / 2 - 2, step.citation.lower(), ink="faint", anchor="end")
-        step_links.append(_link("#/law/steps", f"step {i + 1}: {type(step).__name__}", 10, y, 210, step_h))
-    links["allocation"] = [_link("#/law/allocation", "the allocation", 0, 0, 230, top), *step_links]
+        name = getattr(step, "title", None) or type(step).__name__  # a sequence by its title
+        sk.box(a, 10, y, width - 20, step_h)
+        sk.text(a, 18, y + step_h / 2 + FONT_SIZE_PX / 2 - 2, name, ink="strong", is_name=True, anchor="start")
+        if step.citation and (len(name) + len(step.citation) + 3) * CHAR_WIDTH_PX < width - 36:
+            sk.text(a, width - 18, y + step_h / 2 + FONT_SIZE_PX / 2 - 2, step.citation.lower(), ink="faint", anchor="end")
+        step_links.append(_link("#/law/steps", f"step {i + 1}: {name}", 10, y, width - 20, step_h))
+    links["allocation"] = [_link("#/law/allocation", "the allocation", 0, 0, width, top), *step_links]
 
     chamber = allocate(vote, steps)
     seats = sorted(chamber.seats_by_party.items(), key=lambda kv: -kv[1])
