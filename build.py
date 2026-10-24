@@ -77,7 +77,7 @@ def build_election(
     if chamber is None:
         raise ValueError(f"{key}: {law.id} formed no chamber")
 
-    votes = allocation.votes_by_option(LEVEL, SECTION)
+    votes = allocation.count(LEVEL, SECTION).per_option()
     seats: dict[str, int] = {}
     wahlkreis: dict[str, int] = {}
     for mandate in chamber.mandates:

@@ -169,6 +169,8 @@ export interface ProtocolStep {
   path: (number | string)[];
   kind: string;
   title: string;
+  /** Its arguments: each name and the fact it takes, e.g. votes=wahlkreis:option:erststimme. */
+  inputs: [string, string][];
   parameters: [string, string][];
   citation: string | null;
   reads: string[];
@@ -231,6 +233,8 @@ export interface StepKind {
   /** Full dotted name, e.g. wahlwerk.process.allocation.seats.ApportionSeats. */
   qualname: string;
   summary: Segment[];
+  /** Its arguments as the first law shown calls it: each name and the fact it takes. */
+  inputs: [string, string][];
   reads: string[];
   writes: string[];
   /** Whether it holds steps of its own (a sequence, a loop). */

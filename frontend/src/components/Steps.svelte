@@ -7,6 +7,7 @@
   import CodeRef from './CodeRef.svelte';
   import Segments from './Segments.svelte';
   import RefList from './RefList.svelte';
+  import Term from './Term.svelte';
 
   export let laws: Laws | null;
   export let references: References | null;
@@ -28,10 +29,14 @@
 <section>
   <h2>Kinds of step</h2>
   <p class="prose">
-    A step is one rule. Each kind below is a class in the engine; a law uses it with its own
-    settings and cites its own paragraph. The facts a step reads must be written by an earlier
-    step; the facts it writes are what later steps can read. A step that holds steps (a sequence,
-    a loop) reads and writes what its steps do.
+    A step is one rule, and it reads like a function: it <b>takes</b> facts as its arguments
+    (<code>votes=wahlkreis:option:erststimme</code>), has settings of its own, and its results
+    are the facts it writes. Each kind below is a class in the engine; a law uses it with its
+    own settings and cites its own paragraph. The facts a step takes must be written by an
+    earlier step; the facts it writes are what later steps can take. A table of counts is named
+    by its headers: <code>wahlkreis:option:erststimme</code> has a row per
+    <Term t="Wahlkreis" />, a column per option, and the <Term t="Erststimme">Erststimmen</Term>
+    in it. A step that holds steps (a sequence, a loop) reads and writes what its steps do.
   </p>
 </section>
 
@@ -43,8 +48,13 @@
       <h3 id="step-{k.kind}"><code>{k.kind}</code></h3>
       <p class="prose"><Segments segments={k.summary} cite={noCite} /></p>
       <dl>
-        <dt>reads</dt>
-        <dd>{#each k.reads as f}<code class="fact">{f}</code>{/each}</dd>
+        {#if k.inputs.length}
+          <dt>takes</dt>
+          <dd>{#each k.inputs as [arg, f]}<code class="fact">{arg}={f}</code>{/each}</dd>
+        {:else}
+          <dt>reads</dt>
+          <dd>{#each k.reads as f}<code class="fact">{f}</code>{/each}</dd>
+        {/if}
         <dt>writes</dt>
         <dd>{#each k.writes as f}<code class="fact">{f}</code>{/each}</dd>
         {#if k.computes.length || k.calls.length}
