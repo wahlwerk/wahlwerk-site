@@ -44,7 +44,7 @@ KEY = "de.landtag.st.2026"
 UNIT = "de.st.wk.001.gem.15081026.wbz.000001"
 """The Wahlbezirk the tally sketches show."""
 
-FIELDS = ("unit", "level", "kind", "section", "channel", "party", "candidate", "option", "count")
+FIELDS = ("unit", "level", "kind", "section", "channel", "option", "party", "count")
 
 
 def _short(unit: str) -> str:
@@ -290,7 +290,7 @@ def recorded_plate(vote: PopularVote) -> Plate:
         "one row",
         width=250,
         height=170,
-        caption=("one tally row", "nine fields; blank is absent,", "never zero"),
+        caption=("one tally row", "eight fields; blank is absent,", "never zero"),
     )
     a = p.art
     for i, field in enumerate(FIELDS):
