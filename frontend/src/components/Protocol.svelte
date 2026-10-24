@@ -85,6 +85,13 @@
       function. Plurality knows nothing of units or parties, so the same concept serves
       wherever a law says the most votes win.
     </p>
+    <p class="prose">
+      Ink tells what can change. Under each name, faint, is what the step is handed: the facts
+      it takes from earlier steps (<code>votes=zweitstimme by land × party</code>), fixed by the
+      order of the law. In bold is what can be swapped: a step or a concept as a whole, by its
+      name, and each setting the law fixes (<code>seats=83</code>, <code>share=1/20</code>,
+      <code>factor=2</code>). Change one of those and the same votes give another chamber.
+    </p>
     <figure class="drawing">{@html law.drawing}</figure>
   </section>
 
