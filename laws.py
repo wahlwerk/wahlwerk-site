@@ -73,9 +73,14 @@ def _note_kind(kinds: dict[str, dict[str, Any]], step: AllocationStep, law: Law,
             "writes": sorted(step.writes),
             "holds": any(isinstance(getattr(step, f), tuple) and getattr(step, f) and isinstance(getattr(step, f)[0], AllocationStep) for f in cls.model_fields),
             "uses": [],
+            "computes": [],
             "order": len(kinds),
         },
     )
+    for use in flow.uses(step):
+        link = {"field": use.field, "kind": use.kind, "formula": use.formula}
+        if link not in entry["computes"]:
+            entry["computes"].append(link)
     entry["uses"].append({"law": law.id, "short": SHORT.get(law.id, law.id), "citation": step.citation, "path": list(path)})
 
 

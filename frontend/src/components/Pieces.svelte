@@ -12,7 +12,7 @@
     ['PopularVote', 'vote/popular/', 'what the electorate recorded: the tally and its source'],
     ['Tally', 'vote/popular/', 'the long table of rows: filter, sum_to, sum_by, total; never stores a sum'],
     ['Level, Hierarchy', 'vote/popular/', 'the main (electoral) hierarchy in the ids, and alternative ones beside it'],
-    ['apportionment methods', 'apportionment/', 'Hare-Niemeyer, d’Hondt, Sainte-Laguë; any keys, exact weights, no German content; seats or a Tie'],
+    ['apportionment methods', 'apportionment/', 'plurality (the most votes win), Hare-Niemeyer, d’Hondt, Sainte-Laguë; any keys, exact weights, no German content; seats or a Tie'],
     ['thresholds, Ausgleich', 'apportionment/', 'relative and seat thresholds, exemptions, “or” over them; Überhang and Ausgleich; majority clauses'],
     ['Law', 'law/', 'one law version as one object with its protocol; a registry finds the law in force for a body and date'],
     ['Allocation, AllocationStep', 'process/allocation/', 'the working record, and the rules that fill it; each step declares what it reads and writes'],

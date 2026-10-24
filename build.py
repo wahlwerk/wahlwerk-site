@@ -9,7 +9,8 @@ Writes three files to ``docs/data/``:
 - ``elections.json``: every number derived by the engine from the votes in wahlwerk-data
   under the law in force on election day; nothing is copied from an official result.
   The page shows these numbers and never computes seats itself.
-- ``sketches.json``: the sketches of the Vote page (``sketches.py``), drawn with
+- ``sketches.json``: the sketches of the Vote page and the home page's path from the
+  electorate to a chamber (``sketches.py``), drawn with
   wahlwerk-ui from a real bundle, one SVG per panel, and wahlwerk-ui's style guide.
 - ``references.json``: the sources, from their three homes (``references.py``): the
   engine's ``docs/references.bib`` (Zotero) and ``docs/statutes.toml``, its law
@@ -150,7 +151,8 @@ def main() -> None:
     write(OUT, payload)
 
     sketch_vote = PopularVote.from_key(SKETCH_KEY, data_dir)
-    write(DATA / "sketches.json", build_sketches(sketch_vote))
+    sketch_law = next(LAWS.in_force(body, day) for key, body, day in ELECTIONS if key == SKETCH_KEY)
+    write(DATA / "sketches.json", build_sketches(sketch_vote, sketch_law))
     write(
         DATA / "references.json",
         build_references(

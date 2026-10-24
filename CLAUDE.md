@@ -54,7 +54,8 @@ bundle it deletes nothing and fails.
 
 ```
 build.py                  <- data build: engine + wahlwerk-data in, docs/data/*.json out
-sketches.py               <- the Vote page's sketch plates, drawn with wahlwerk-ui from a real bundle
+sketches.py               <- the Vote page's sketch plates and the home plate (electorate, tally, allocation,
+                             chamber, each box a link), drawn with wahlwerk-ui from a real bundle
 references.py             <- sources from their three homes: references.bib, the law registry, bundles
 formulas.py               <- the Formulas page's content, read from wahlwerk.calc's docstrings
 laws.py                   <- the Law pages' content: each law's protocol, stages, move ranges, facts and
@@ -78,11 +79,13 @@ frontend/src/
     Sidebar.svelte        <- the side panel, as in IR-bands: the pages on top, the outline of the
                              page shown below (its h2/h3, read from the page, the one being read
                              marked); docked from 1080 px, a drawer behind the menu button below
-    Home.svelte           <- hero, live stats, one card per component
+    Home.svelte           <- hero, live stats, the home plate (the whole path, every box a link), one card
+                             per component
     Icon.svelte           <- one symbol per component, in currentColor
     Vote.svelte           <- Vote page: a vote, who votes, what is voted on, what is recorded
     Hierarchies.svelte    <- Vote page, last section: unit ids and the administrative tree
-    Plate.svelte          <- a sketch plate: numbered panels that wrap at phone width
+    Plate.svelte          <- a sketch plate: numbered panels that wrap at phone width; a panel's links
+                             (from sketches.py) lie over its art as transparent anchors
     CodeRef.svelte        <- "in the code": links into the API reference and the source
     Law.svelte            <- a statute cited inline (Art. 63 GG), linked to its version
     Term.svelte           <- a term of art (Landtag): italic, dotted underline, concept on hover
@@ -90,8 +93,9 @@ frontend/src/
     RefList.svelte        <- a page's sources: literature, statutes, data
     Protocol.svelte       <- Law page: a law is a list of steps; per law (tabs) the drawing, the stages and
                              move ranges, the facts the allocation holds; sequences, loops, changing a law
-    Steps.svelte          <- Law › Steps (#/law/steps): every kind of step, its docstring, reads, writes, uses
-    Pieces.svelte         <- Allocation page: the four roles and the modules
+    Steps.svelte          <- Law › Steps (#/law/steps): every kind of step, its docstring, reads, writes,
+                             what it computes with down to the formula, uses
+    Pieces.svelte         <- Law › Allocation (#/law/allocation): the four roles and the modules
     Formulas.svelte       <- Formulas page: every formula of wahlwerk.calc by layer, the notation, the literature
     Segments.svelte       <- docstring text from formulas.json: inline math, code, citations, terms of art
     Math.svelte           <- one formula in LaTeX, rendered by KaTeX
@@ -102,8 +106,9 @@ frontend/src/
     ThemeToggle.svelte    <- auto / light / dark
   lib/
     tokens.ts             <- DESIGN TOKENS: every colour (light and dark), party colour, font
-    pages.ts              <- the pages, hash routes (#/vote ...), the five components in order, and the
-                             sub-pages under them (SUBPAGES: #/law/steps), listed under their parent in the side panel
+    pages.ts              <- the pages, hash routes (#/vote ...), the four components in order, and the
+                             sub-pages under them (SUBPAGES: #/law/allocation, #/law/steps), listed under their
+                             parent in the side panel; #/allocation still reaches Law › Allocation
     impressum.ts          <- the operator's name, address and contact for the Impressum
     types.ts              <- the shape of elections.json
     elections.ts          <- per-election labels and notes (prose only)

@@ -1,11 +1,14 @@
 <script lang="ts">
   // The front door: what wahlwerk is, how much the site reproduces, and one
   // card per component in the order the engine runs them.
-  import type { SiteData } from '../lib/types';
+  import type { SiteData, Sketches } from '../lib/types';
   import { COMPONENTS, href } from '../lib/pages';
   import Icon from './Icon.svelte';
+  import Plate from './Plate.svelte';
+  import { ELECTION_TEXT } from '../lib/elections';
 
   export let data: SiteData | null;
+  export let sketches: Sketches | null = null;
 
   const count = new Intl.NumberFormat('de-DE');
 
@@ -13,6 +16,8 @@
   $: elections = data?.elections ?? [];
   $: laws = new Set(elections.map((e) => e.law.id)).size;
   $: seats = elections.reduce((s, e) => s + e.seats, 0);
+  // The election the home plate draws, named the way the Chamber page names it.
+  $: sketchLabel = sketches ? ELECTION_TEXT[sketches.key]?.label ?? sketches.key : '';
 </script>
 
 <div class="home">
@@ -41,6 +46,16 @@
         <span class="n">{count.format(seats)}</span>
         <span class="l">seats derived</span>
       </div>
+    </div>
+  {/if}
+
+  {#if sketches?.plates.home}
+    <!-- The whole path in one plate, drawn by sketches.py; every box opens its page. -->
+    <div class="path">
+      <Plate plate={sketches.plates.home}>
+        Click a box to open its page. The tally is the Zweitstimmen of {sketchLabel}, the steps
+        are the law in force for it, and the chamber is what the engine derives from them.
+      </Plate>
     </div>
   {/if}
 
@@ -125,7 +140,7 @@
      stack: the flow reads left to right, then top to bottom. */
   .cards {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
     width: 100%;
   }
@@ -182,6 +197,11 @@
   .cta {
     font: 600 0.84rem var(--sans);
     color: var(--accent);
+  }
+
+  .path {
+    width: 100%;
+    margin-bottom: 40px;
   }
 
   .what {

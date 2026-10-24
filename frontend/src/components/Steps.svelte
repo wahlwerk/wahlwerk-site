@@ -3,6 +3,7 @@
   // with what its class's docstring says it does (laws.json; the text is the engine's),
   // the facts it reads and writes, and where each law uses it with the paragraph.
   import type { Laws, References } from '../lib/types';
+  import { apiHref } from '../lib/api';
   import CodeRef from './CodeRef.svelte';
   import Segments from './Segments.svelte';
   import RefList from './RefList.svelte';
@@ -40,6 +41,14 @@
         <dd>{#each k.reads as f}<code class="fact">{f}</code>{/each}</dd>
         <dt>writes</dt>
         <dd>{#each k.writes as f}<code class="fact">{f}</code>{/each}</dd>
+        {#if k.computes.length}
+          <dt>computes with</dt>
+          <dd class="chain">
+            {#each k.computes as c}
+              <span style="padding-left:{c.field.split('.').length - 1}em">↳ <code>{c.kind}</code> → <a href={apiHref(c.formula)}><code>{c.formula.replace(/^wahlwerk\./, '')}</code></a></span>
+            {/each}
+          </dd>
+        {/if}
         <dt>used in</dt>
         <dd>
           {#each k.uses as u, i}{#if i > 0}; {/if}<a href="#law-{u.law}">{u.short}</a>{#if u.citation}, {u.citation}{/if}{/each}
@@ -69,6 +78,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: 4px 6px;
+  }
+  .chain {
+    flex-direction: column;
+    gap: 2px;
   }
   .fact {
     font-size: 0.8rem;

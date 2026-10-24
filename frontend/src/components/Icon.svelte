@@ -28,11 +28,6 @@
     <!-- an ordered list of steps -->
     <path d="M9.5 6h10M9.5 12h10M9.5 18h10" />
     <path d="M4.5 5l1-1v4M4 11.5a1 1 0 0 1 2 .3L4 14h2M4 17h2l-1 1.2a1 1 0 1 1-1 1.3" />
-  {:else if name === 'allocation'}
-    <!-- one record, split into seats -->
-    <path d="M3 12h6" />
-    <circle cx="10.5" cy="12" r="1.5" />
-    <path d="M12 11l7-5M12 12h7M12 13l7 5" />
   {:else if name === 'formulas'}
     <!-- a sum sign -->
     <path d="M17 5H7l6 7-6 7h10" />

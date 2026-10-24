@@ -39,7 +39,7 @@
       was in force.
     </p>
     <p>
-      The steps work on one record, the <b>allocation</b>. It starts with the tally of the vote,
+      The steps work on one record, the <b>allocation</b> (<a href={href('law-allocation')}>Allocation</a>). It starts with the tally of the vote,
       each step adds what it establishes (a sum, the winners, the parties past the threshold, each
       party's seats), and the last step forms the chamber. The allocation is the working record of
       one run of one law on one vote: it is not the law, and it is not kept afterwards.
@@ -69,7 +69,11 @@
       The <a href="#law-{law.id}">{law.short}</a> as the engine holds it. Each box is a step with
       the paragraph it follows and its settings; the facts it writes stand in the margin; the number
       in the gutter is its stage. A dashed frame holds steps that act as one: a named
-      <b>sequence</b>, or a loop that runs it again.
+      <b>sequence</b>, or a loop that runs it again. Under a step that computes, the lines
+      marked ↳ follow it down to its <b>formula</b>: electing in the
+      <Term t="Wahlkreis">Wahlkreise</Term> uses <i>plurality</i>, the most votes win, which is
+      one function on the <a href={href('formulas')}>Formulas</a> page; it knows nothing of units
+      or parties, so the same choice can serve wherever a law says the most votes win.
     </p>
     <figure class="drawing">{@html law.drawing}</figure>
   </section>

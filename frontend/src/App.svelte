@@ -112,7 +112,7 @@
 
 <main class:wide={page === 'home'} bind:this={content}>
   {#if page === 'home'}
-    <Home {data} />
+    <Home {data} {sketches} />
   {:else if component}
     <article class="page">
       <header class="page-head">
@@ -125,8 +125,6 @@
         <Vote {sketches} {references} />
       {:else if page === 'law'}
         <Protocol {laws} {references} />
-      {:else if page === 'allocation'}
-        <Pieces />
       {:else if page === 'formulas'}
         <Formulas {formulas} {references} />
       {:else if data}
@@ -153,9 +151,11 @@
       <header class="page-head">
         <div class="eyebrow"><a href={href(parent.id)}>{parent.title}</a> · {subpage.title}</div>
         <h1>{subpage.title}</h1>
-        <p class="lede">Every kind of step the laws on this site are made of: what it does, what it reads and writes, and where each law uses it.</p>
+        <p class="lede">{subpage.lede}</p>
       </header>
-      {#if page === 'law-steps'}
+      {#if page === 'law-allocation'}
+        <Pieces />
+      {:else if page === 'law-steps'}
         <Steps {laws} {references} />
       {/if}
       <nav class="steps" aria-label="Back">

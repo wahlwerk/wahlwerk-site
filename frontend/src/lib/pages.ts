@@ -4,18 +4,35 @@
  * top navigation and the prev/next links all read from this one list.
  */
 
-export type ComponentId = 'vote' | 'law' | 'allocation' | 'chamber' | 'formulas';
-export type PageId = 'home' | ComponentId | 'law-steps' | 'impressum' | 'style';
+export type ComponentId = 'vote' | 'law' | 'chamber' | 'formulas';
+export type PageId = 'home' | ComponentId | 'law-allocation' | 'law-steps' | 'impressum' | 'style';
 
 /** Pages under a component page: shown under it in the side panel, reached by a path. */
-export const SUBPAGES: { id: PageId; parent: ComponentId; title: string; path: string }[] = [
-  { id: 'law-steps', parent: 'law', title: 'Steps', path: 'law/steps' },
+export const SUBPAGES: { id: PageId; parent: ComponentId; title: string; path: string; lede: string }[] = [
+  {
+    id: 'law-allocation',
+    parent: 'law',
+    title: 'Allocation',
+    path: 'law/allocation',
+    lede:
+      'allocate(vote, protocol) runs a law: it applies each step to one working record and forms a chamber. It belongs to neither the vote nor the chamber.',
+  },
+  {
+    id: 'law-steps',
+    parent: 'law',
+    title: 'Steps',
+    path: 'law/steps',
+    lede: 'Every kind of step the laws on this site are made of: what it does, what it reads and writes, what it computes with, and where each law uses it.',
+  },
 ];
+
+/** Old routes kept working: the Allocation page moved under Law. */
+const MOVED: Record<string, PageId> = { allocation: 'law-allocation' };
 
 export interface ComponentPage {
   id: ComponentId;
   /** The engine's role for this component. */
-  role: 'input' | 'protocol' | 'process' | 'state' | 'formula';
+  role: 'input' | 'protocol' | 'state' | 'formula';
   title: string;
   /** One sentence under the page title. */
   lede: string;
@@ -40,16 +57,7 @@ export const COMPONENTS: ComponentPage[] = [
     lede:
       'A law is a list of steps, each citing the paragraph it follows. What depends on what follows from the facts each step reads and writes.',
     card:
-      'Two Landtag laws as protocols: every step and its paragraph, drawn; which steps depend on which, and which could trade places.',
-  },
-  {
-    id: 'allocation',
-    role: 'process',
-    title: 'Allocation',
-    lede:
-      'allocate(vote, protocol) applies each step to one working record and forms a chamber. It belongs to neither the vote nor the chamber.',
-    card:
-      'How the pieces fit: apportionment methods, thresholds, Ausgleich, and the process that runs the law.',
+      'Two Landtag laws as protocols, and the allocation that runs them: every step and its paragraph, drawn down to its formula; which steps depend on which, and which could trade places.',
   },
   {
     id: 'chamber',
@@ -78,6 +86,7 @@ export function pageFromHash(hash: string): PageId {
   const id = hash.replace(/^#\/?/, '');
   const sub = SUBPAGES.find((s) => s.path === id);
   if (sub) return sub.id;
+  if (MOVED[id]) return MOVED[id];
   return (ALL as string[]).includes(id) ? (id as PageId) : 'home';
 }
 

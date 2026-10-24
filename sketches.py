@@ -11,18 +11,26 @@ The plates, in the order the page shows them:
 - ``what``: what is voted on, by anyone; a list, a person, an option, several marks,
   x out of y, an order: examples, not a closed list
 - ``recorded``: what a tally records; one row, the kinds, the two hierarchies
+
+and, for the home page, ``home``: the whole path in four panels, the electorate, the
+tally, the allocation a law describes as steps, and the chamber, each box a link to
+the page that explains it (``links``, in the coordinates of the panel's art).
 """
 
 from __future__ import annotations
 
 from typing import Any
 
+from wahlwerk.law.base import Law
+from wahlwerk.process.allocation.allocate import allocate
 from wahlwerk.vote.popular.popular_vote import PopularVote
 from wahlwerk.vote.popular.tally import TallyKind
+from wahlwerk_ui.plot.chamber.common import party_tones
+from wahlwerk_ui.plot.chamber.seat import seat_layout
 from wahlwerk_ui.sketch import guide
 from wahlwerk_ui.sketch import primitives as sk
 from wahlwerk_ui.sketch.plate import Plate
-from wahlwerk_ui.style import FONT_SIZE_PX
+from wahlwerk_ui.style import CHAR_WIDTH_PX, FONT_SIZE_PX
 
 KEY = "de.landtag.st.2026"
 """The bundle the numbers come from."""
@@ -357,14 +365,94 @@ def recorded_plate(vote: PopularVote) -> Plate:
     return plate
 
 
-def build_sketches(vote: PopularVote) -> dict[str, Any]:
-    """Every plate of the site, as the page reads them."""
+Link = dict[str, Any]
+"""A clickable region of a panel: ``href``, ``label`` and ``x``, ``y``, ``w``, ``h`` in px of its art."""
+
+
+def _link(href: str, label: str, x: float, y: float, w: float, h: float) -> Link:
+    return {"href": href, "label": label, "x": x, "y": y, "w": w, "h": h}
+
+
+def home_plate(vote: PopularVote, law: Law) -> tuple[Plate, dict[str, list[Link]]]:
+    """From the people to a chamber, in four panels, every box a link.
+
+    The tally shows the vote's own Land totals; the allocation lists the law's own
+    steps; the chamber is what the engine derives from that vote under that law.
+    """
+    plate = Plate("home", "from the electorate to a chamber")
+    links: dict[str, list[Link]] = {}
+    height = 196
+
+    p = plate.panel("electorate", "the electorate", width=150, height=height,
+                    caption=("who votes", "each voter, in one unit"))
+    a = p.art
+    sk.unit(a, 1, 1, 148, height - 2, "the people")
+    sk.crowd(a, 10, 26, 130, height - 40, 46)
+    links["electorate"] = [_link("#/vote", "the vote: who votes and how", 0, 0, 150, height)]
+
+    p = plate.panel("tally", "the tally", width=190, height=height,
+                    caption=("what is recorded", "votes per unit, summed up"))
+    a = p.art
+    land = vote.tally.sum_to("land").filter(kind=TallyKind.VOTES, section="zweitstimme")
+    totals = sorted(land.sum_by("party").items(), key=lambda kv: -kv[1])
+    rows = [(str(party), f"{count:,}".replace(",", " ")) for party, count in totals[:6]]
+    rows.append(("…", ""))
+    sk.box(a, 1, 1, 188, height - 2)
+    sk.text(a, 10, FONT_SIZE_PX + 8, "zweitstimme, land", ink="faint", anchor="start")
+    sk.table(a, 10, FONT_SIZE_PX + 18, ("party", "votes"), rows, numeric=(False, True))
+    links["tally"] = [_link("#/vote", "the tally a vote leaves", 0, 0, 190, height)]
+
+    steps = law.protocol
+    p = plate.panel("allocation", "the allocation", width=230, height=height,
+                    caption=("what the law does", "a list of steps, one record"))
+    a = p.art
+    sk.unit(a, 1, 1, 228, height - 2, law.id)
+    top, gap = 24.0, 4.0
+    step_h = (height - top - 8 - gap * (len(steps) - 1)) / len(steps)
+    step_links = []
+    for i, step in enumerate(steps):
+        y = top + i * (step_h + gap)
+        sk.box(a, 10, y, 210, step_h)
+        sk.text(a, 18, y + step_h / 2 + FONT_SIZE_PX / 2 - 2, type(step).__name__, ink="strong", is_name=True, anchor="start")
+        if step.citation and (len(type(step).__name__) + len(step.citation) + 3) * CHAR_WIDTH_PX < 194:
+            sk.text(a, 212, y + step_h / 2 + FONT_SIZE_PX / 2 - 2, step.citation.lower(), ink="faint", anchor="end")
+        step_links.append(_link("#/law/steps", f"step {i + 1}: {type(step).__name__}", 10, y, 210, step_h))
+    links["allocation"] = [_link("#/law/allocation", "the allocation", 0, 0, 230, top), *step_links]
+
+    chamber = allocate(vote, steps)
+    seats = sorted(chamber.seats_by_party.items(), key=lambda kv: -kv[1])
+    p = plate.panel("chamber", "the chamber", width=200, height=height,
+                    caption=(f"{chamber.size} seats", "derived from these votes"))
+    a = p.art
+    groups = [(party, count) for party, count in seats]
+    centres, seat_r = seat_layout(chamber.size)
+    radius, cx, floor = 92.0, 100.0, height - 40
+    scale = radius / (1 + seat_r)
+    seat = 0
+    for (_, count), (key, colour) in zip(groups, party_tones(groups, None)):
+        a.parties.setdefault(key, colour)
+        for x, y in centres[seat : seat + count]:
+            sk.dot(a, cx + x * scale, floor - y * scale, seat_r * scale * 0.92, cls=f"party-{key}")
+        seat += count
+    a.line("structure", 4, floor + seat_r * scale + 3, 196, floor + seat_r * scale + 3)
+    links["chamber"] = [_link("#/chamber", "the chamber, seat by seat", 0, 0, 200, height)]
+    return plate, links
+
+
+def build_sketches(vote: PopularVote, law: Law, home_vote: PopularVote | None = None) -> dict[str, Any]:
+    """Every plate of the site, as the page reads them. ``home_vote`` (the vote the home
+    plate's numbers come from) is ``vote`` unless given."""
+    home, links = home_plate(home_vote or vote, law)
+    home_dict = home.to_dict()
+    for panel in home_dict["panels"]:
+        panel["links"] = links.get(panel["name"], [])
     return {
         "key": KEY,
         "unit": UNIT,
         "plates": {
             plate.name: plate.to_dict()
             for plate in (vote_plate(vote), who_plate(), what_plate(), recorded_plate(vote))
-        },
+        }
+        | {"home": home_dict},
         "style": [plate.to_dict() for plate in guide.plates()],
     }

@@ -11,7 +11,22 @@
     {#each plate.panels as p (p.name)}
       <figure class="panel" style="flex-basis:{Math.round(p.width * 0.85)}px">
         <div class="ptitle"><span class="n">{p.number}</span>{p.title}</div>
-        <div class="art" style="--w:{Math.round(p.width * 1.15)}px">{@html p.svg}</div>
+        <div class="art" style="--w:{Math.round(p.width * 1.15)}px">
+          <div class="frame">
+            {@html p.svg}
+            <!-- Links over the art (sketches.py places them): the drawing stays code, the
+                 page only makes its boxes reachable. Later links sit on top of earlier ones. -->
+            {#each p.links ?? [] as l}
+              <a
+                class="hit"
+                href={l.href}
+                aria-label={l.label}
+                title={l.label}
+                style="left:{(100 * l.x) / p.width}%;top:{(100 * l.y) / p.height}%;width:{(100 * l.w) / p.width}%;height:{(100 * l.h) / p.height}%"
+              ></a>
+            {/each}
+          </div>
+        </div>
         <figcaption>
           {#if p.caption.length}<b>{p.caption[0]}</b>{/if}
           {#each p.caption.slice(1) as line}<span>{line}</span>{/each}
@@ -61,11 +76,26 @@
     display: flex;
     justify-content: center;
   }
-  .art :global(svg) {
+  .frame {
+    position: relative;
     width: 100%;
     max-width: var(--w);
+  }
+  .frame :global(svg) {
+    display: block;
+    width: 100%;
     height: auto;
     overflow: visible;
+  }
+  .hit {
+    position: absolute;
+    border-radius: var(--radius);
+    outline: 1px solid transparent;
+    transition: outline-color 0.15s ease;
+  }
+  .hit:hover,
+  .hit:focus-visible {
+    outline-color: var(--accent);
   }
   figcaption {
     display: flex;
