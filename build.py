@@ -4,9 +4,15 @@ Run from the repository root, with wahlwerk-data cloned beside it:
 
     uv run python build.py [--data ../wahlwerk-data]
 
-Writes ``docs/data/elections.json``. Every number in it is derived by the engine from
-the votes in wahlwerk-data under the law in force on election day; nothing is copied
-from an official result. The page shows these numbers and never computes seats itself.
+Writes three files to ``docs/data/``:
+
+- ``elections.json``: every number derived by the engine from the votes in wahlwerk-data
+  under the law in force on election day; nothing is copied from an official result.
+  The page shows these numbers and never computes seats itself.
+- ``sketches.json``: the sketches of the Vote page (``sketches.py``), drawn with
+  wahlwerk-ui from a real bundle, one SVG per panel, and wahlwerk-ui's style guide.
+- ``references.json``: the sources, from their three homes (``references.py``): the
+  engine's ``docs/references.bib`` (Zotero), the engine's law registry, the bundles.
 """
 
 from __future__ import annotations
@@ -24,10 +30,15 @@ from wahlwerk.party.registry import PartyRegistry
 from wahlwerk.process.allocation.allocate import derive
 from wahlwerk.vote.popular.popular_vote import PopularVote
 
+from references import build_references
+from sketches import KEY as SKETCH_KEY
+from sketches import build_sketches
+
 logger = logging.getLogger("build")
 
 HERE = Path(__file__).parent
-OUT = HERE / "docs" / "data" / "elections.json"
+DATA = HERE / "docs" / "data"
+OUT = DATA / "elections.json"
 PARTIES = Path("parties") / "de" / "de.bund.json"
 
 # The elections the page shows: bundle key, body, election day. Only elections whose
@@ -109,6 +120,12 @@ def main() -> None:
         default=HERE.parent / "wahlwerk-data",
         help="the wahlwerk-data checkout (default: beside this repository)",
     )
+    parser.add_argument(
+        "--engine",
+        type=Path,
+        default=HERE.parent / "wahlwerk",
+        help="the wahlwerk checkout, for docs/references.bib (default: beside this repository)",
+    )
     args = parser.parse_args()
     data_dir: Path = args.data
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -117,15 +134,28 @@ def main() -> None:
     payload = {
         "engine": version("wahlwerk"),
         "elections": [
-            build_election(key, body, day, data_dir, parties)
-            for key, body, day in ELECTIONS
+            build_election(key, body, day, data_dir, parties) for key, body, day in ELECTIONS
         ],
     }
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+    write(OUT, payload)
+
+    sketch_vote = PopularVote.from_key(SKETCH_KEY, data_dir)
+    write(DATA / "sketches.json", build_sketches(sketch_vote))
+    write(
+        DATA / "references.json",
+        build_references(
+            args.engine / "docs" / "references.bib",
+            LAWS.laws,
+            {SKETCH_KEY: sketch_vote},
+        ),
     )
-    logger.info("wrote %s", OUT.relative_to(HERE))
+
+
+def write(path: Path, payload: object) -> None:
+    """Write ``payload`` as JSON, the way every file in docs/data/ is written."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    logger.info("wrote %s", path.relative_to(HERE))
 
 
 if __name__ == "__main__":

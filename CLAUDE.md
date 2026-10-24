@@ -48,9 +48,13 @@ stay in `docs/assets/`; delete the stale ones before committing.
 ## Architecture
 
 ```
-build.py                  <- data build: engine + wahlwerk-data in, docs/data/elections.json out
+build.py                  <- data build: engine + wahlwerk-data in, docs/data/*.json out
+sketches.py               <- the Vote page's sketch plates, drawn with wahlwerk-ui from a real bundle
+references.py             <- sources from their three homes: references.bib, the law registry, bundles
 docs/                     <- GitHub Pages root, committed
   data/elections.json     <- written by build.py only
+  data/sketches.json      <- written by build.py only: one SVG per panel, plus wahlwerk-ui's style plates
+  data/references.json    <- written by build.py only: literature, statutes, data
   index.html, assets/     <- written by npm run build only
   favicon.svg, .nojekyll  <- hand-written
 frontend/src/
@@ -60,7 +64,13 @@ frontend/src/
   components/
     Home.svelte           <- hero, live stats, one card per component
     Icon.svelte           <- one symbol per component, in currentColor
-    Hierarchies.svelte    <- Vote page: unit ids and the administrative tree
+    Vote.svelte           <- Vote page: a vote, who votes, what is voted on, what is recorded
+    Hierarchies.svelte    <- Vote page, last section: unit ids and the administrative tree
+    Plate.svelte          <- a sketch plate: numbered panels that wrap at phone width
+    CodeRef.svelte        <- "in the code": links into the API reference and the source
+    Law.svelte            <- a statute cited inline (Art. 63 GG), linked to its version
+    Cite.svelte           <- a literature citation, a superscript number
+    RefList.svelte        <- a page's sources: literature, statutes, data
     Protocol.svelte       <- Law page: the LWG LSA as the engine's protocol (law/de/st/lwg.py)
     Pieces.svelte         <- Allocation page: the four roles and the modules
     Results.svelte        <- Chamber page: election tabs, seat grid, result table, note, source
@@ -74,6 +84,8 @@ frontend/src/
     impressum.ts          <- the operator's name, address and contact for the Impressum
     types.ts              <- the shape of elections.json
     elections.ts          <- per-election labels and notes (prose only)
+    citations.ts          <- formats literature, statutes and data sources
+    api.ts                <- links to the API reference (wahlwerk.github.io/wahlwerk) and to the source
 ```
 
 ## Rules
@@ -95,4 +107,13 @@ frontend/src/
   from the bundle's `[source]`.
 - **Language:** English prose, German terms of art (`Wahlkreis`, `Zweitstimme`, `Überhang`),
   the same policy as the engine's README.
+- **Sketches are drawn in code**, by `sketches.py` with wahlwerk-ui, never by hand and never
+  in a component: the drawing may be schematic, every number in it comes from the engine.
+  The style is wahlwerk-ui's `STYLE.md`.
+- **The site explains, the reference documents.** A concept links to its API entry
+  (`CodeRef`), it never copies a field list or a signature.
+- **Every claim has a source**, from its own home: literature numbered from the engine's
+  `docs/references.bib` (Zotero), statutes inline in their own form (`Art. 63 GG`) linked to
+  the version in the engine's law registry, data named with publisher, licence and
+  attribution. A statute the engine does not implement goes in `CITED_STATUTES`.
 - No em-dashes in any text.

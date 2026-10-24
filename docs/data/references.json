@@ -1,0 +1,46 @@
+{
+ "literature": {},
+ "statutes": {
+  "de.mv.lkwg.2011": {
+   "short": "LKWG M-V",
+   "title": "Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)",
+   "citation": "LKWG M-V vom 16. Dezember 2010 (GVOBl. M-V S. 690), Fassung gültig vom 1. September 2026 bis 31. Dezember 2028, zuletzt geändert durch Artikel 12 des Gesetzes vom 8. Juli 2026 (GVOBl. M-V S. 719, 731); Sec. 54, 57, 58 unchanged since 1 January 2011",
+   "source": "https://www.landesrecht-mv.de/bsmv/document/jlr-LKWGMVrahmen",
+   "in_force_from": "2011-01-01",
+   "in_force_until": null,
+   "implemented": true
+  },
+  "de.st.lwg.2021": {
+   "short": "LWG LSA",
+   "title": "Wahlgesetz des Landes Sachsen-Anhalt (LWG)",
+   "citation": "LWG in der Fassung der Bekanntmachung vom 18. Februar 2010 (GVBl. LSA S. 80), zuletzt geändert durch Artikel 2 des Gesetzes vom 19. März 2021 (GVBl. LSA S. 98); Sec. 1, 32, 33, 35 unchanged in substance up to the Gesetz vom 7. Februar 2025 (GVBl. LSA S. 316)",
+   "source": "https://www.landtag.sachsen-anhalt.de/fileadmin/Downloads/Rechtsgrundlagen/Gesetze_8.WP/2021_Wahlgesetz_LWG.pdf",
+   "in_force_from": null,
+   "in_force_until": null,
+   "implemented": true
+  },
+  "de.bund.gg": {
+   "short": "GG",
+   "title": "Grundgesetz für die Bundesrepublik Deutschland",
+   "citation": "cited in the version in force today",
+   "source": "https://www.gesetze-im-internet.de/gg/",
+   "implemented": false
+  },
+  "de.bund.gobt": {
+   "short": "GO-BT",
+   "title": "Geschäftsordnung des Deutschen Bundestages",
+   "citation": "cited in the version in force today; Sec. 10 (1) is the engine's caucus protocol (wahlwerk.law.de.bund.gobt)",
+   "source": "https://www.gesetze-im-internet.de/btgo_1980/",
+   "implemented": false
+  }
+ },
+ "data": {
+  "de.landtag.st.2026": {
+   "publisher": "Statistisches Landesamt Sachsen-Anhalt",
+   "title": "Landtagswahl in Sachsen-Anhalt am 6. September 2026: endgültige Ergebnisse",
+   "url": "https://wahlergebnisse.sachsen-anhalt.de/wahlen/lt26/downloads/Ergebnisse_LT_2026.xlsx",
+   "licence": "dl-de/by-2-0",
+   "attribution": "Statistisches Landesamt Sachsen-Anhalt, Halle (Saale) 2026, eigene Berechnung; Datenlizenz Deutschland Namensnennung Version 2.0 (dl-de/by-2-0), www.govdata.de/dl-de/by-2-0; Datensatz: https://wahlergebnisse.sachsen-anhalt.de/wahlen/lt26/downloads/Ergebnisse_LT_2026.xlsx; die Daten wurden geändert (in eine lange Tabelle je Wahlbezirk umgeformt)."
+  }
+ }
+}

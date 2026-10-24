@@ -2,12 +2,12 @@
   // Root: loads the numbers build.py derived, follows the location hash to a
   // page, and frames it with the top bar and the footer.
   import { onMount } from 'svelte';
-  import type { SiteData } from './lib/types';
+  import type { References, SiteData, Sketches } from './lib/types';
   import { COMPONENTS, href, pageFromHash } from './lib/pages';
   import type { PageId } from './lib/pages';
   import ThemeToggle from './components/ThemeToggle.svelte';
   import Home from './components/Home.svelte';
-  import Hierarchies from './components/Hierarchies.svelte';
+  import Vote from './components/Vote.svelte';
   import Protocol from './components/Protocol.svelte';
   import Pieces from './components/Pieces.svelte';
   import Results from './components/Results.svelte';
@@ -15,6 +15,8 @@
   import StyleGuide from './components/StyleGuide.svelte';
 
   let data: SiteData | null = null;
+  let sketches: Sketches | null = null;
+  let references: References | null = null;
   let error: string | null = null;
   let page: PageId = pageFromHash(window.location.hash);
 
@@ -28,11 +30,19 @@
     window.scrollTo(0, 0);
   }
 
+  async function json<T>(path: string): Promise<T> {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`${path}: ${response.status} ${response.statusText}`);
+    return (await response.json()) as T;
+  }
+
   async function load(): Promise<void> {
     try {
-      const response = await fetch('data/elections.json');
-      if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
-      data = (await response.json()) as SiteData;
+      [data, sketches, references] = await Promise.all([
+        json<SiteData>('data/elections.json'),
+        json<Sketches>('data/sketches.json'),
+        json<References>('data/references.json'),
+      ]);
     } catch (e) {
       error = e instanceof Error ? e.message : String(e);
     }
@@ -67,7 +77,7 @@
       </header>
 
       {#if page === 'vote'}
-        <Hierarchies />
+        <Vote {sketches} {references} />
       {:else if page === 'law'}
         <Protocol />
       {:else if page === 'allocation'}
@@ -94,7 +104,7 @@
   {:else if page === 'impressum'}
     <Impressum elections={data?.elections ?? []} />
   {:else if page === 'style'}
-    <StyleGuide />
+    <StyleGuide {sketches} />
   {/if}
 </main>
 

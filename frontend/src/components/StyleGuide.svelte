@@ -3,6 +3,11 @@
   // second copy of a value, so it cannot drift from what the site uses.
   import { COLORS, PARTY_COLORS, FONTS, LAYOUT } from '../lib/tokens';
   import type { ColorToken } from '../lib/tokens';
+  import type { Sketches } from '../lib/types';
+  import Plate from './Plate.svelte';
+
+  /** The drawing style guide's plates, drawn by wahlwerk-ui (sketch/guide.py). */
+  export let sketches: Sketches | null = null;
 
   const colors = Object.entries(COLORS);
   const parties = Object.entries(PARTY_COLORS);
@@ -129,6 +134,27 @@
         <dd>{text}</dd>
       {/each}
     </dl>
+  </section>
+  <section>
+    <h2>Drawings</h2>
+    <p>
+      Sketches and chamber plots are drawn in code by wahlwerk-ui, in the style of a technical
+      drawing: thin lines, the construction left visible, one face for every label, the subject the
+      only saturated colour. The rules are its
+      <a href="https://github.com/wahlwerk/wahlwerk-ui/blob/main/STYLE.md">STYLE.md</a>, step by
+      step; the party colours have
+      <a href="https://github.com/wahlwerk/wahlwerk-ui/blob/main/docs/party-colours.md">a page of
+      their own</a>, and <code>PARTY_COLORS</code> above copies them. The plates below are drawn
+      with the library they describe.
+    </p>
+    {#if sketches}
+      {#each sketches.style as plate (plate.name)}
+        <h3>{plate.title}</h3>
+        <Plate {plate} />
+      {/each}
+    {:else}
+      <p class="muted">Loading the drawings …</p>
+    {/if}
   </section>
 </article>
 

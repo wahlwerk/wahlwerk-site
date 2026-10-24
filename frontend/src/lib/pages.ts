@@ -24,9 +24,9 @@ export const COMPONENTS: ComponentPage[] = [
     role: 'input',
     title: 'Vote',
     lede:
-      'What the electorate recorded: a tally of rows, one per unit, section and party, with its source. The vote holds no law.',
+      'How many choices become one record: who votes, on what, and what is recorded. The vote is input and holds no law.',
     card:
-      'The tally as the engine reads it: units from Land to Wahlbezirk, and the two hierarchies they belong to.',
+      'What a vote is: the electorate and the members of a body, what they vote on, and the tally a popular vote leaves.',
   },
   {
     id: 'law',

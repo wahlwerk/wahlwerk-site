@@ -40,14 +40,20 @@ export const COLORS: Record<string, ColorToken> = {
  * falls back to `party-other`.
  */
 export const PARTY_COLORS: Record<string, ColorToken> = {
+  // Copied from wahlwerk-ui's src/wahlwerk_ui/parties.py: change them there first.
   afd:          { light: '#0a8fcf', dark: '#3aa9e0', usage: 'AfD' },
+  bsw:          { light: '#6d2a55', dark: '#b0619a', usage: 'BSW' },
   cdu:          { light: '#2a2c31', dark: '#c9c7c0', usage: 'CDU' },
-  spd:          { light: '#d0141e', dark: '#ec4a4f', usage: 'SPD' },
+  'cdu-csu':    { light: '#2a2c31', dark: '#c9c7c0', usage: 'CDU/CSU, the caucus' },
+  csu:          { light: '#0080c8', dark: '#3a9ee0', usage: 'CSU' },
+  fdp:          { light: '#d9a800', dark: '#f0c93a', usage: 'FDP' },
+  fw:           { light: '#e58a00', dark: '#f5ab40', usage: 'Freie Wähler' },
   gruene:       { light: '#3e8a25', dark: '#62b046', usage: 'BÜNDNIS 90/DIE GRÜNEN' },
   linke:        { light: '#b3276d', dark: '#dc5a98', usage: 'Die Linke' },
-  bsw:          { light: '#6d2a55', dark: '#b0619a', usage: 'BSW' },
-  fdp:          { light: '#d9a800', dark: '#f0c93a', usage: 'FDP' },
   npd:          { light: '#7a4a1f', dark: '#b07a48', usage: 'NPD' },
+  pds:          { light: '#b3276d', dark: '#dc5a98', usage: 'PDS' },
+  spd:          { light: '#d0141e', dark: '#ec4a4f', usage: 'SPD' },
+  ssw:          { light: '#003c8f', dark: '#4f7fcf', usage: 'SSW' },
   'party-other': { light: '#8a8d96', dark: '#6f727a', usage: 'Any party without its own colour' },
 };
 
