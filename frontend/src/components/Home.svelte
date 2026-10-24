@@ -121,11 +121,11 @@
     color: var(--muted);
   }
 
-  /* Four components in one row where there is room, 2x2 below that, then a
+  /* The components in one row where there is room, two per row below that, then a
      stack: the flow reads left to right, then top to bottom. */
   .cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 20px;
     width: 100%;
   }

@@ -33,6 +33,9 @@
     <path d="M3 12h6" />
     <circle cx="10.5" cy="12" r="1.5" />
     <path d="M12 11l7-5M12 12h7M12 13l7 5" />
+  {:else if name === 'formulas'}
+    <!-- a sum sign -->
+    <path d="M17 5H7l6 7-6 7h10" />
   {:else}
     <!-- a hemicycle -->
     <path d="M3 19a9 9 0 0 1 18 0" />

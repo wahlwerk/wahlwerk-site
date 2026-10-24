@@ -1,4 +1,5 @@
 import App from './App.svelte';
+import 'katex/dist/katex.min.css';
 import './app.css';
 import { installTokens } from './lib/tokens';
 

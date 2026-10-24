@@ -105,3 +105,50 @@ export interface References {
   /** From each bundle's [source], by bundle key. */
   data: Record<string, DataSource>;
 }
+
+/** A piece of running text from a wahlwerk-calc docstring (formulas.py). */
+export type Segment =
+  | { text: string }
+  | { strong: string }
+  | { math: string }
+  | { code: string }
+  | { cite: string[] };
+
+/** One block of a module's docstring: a paragraph, a list, a display formula, a table. */
+export type Block =
+  | { p: Segment[] }
+  | { list: Segment[][] }
+  | { math: string }
+  | { table: { head: Segment[][]; rows: Segment[][][] } };
+
+export interface CalcFunction {
+  name: string;
+  /** Full dotted name, e.g. wahlwerk_calc.divisor.sainte_lague. */
+  qualname: string;
+  kind: 'function' | 'class';
+  /** The first paragraph of its docstring. */
+  summary: Segment[];
+}
+
+export interface CalcModule {
+  name: string;
+  qualname: string;
+  title: Segment[];
+  body: Block[];
+  functions: CalcFunction[];
+  /** BibTeX keys, in the order the module cites them. */
+  cites: string[];
+}
+
+export interface CalcSymbol {
+  latex: string;
+  meaning: string;
+  group: string;
+}
+
+/** docs/data/formulas.json: wahlwerk-calc's formulas, read from its docstrings. */
+export interface Formulas {
+  calc: string;
+  symbols: CalcSymbol[];
+  layers: { title: string; modules: CalcModule[] }[];
+}

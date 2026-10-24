@@ -2,7 +2,7 @@
   // Root: loads the numbers build.py derived, follows the location hash to a
   // page, and frames it with the top bar and the footer.
   import { onMount } from 'svelte';
-  import type { References, SiteData, Sketches } from './lib/types';
+  import type { Formulas as FormulasData, References, SiteData, Sketches } from './lib/types';
   import { COMPONENTS, href, pageFromHash } from './lib/pages';
   import type { PageId } from './lib/pages';
   import ThemeToggle from './components/ThemeToggle.svelte';
@@ -12,12 +12,14 @@
   import Protocol from './components/Protocol.svelte';
   import Pieces from './components/Pieces.svelte';
   import Results from './components/Results.svelte';
+  import Formulas from './components/Formulas.svelte';
   import Impressum from './components/Impressum.svelte';
   import StyleGuide from './components/StyleGuide.svelte';
 
   let data: SiteData | null = null;
   let sketches: Sketches | null = null;
   let references: References | null = null;
+  let formulas: FormulasData | null = null;
   let error: string | null = null;
   let page: PageId = pageFromHash(window.location.hash);
 
@@ -30,7 +32,7 @@
   let content: HTMLElement | null = null;
   /** Below WIDE_MIN_PX the side panel is a drawer, closed until the menu button opens it. */
   let drawerOpen = false;
-  $: contentKey = `${page}:${data ? 1 : 0}:${sketches ? 1 : 0}:${references ? 1 : 0}`;
+  $: contentKey = `${page}:${data ? 1 : 0}:${sketches ? 1 : 0}:${references ? 1 : 0}:${formulas ? 1 : 0}`;
 
   function follow(): void {
     const id = window.location.hash.replace(/^#\/?/, '');
@@ -58,10 +60,11 @@
 
   async function load(): Promise<void> {
     try {
-      [data, sketches, references] = await Promise.all([
+      [data, sketches, references, formulas] = await Promise.all([
         json<SiteData>('data/elections.json'),
         json<Sketches>('data/sketches.json'),
         json<References>('data/references.json'),
+        json<FormulasData>('data/formulas.json'),
       ]);
     } catch (e) {
       error = e instanceof Error ? e.message : String(e);
@@ -119,6 +122,8 @@
         <Protocol />
       {:else if page === 'allocation'}
         <Pieces />
+      {:else if page === 'formulas'}
+        <Formulas {formulas} {references} />
       {:else if data}
         <Results elections={data.elections} />
       {:else if error}

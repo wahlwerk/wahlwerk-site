@@ -1,0 +1,2639 @@
+{
+ "calc": "0.1.0",
+ "symbols": [
+  {
+   "latex": "i, j",
+   "meaning": "a key: a party, a caucus, a Land; whatever is apportioned to",
+   "group": "keys"
+  },
+  {
+   "latex": "n",
+   "meaning": "the number of keys",
+   "group": "keys"
+  },
+  {
+   "latex": "v_i",
+   "meaning": "the votes (or any weight) of key i",
+   "group": "votes"
+  },
+  {
+   "latex": "V = \\sum_i v_i",
+   "meaning": "the total votes",
+   "group": "votes"
+  },
+  {
+   "latex": "p_i = v_i / V",
+   "meaning": "the vote share of key i",
+   "group": "votes"
+  },
+  {
+   "latex": "s_i",
+   "meaning": "the seats of key i",
+   "group": "seats"
+  },
+  {
+   "latex": "S = \\sum_i s_i",
+   "meaning": "the seats to give: the house size",
+   "group": "seats"
+  },
+  {
+   "latex": "q_i = s_i / S",
+   "meaning": "the seat share of key i",
+   "group": "seats"
+  },
+  {
+   "latex": "m_i",
+   "meaning": "the minimum seats of key i, e.g. Wahlkreise won outright",
+   "group": "seats"
+  },
+  {
+   "latex": "Q",
+   "meaning": "a quota: the votes one seat is worth",
+   "group": "methods"
+  },
+  {
+   "latex": "D",
+   "meaning": "a divisor: the votes per seat that rounds to the house size",
+   "group": "methods"
+  },
+  {
+   "latex": "\\sigma(k)",
+   "meaning": "a signpost: where a quotient rounds up from k to k + 1 seats",
+   "group": "methods"
+  },
+  {
+   "latex": "\\theta",
+   "meaning": "a legal threshold, as a share of the votes",
+   "group": "methods"
+  },
+  {
+   "latex": "M",
+   "meaning": "the members a majority is reckoned on",
+   "group": "majorities"
+  },
+  {
+   "latex": "\\operatorname{maj}(M) = \\lfloor M/2 \\rfloor + 1",
+   "meaning": "a majority of M",
+   "group": "majorities"
+  },
+  {
+   "latex": "C",
+   "meaning": "a coalition: a set of keys",
+   "group": "majorities"
+  },
+  {
+   "latex": "w(C) = \\sum_{i \\in C} s_i",
+   "meaning": "the seats of a coalition",
+   "group": "majorities"
+  },
+  {
+   "latex": "T",
+   "meaning": "the quota of a weighted vote: the seats a coalition needs",
+   "group": "majorities"
+  },
+  {
+   "latex": "\\eta_i",
+   "meaning": "the coalitions for which key i is pivotal (swings)",
+   "group": "power"
+  },
+  {
+   "latex": "\\beta_i, \\phi_i",
+   "meaning": "the Banzhaf and Shapley-Shubik indices of key i",
+   "group": "power"
+  },
+  {
+   "latex": "H, N",
+   "meaning": "concentration (Herfindahl) and the effective number of keys",
+   "group": "measures"
+  }
+ ],
+ "layers": [
+  {
+   "title": "Shares, quotas, the seat result",
+   "modules": [
+    {
+     "name": "share",
+     "qualname": "wahlwerk_calc.share",
+     "title": [
+      {
+       "text": "Shares: each key's part of the whole, the first step of most formulas."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "With "
+        },
+        {
+         "math": "v_i"
+        },
+        {
+         "text": " the votes of key "
+        },
+        {
+         "math": "i"
+        },
+        {
+         "text": " and "
+        },
+        {
+         "math": "V = \\sum_i v_i"
+        },
+        {
+         "text": ", the vote share is "
+        },
+        {
+         "math": "p_i = v_i / V"
+        },
+        {
+         "text": "; for seats "
+        },
+        {
+         "math": "s_i"
+        },
+        {
+         "text": " and "
+        },
+        {
+         "math": "S = \\sum_i s_i"
+        },
+        {
+         "text": " the seat share is "
+        },
+        {
+         "math": "q_i = s_i / S"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "share_array",
+       "qualname": "wahlwerk_calc.share.share_array",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The shares of checked input, keys on the last axis (exact or float)."
+        }
+       ]
+      },
+      {
+       "name": "shares",
+       "qualname": "wahlwerk_calc.share.shares",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Each key's share "
+        },
+        {
+         "math": "p_i = v_i / V"
+        },
+        {
+         "text": "; raises "
+        },
+        {
+         "code": "ValueError"
+        },
+        {
+         "text": " when "
+        },
+        {
+         "math": "V = 0"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "total",
+       "qualname": "wahlwerk_calc.share.total",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The sum "
+        },
+        {
+         "math": "V = \\sum_i v_i"
+        },
+        {
+         "text": ": a number, or one per scenario."
+        }
+       ]
+      }
+     ],
+     "cites": []
+    },
+    {
+     "name": "quota",
+     "qualname": "wahlwerk_calc.quota",
+     "title": [
+      {
+       "text": "Quotas: the votes one seat is worth, given "
+      },
+      {
+       "math": "V"
+      },
+      {
+       "text": " votes and "
+      },
+      {
+       "math": "S"
+      },
+      {
+       "text": " seats."
+      }
+     ],
+     "body": [
+      {
+       "table": {
+        "head": [
+         [
+          {
+           "text": "quota"
+          }
+         ],
+         [
+          {
+           "math": "Q"
+          }
+         ]
+        ],
+        "rows": [
+         [
+          [
+           {
+            "text": "Hare"
+           }
+          ],
+          [
+           {
+            "math": "V / S"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Hagenbach-Bischoff"
+           }
+          ],
+          [
+           {
+            "math": "V / (S + 1)"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Droop"
+           }
+          ],
+          [
+           {
+            "math": "\\lfloor V / (S + 1) \\rfloor + 1"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Imperiali"
+           }
+          ],
+          [
+           {
+            "math": "V / (S + 2)"
+           }
+          ]
+         ]
+        ]
+       }
+      },
+      {
+       "p": [
+        {
+         "text": "Each is a plain function of two numbers, "
+        },
+        {
+         "code": "quota(V, S)"
+        },
+        {
+         "text": ", exact for exact input; the largest remainder methods ("
+        },
+        {
+         "code": "remainder"
+        },
+        {
+         "text": ") take any of them."
+        }
+       ]
+      },
+      {
+       "p": [
+        {
+         "code": "whole_seats()"
+        },
+        {
+         "text": " is the first step of every quota method, "
+        },
+        {
+         "math": "\\lfloor v_i / Q \\rfloor"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "droop",
+       "qualname": "wahlwerk_calc.quota.droop",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Droop: "
+        },
+        {
+         "math": "Q = \\lfloor V / (S + 1) \\rfloor + 1"
+        },
+        {
+         "text": ", the smallest whole number of votes that only "
+        },
+        {
+         "math": "S"
+        },
+        {
+         "text": " keys can reach."
+        }
+       ]
+      },
+      {
+       "name": "hagenbach_bischoff",
+       "qualname": "wahlwerk_calc.quota.hagenbach_bischoff",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Hagenbach-Bischoff: "
+        },
+        {
+         "math": "Q = V / (S + 1)"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "hare",
+       "qualname": "wahlwerk_calc.quota.hare",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Hare: "
+        },
+        {
+         "math": "Q = V / S"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "imperiali",
+       "qualname": "wahlwerk_calc.quota.imperiali",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Imperiali (quota): "
+        },
+        {
+         "math": "Q = V / (S + 2)"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "whole_seats",
+       "qualname": "wahlwerk_calc.quota.whole_seats",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The whole seats a quota gives: "
+        },
+        {
+         "math": "\\lfloor v / Q \\rfloor"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "cites": []
+    },
+    {
+     "name": "result",
+     "qualname": "wahlwerk_calc.result",
+     "title": [
+      {
+       "text": "The result of a seat formula: the seats decided, and the seats still tied."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "A seat formula never lets order decide equal claims. Where the claims for the last seats are exactly equal, it decides what it can and reports the rest: which keys are tied and how many seats they share, one each. That is a result, not an error; a law that cannot go on without the lot raises on it, a person exploring a formula reads it."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "SeatResult",
+       "qualname": "wahlwerk_calc.result.SeatResult",
+       "kind": "class",
+       "summary": [
+        {
+         "text": "Seats per key, shaped like the input of the formula that made it."
+        }
+       ]
+      }
+     ],
+     "cites": []
+    }
+   ]
+  },
+  {
+   "title": "Seat formulas",
+   "modules": [
+    {
+     "name": "divisor",
+     "qualname": "wahlwerk_calc.divisor",
+     "title": [
+      {
+       "text": "Divisor methods (highest averages): seats in proportion, by one common divisor."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "A divisor method gives key "
+        },
+        {
+         "math": "i"
+        },
+        {
+         "text": " the seats"
+        }
+       ]
+      },
+      {
+       "math": "s_i = \\#\\{\\, k \\ge 0 : v_i / D > \\sigma(k) \\,\\}"
+      },
+      {
+       "p": [
+        {
+         "text": "for a divisor "
+        },
+        {
+         "math": "D"
+        },
+        {
+         "text": " chosen so that "
+        },
+        {
+         "math": "\\sum_i s_i = S"
+        },
+        {
+         "text": ": each key's votes over the divisor, rounded by the method's "
+        },
+        {
+         "strong": "signposts"
+        },
+        {
+         "text": " "
+        },
+        {
+         "math": "\\sigma(0) < \\sigma(1) < \\dots"
+        },
+        {
+         "text": " ("
+        },
+        {
+         "math": "\\sigma(k)"
+        },
+        {
+         "text": " lies between "
+        },
+        {
+         "math": "k"
+        },
+        {
+         "text": " and "
+        },
+        {
+         "math": "k+1"
+        },
+        {
+         "text": "; a quotient above it rounds up to "
+        },
+        {
+         "math": "k+1"
+        },
+        {
+         "text": "). Equivalently, seat "
+        },
+        {
+         "math": "k+1"
+        },
+        {
+         "text": " of key "
+        },
+        {
+         "math": "i"
+        },
+        {
+         "text": " is claimed by "
+        },
+        {
+         "math": "v_i/\\sigma(k)"
+        },
+        {
+         "text": ", and the "
+        },
+        {
+         "math": "S"
+        },
+        {
+         "text": " largest claims win "
+        },
+        {
+         "cite": [
+          "Balinski.FairRepresentationMeeting.2001",
+          "Pukelsheim.ProportionalRepresentationApportionment.2017"
+         ]
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "p": [
+        {
+         "text": "The signposts name the method:"
+        }
+       ]
+      },
+      {
+       "table": {
+        "head": [
+         [
+          {
+           "text": "method"
+          }
+         ],
+         [
+          {
+           "math": "\\sigma(k)"
+          }
+         ],
+         [
+          {
+           "text": "divisors (claims)"
+          }
+         ]
+        ],
+        "rows": [
+         [
+          [
+           {
+            "text": "D'Hondt (Jefferson)"
+           }
+          ],
+          [
+           {
+            "math": "k+1"
+           }
+          ],
+          [
+           {
+            "text": "1, 2, 3, ..."
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Sainte-Laguë (Webster)"
+           }
+          ],
+          [
+           {
+            "math": "k+\\tfrac12"
+           }
+          ],
+          [
+           {
+            "text": "1, 3, 5, ... (scaled)"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Adams"
+           }
+          ],
+          [
+           {
+            "math": "k"
+           }
+          ],
+          [
+           {
+            "text": "0, 1, 2, ..."
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Danish"
+           }
+          ],
+          [
+           {
+            "math": "k+\\tfrac13"
+           }
+          ],
+          [
+           {
+            "text": "1, 4, 7, ... (scaled)"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Imperiali"
+           }
+          ],
+          [
+           {
+            "math": "k+2"
+           }
+          ],
+          [
+           {
+            "text": "2, 3, 4, ..."
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "modified Sainte-Laguë"
+           }
+          ],
+          [
+           {
+            "math": "0.7"
+           },
+           {
+            "text": ", then "
+           },
+           {
+            "math": "k+\\tfrac12"
+           }
+          ],
+          [
+           {
+            "text": "1.4, 3, 5, ... (scaled)"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Dean"
+           }
+          ],
+          [
+           {
+            "math": "k(k+1)/(k+\\tfrac12)"
+           }
+          ],
+          [
+           {
+            "text": "harmonic mean"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Huntington-Hill"
+           }
+          ],
+          [
+           {
+            "math": "\\sqrt{k(k+1)}"
+           }
+          ],
+          [
+           {
+            "text": "geometric mean"
+           }
+          ]
+         ]
+        ]
+       }
+      },
+      {
+       "p": [
+        {
+         "text": "Exact input is computed exactly, but fast: the claims are ranked in floating point to find the last seat, and the last seat and the counts around it are then checked in exact arithmetic, so a tie is found exactly as the law means it. Floating-point input stays floating point. A 2-D input is apportioned row by row."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "Signposts",
+       "qualname": "wahlwerk_calc.divisor.Signposts",
+       "kind": "class",
+       "summary": [
+        {
+         "text": "The rounding of a divisor method: "
+        },
+        {
+         "math": "\\sigma(k)"
+        },
+        {
+         "text": ", the point between "
+        },
+        {
+         "math": "k"
+        },
+        {
+         "text": " and "
+        },
+        {
+         "math": "k+1"
+        },
+        {
+         "text": " seats."
+        }
+       ]
+      },
+      {
+       "name": "adams",
+       "qualname": "wahlwerk_calc.divisor.adams",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Adams: "
+        },
+        {
+         "math": "\\sigma(k) = k"
+        },
+        {
+         "text": ", rounding up. Favours smaller keys."
+        }
+       ]
+      },
+      {
+       "name": "d_hondt",
+       "qualname": "wahlwerk_calc.divisor.d_hondt",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "D'Hondt (Jefferson): "
+        },
+        {
+         "math": "\\sigma(k) = k + 1"
+        },
+        {
+         "text": ". Favours larger keys."
+        }
+       ]
+      },
+      {
+       "name": "danish",
+       "qualname": "wahlwerk_calc.divisor.danish",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The Danish method: "
+        },
+        {
+         "math": "\\sigma(k) = k + \\tfrac13"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "dean",
+       "qualname": "wahlwerk_calc.divisor.dean",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Dean: "
+        },
+        {
+         "math": "\\sigma(k) = k(k+1)/(k+\\tfrac12)"
+        },
+        {
+         "text": ", the harmonic mean."
+        }
+       ]
+      },
+      {
+       "name": "divisor_range",
+       "qualname": "wahlwerk_calc.divisor.divisor_range",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Every divisor strictly between the two numbers returned gives the apportionment of "
+        },
+        {
+         "code": "seats"
+        },
+        {
+         "text": ": the claims of the last seat won and the first seat lost, "
+        },
+        {
+         "math": "(c_{S+1}, c_S)"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "highest_averages",
+       "qualname": "wahlwerk_calc.divisor.highest_averages",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Apportion "
+        },
+        {
+         "code": "seats"
+        },
+        {
+         "text": " by the divisor method with "
+        },
+        {
+         "code": "signposts"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "huntington_hill",
+       "qualname": "wahlwerk_calc.divisor.huntington_hill",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Huntington-Hill: "
+        },
+        {
+         "math": "\\sigma(k) = \\sqrt{k(k+1)}"
+        },
+        {
+         "text": ", the geometric mean."
+        }
+       ]
+      },
+      {
+       "name": "imperiali",
+       "qualname": "wahlwerk_calc.divisor.imperiali",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Imperiali: "
+        },
+        {
+         "math": "\\sigma(k) = k + 2"
+        },
+        {
+         "text": ". Favours larger keys more than D'Hondt."
+        }
+       ]
+      },
+      {
+       "name": "modified_sainte_lague",
+       "qualname": "wahlwerk_calc.divisor.modified_sainte_lague",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Modified Sainte-Laguë: "
+        },
+        {
+         "math": "\\sigma(0) = 0.7"
+        },
+        {
+         "text": ", then "
+        },
+        {
+         "math": "k + \\tfrac12"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "sainte_lague",
+       "qualname": "wahlwerk_calc.divisor.sainte_lague",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Sainte-Laguë/Schepers (Webster): "
+        },
+        {
+         "math": "\\sigma(k) = k + \\tfrac12"
+        },
+        {
+         "text": ", standard rounding. Neutral between large and small keys."
+        }
+       ]
+      },
+      {
+       "name": "seats_at",
+       "qualname": "wahlwerk_calc.divisor.seats_at",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The seats a given divisor "
+        },
+        {
+         "math": "D"
+        },
+        {
+         "text": " gives: "
+        },
+        {
+         "math": "s_i = \\#\\{k : v_i/D > \\sigma(k)\\}"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "cites": [
+      "Balinski.FairRepresentationMeeting.2001",
+      "Pukelsheim.ProportionalRepresentationApportionment.2017"
+     ]
+    },
+    {
+     "name": "remainder",
+     "qualname": "wahlwerk_calc.remainder",
+     "title": [
+      {
+       "text": "Largest remainder methods (quota methods): whole seats, then the largest remainders."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "Each key first gets the whole part of its votes over the quota "
+        },
+        {
+         "math": "Q"
+        },
+        {
+         "text": ", and the seats left go one each to the largest remainders:"
+        }
+       ]
+      },
+      {
+       "math": "s_i = \\lfloor v_i / Q \\rfloor + [\\, i \\text{ among the } S - \\textstyle\\sum_j \\lfloor v_j/Q \\rfloor \\text{ largest } v_i/Q - \\lfloor v_i/Q \\rfloor \\,]"
+      },
+      {
+       "p": [
+        {
+         "text": "With the Hare quota this is Hare/Niemeyer (Hamilton) "
+        },
+        {
+         "cite": [
+          "Pukelsheim.ProportionalRepresentationApportionment.2017"
+         ]
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "hare_niemeyer",
+       "qualname": "wahlwerk_calc.remainder.hare_niemeyer",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Hare/Niemeyer (Hamilton): the Hare quota "
+        },
+        {
+         "math": "Q = V/S"
+        },
+        {
+         "text": ", so "
+        },
+        {
+         "math": "v_i/Q = p_i S"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "largest_remainder",
+       "qualname": "wahlwerk_calc.remainder.largest_remainder",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Apportion "
+        },
+        {
+         "code": "seats"
+        },
+        {
+         "text": ": "
+        },
+        {
+         "math": "\\lfloor v_i/Q \\rfloor"
+        },
+        {
+         "text": " each, then the largest remainders."
+        }
+       ]
+      }
+     ],
+     "cites": [
+      "Pukelsheim.ProportionalRepresentationApportionment.2017"
+     ]
+    },
+    {
+     "name": "plurality",
+     "qualname": "wahlwerk_calc.plurality",
+     "title": [
+      {
+       "text": "Plurality: the keys with the most votes win, one seat each."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "With one seat this is first past the post, the rule of a Wahlkreis: the key with the most votes wins, "
+        },
+        {
+         "math": "\\arg\\max_i v_i"
+        },
+        {
+         "text": ", and equal tops are a tie. With "
+        },
+        {
+         "math": "S"
+        },
+        {
+         "text": " seats it is the single non-transferable vote: the "
+        },
+        {
+         "math": "S"
+        },
+        {
+         "text": " keys with the most votes."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "plurality",
+       "qualname": "wahlwerk_calc.plurality.plurality",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The "
+        },
+        {
+         "code": "seats"
+        },
+        {
+         "text": " keys with the most votes, one seat each; a key without votes wins nothing. Raises "
+        },
+        {
+         "code": "ValueError"
+        },
+        {
+         "text": " for more seats than keys with votes."
+        }
+       ]
+      }
+     ],
+     "cites": []
+    }
+   ]
+  },
+  {
+   "title": "Clauses around them",
+   "modules": [
+    {
+     "name": "majority",
+     "qualname": "wahlwerk_calc.majority",
+     "title": [
+      {
+       "text": "Majorities: how many are needed, and the clause that secures one."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "With "
+        },
+        {
+         "math": "M"
+        },
+        {
+         "text": " members (or votes cast, whichever the rule counts), a majority of "
+        },
+        {
+         "math": "M"
+        },
+        {
+         "text": " is more than half,"
+        }
+       ]
+      },
+      {
+       "math": "\\operatorname{maj}(M) = \\lfloor M / 2 \\rfloor + 1,"
+      },
+      {
+       "p": [
+        {
+         "text": "and a qualified majority of a share "
+        },
+        {
+         "math": "r"
+        },
+        {
+         "text": " (two thirds, say) is at least that share, "
+        },
+        {
+         "math": "\\lceil r M \\rceil"
+        },
+        {
+         "text": ", or more than it, "
+        },
+        {
+         "math": "\\lfloor r M \\rfloor + 1"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "is_majority",
+       "qualname": "wahlwerk_calc.majority.is_majority",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Whether "
+        },
+        {
+         "code": "yes"
+        },
+        {
+         "text": " reaches the majority of "
+        },
+        {
+         "code": "base"
+        },
+        {
+         "text": ": more than "
+        },
+        {
+         "code": "share"
+        },
+        {
+         "text": " of it ("
+        },
+        {
+         "code": "is_strict"
+        },
+        {
+         "text": "), or at least that share. Vectorised over arrays."
+        }
+       ]
+      },
+      {
+       "name": "majority_first",
+       "qualname": "wahlwerk_calc.majority.majority_first",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Largest remainder with a majority clause: a key with more than half the votes, left with no more than half the seats, takes one of the remainder seats first (e.g. Sec. 35 (6) LWG LSA). The total stays "
+        },
+        {
+         "math": "S"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "majority_of",
+       "qualname": "wahlwerk_calc.majority.majority_of",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The smallest number above half: "
+        },
+        {
+         "math": "\\lfloor M/2 \\rfloor + 1"
+        },
+        {
+         "text": ". An "
+        },
+        {
+         "code": "int"
+        },
+        {
+         "text": ", or an array for an array of member counts."
+        }
+       ]
+      },
+      {
+       "name": "qualified_majority",
+       "qualname": "wahlwerk_calc.majority.qualified_majority",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The smallest whole number that is at least "
+        },
+        {
+         "code": "share"
+        },
+        {
+         "text": " of "
+        },
+        {
+         "math": "M"
+        },
+        {
+         "text": ", "
+        },
+        {
+         "math": "\\lceil r M \\rceil"
+        },
+        {
+         "text": "; with "
+        },
+        {
+         "code": "is_strict"
+        },
+        {
+         "text": ", more than it, "
+        },
+        {
+         "math": "\\lfloor r M \\rfloor + 1"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "cites": []
+    },
+    {
+     "name": "threshold",
+     "qualname": "wahlwerk_calc.threshold",
+     "title": [
+      {
+       "text": "Thresholds: which keys take part at all."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "Each returns, per key, whether it passes: a "
+        },
+        {
+         "code": "dict"
+        },
+        {
+         "text": " of booleans for keyed input, a boolean array otherwise. A legal threshold of a share "
+        },
+        {
+         "math": "\\theta"
+        },
+        {
+         "text": " (five percent) passes key "
+        },
+        {
+         "math": "i"
+        },
+        {
+         "text": " when "
+        },
+        {
+         "math": "p_i \\ge \\theta"
+        },
+        {
+         "text": ", i.e. "
+        },
+        {
+         "math": "v_i \\ge \\theta V"
+        },
+        {
+         "text": "; a Grundmandatsklausel passes keys that won at least so many seats outright. Combine masks with "
+        },
+        {
+         "code": "|"
+        },
+        {
+         "text": " (numpy) or "
+        },
+        {
+         "code": "or"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "count_threshold",
+       "qualname": "wahlwerk_calc.threshold.count_threshold",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Passes keys with "
+        },
+        {
+         "math": "v_i \\ge"
+        },
+        {
+         "text": " "
+        },
+        {
+         "code": "count"
+        },
+        {
+         "text": " (or "
+        },
+        {
+         "math": ">"
+        },
+        {
+         "text": " without "
+        },
+        {
+         "code": "accept_equal"
+        },
+        {
+         "text": ")."
+        }
+       ]
+      },
+      {
+       "name": "effective_threshold",
+       "qualname": "wahlwerk_calc.threshold.effective_threshold",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Taagepera's effective threshold of a district of magnitude "
+        },
+        {
+         "math": "m"
+        },
+        {
+         "text": ": "
+        },
+        {
+         "math": "T_{\\text{eff}} = \\tfrac{3}{4} / (m + 1)"
+        },
+        {
+         "text": ", the vote share at which a key tends to win its first seat "
+        },
+        {
+         "cite": [
+          "Taagepera.NationwideThresholdRepresentation.2002"
+         ]
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "seat_threshold",
+       "qualname": "wahlwerk_calc.threshold.seat_threshold",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Passes keys that already won at least "
+        },
+        {
+         "code": "seats"
+        },
+        {
+         "text": " seats (the Grundmandatsklausel: three Wahlkreise)."
+        }
+       ]
+      },
+      {
+       "name": "share_threshold",
+       "qualname": "wahlwerk_calc.threshold.share_threshold",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Passes keys with "
+        },
+        {
+         "math": "v_i \\ge \\theta V"
+        },
+        {
+         "text": " (\"mindestens\"), or "
+        },
+        {
+         "math": "v_i > \\theta V"
+        },
+        {
+         "text": " without "
+        },
+        {
+         "code": "accept_equal"
+        },
+        {
+         "text": " (\"mehr als\")."
+        }
+       ]
+      }
+     ],
+     "cites": [
+      "Taagepera.NationwideThresholdRepresentation.2002"
+     ]
+    },
+    {
+     "name": "compensation",
+     "qualname": "wahlwerk_calc.compensation",
+     "title": [
+      {
+       "text": "Überhang and Ausgleich: when keys hold more seats than their proportional share."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "In mixed systems a key may win more seats outright, in Wahlkreise, than the apportionment gives it: its Überhang, "
+        },
+        {
+         "math": "\\max(0, m_i - s_i)"
+        },
+        {
+         "text": " for a minimum "
+        },
+        {
+         "math": "m_i"
+        },
+        {
+         "text": ". Ausgleich grows the house "
+        },
+        {
+         "math": "S"
+        },
+        {
+         "text": " until the apportionment covers every minimum."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "overhang",
+       "qualname": "wahlwerk_calc.compensation.overhang",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Each key's Überhang "
+        },
+        {
+         "math": "\\max(0, m_i - s_i)"
+        },
+        {
+         "text": "; keys missing on one side count 0."
+        }
+       ]
+      },
+      {
+       "name": "remaining",
+       "qualname": "wahlwerk_calc.compensation.remaining",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The seats left to fill after those won outright, "
+        },
+        {
+         "math": "\\max(0, s_i - m_i)"
+        },
+        {
+         "text": ": a key's list seats. Keys missing on one side count 0."
+        }
+       ]
+      },
+      {
+       "name": "smallest_house",
+       "qualname": "wahlwerk_calc.compensation.smallest_house",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The apportionment of the smallest house "
+        },
+        {
+         "math": "S' \\ge S"
+        },
+        {
+         "text": " in which every key gets at least "
+        },
+        {
+         "math": "m_i"
+        },
+        {
+         "text": ": each house is apportioned afresh by "
+        },
+        {
+         "code": "method"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "cites": []
+    }
+   ]
+  },
+  {
+   "title": "Measures of a result",
+   "modules": [
+    {
+     "name": "proportionality",
+     "qualname": "wahlwerk_calc.proportionality",
+     "title": [
+      {
+       "text": "Disproportionality: how far seat shares "
+      },
+      {
+       "math": "q_i"
+      },
+      {
+       "text": " stray from vote shares "
+      },
+      {
+       "math": "p_i"
+      },
+      {
+       "text": "."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "Each index compares the two over the keys of both sides (a key missing on one side has 0 there) and returns one number per scenario, exact for exact input "
+        },
+        {
+         "cite": [
+          "Gallagher.ProportionalityDisproportionalityElectoral.1991"
+         ]
+        },
+        {
+         "text": ":"
+        }
+       ]
+      },
+      {
+       "table": {
+        "head": [
+         [
+          {
+           "text": "index"
+          }
+         ],
+         [
+          {
+           "text": "formula"
+          }
+         ],
+         [
+          {
+           "text": "proportional"
+          }
+         ]
+        ],
+        "rows": [
+         [
+          [
+           {
+            "text": "Loosemore-Hanby"
+           }
+          ],
+          [
+           {
+            "math": "\\tfrac12 \\sum_i |p_i - q_i|"
+           }
+          ],
+          [
+           {
+            "text": "0"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Rose"
+           }
+          ],
+          [
+           {
+            "math": "1 - \\mathrm{LH}"
+           }
+          ],
+          [
+           {
+            "text": "1"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Gallagher"
+           }
+          ],
+          [
+           {
+            "math": "\\sqrt{\\tfrac12 \\sum_i (p_i - q_i)^2}"
+           }
+          ],
+          [
+           {
+            "text": "0"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Rae"
+           }
+          ],
+          [
+           {
+            "math": "\\tfrac1n \\sum_i |p_i - q_i|"
+           }
+          ],
+          [
+           {
+            "text": "0"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Lijphart"
+           }
+          ],
+          [
+           {
+            "math": "\\max_i |p_i - q_i|"
+           }
+          ],
+          [
+           {
+            "text": "0"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Sainte-Laguë"
+           }
+          ],
+          [
+           {
+            "math": "\\sum_i (q_i - p_i)^2 / p_i"
+           }
+          ],
+          [
+           {
+            "text": "0"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "D'Hondt"
+           }
+          ],
+          [
+           {
+            "math": "\\max_i q_i / p_i"
+           }
+          ],
+          [
+           {
+            "text": "1"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "regression"
+           }
+          ],
+          [
+           {
+            "math": "\\sum_i p_i q_i / \\sum_i p_i^2"
+           }
+          ],
+          [
+           {
+            "text": "1"
+           }
+          ]
+         ]
+        ]
+       }
+      },
+      {
+       "p": [
+        {
+         "text": "The Gallagher index is a square root, so "
+        },
+        {
+         "code": "gallagher_squared()"
+        },
+        {
+         "text": " is the exact one and "
+        },
+        {
+         "code": "gallagher()"
+        },
+        {
+         "text": " its float root. "
+        },
+        {
+         "code": "advantage_ratio()"
+        },
+        {
+         "text": " is per key."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "advantage_ratio",
+       "qualname": "wahlwerk_calc.proportionality.advantage_ratio",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Per key, "
+        },
+        {
+         "math": "q_i / p_i"
+        },
+        {
+         "text": ": above 1 a key holds more seats than votes. A key without votes and without seats has 0; without votes but with seats, infinity ("
+        },
+        {
+         "code": "ValueError"
+        },
+        {
+         "text": " for exact input)."
+        }
+       ]
+      },
+      {
+       "name": "d_hondt",
+       "qualname": "wahlwerk_calc.proportionality.d_hondt",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "D'Hondt: "
+        },
+        {
+         "math": "\\max_i q_i / p_i"
+        },
+        {
+         "text": ", the index the D'Hondt method minimises; 1 when proportional. Raises "
+        },
+        {
+         "code": "ValueError"
+        },
+        {
+         "text": " if a key without votes won seats (infinite)."
+        }
+       ]
+      },
+      {
+       "name": "gallagher",
+       "qualname": "wahlwerk_calc.proportionality.gallagher",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Gallagher (least squares): "
+        },
+        {
+         "math": "\\sqrt{\\tfrac12 \\sum_i (p_i - q_i)^2}"
+        },
+        {
+         "text": ", a float "
+        },
+        {
+         "cite": [
+          "Gallagher.ProportionalityDisproportionalityElectoral.1991"
+         ]
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "gallagher_squared",
+       "qualname": "wahlwerk_calc.proportionality.gallagher_squared",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The square of the Gallagher (least squares) index, "
+        },
+        {
+         "math": "\\tfrac12 \\sum_i (p_i - q_i)^2"
+        },
+        {
+         "text": "; exact for exact input."
+        }
+       ]
+      },
+      {
+       "name": "lijphart",
+       "qualname": "wahlwerk_calc.proportionality.lijphart",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Lijphart: the largest deviation "
+        },
+        {
+         "math": "\\max_i |p_i - q_i|"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "loosemore_hanby",
+       "qualname": "wahlwerk_calc.proportionality.loosemore_hanby",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Loosemore-Hanby: "
+        },
+        {
+         "math": "\\tfrac12 \\sum_i |p_i - q_i|"
+        },
+        {
+         "text": "; 0 when proportional, up to 1."
+        }
+       ]
+      },
+      {
+       "name": "rae",
+       "qualname": "wahlwerk_calc.proportionality.rae",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Rae: the mean "
+        },
+        {
+         "math": "\\tfrac1n \\sum_i |p_i - q_i|"
+        },
+        {
+         "text": " over all "
+        },
+        {
+         "math": "n"
+        },
+        {
+         "text": " keys."
+        }
+       ]
+      },
+      {
+       "name": "regression",
+       "qualname": "wahlwerk_calc.proportionality.regression",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The regression index "
+        },
+        {
+         "math": "\\sum_i p_i q_i / \\sum_i p_i^2"
+        },
+        {
+         "text": ", the slope of seat shares on vote shares through the origin: above 1 favours large keys."
+        }
+       ]
+      },
+      {
+       "name": "rose",
+       "qualname": "wahlwerk_calc.proportionality.rose",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Rose: "
+        },
+        {
+         "math": "1 - \\tfrac12 \\sum_i |p_i - q_i|"
+        },
+        {
+         "text": "; 1 when proportional."
+        }
+       ]
+      },
+      {
+       "name": "sainte_lague",
+       "qualname": "wahlwerk_calc.proportionality.sainte_lague",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Sainte-Laguë: "
+        },
+        {
+         "math": "\\sum_i (q_i - p_i)^2 / p_i"
+        },
+        {
+         "text": ", the index the Sainte-Laguë method minimises. Raises "
+        },
+        {
+         "code": "ValueError"
+        },
+        {
+         "text": " if a key without votes won seats (infinite)."
+        }
+       ]
+      }
+     ],
+     "cites": [
+      "Gallagher.ProportionalityDisproportionalityElectoral.1991"
+     ]
+    },
+    {
+     "name": "fragmentation",
+     "qualname": "wahlwerk_calc.fragmentation",
+     "title": [
+      {
+       "text": "Fragmentation: how many keys matter, from their shares "
+      },
+      {
+       "math": "p_i"
+      },
+      {
+       "text": " (of votes or seats)."
+      }
+     ],
+     "body": [
+      {
+       "table": {
+        "head": [
+         [
+          {
+           "text": "measure"
+          }
+         ],
+         [
+          {
+           "text": "formula"
+          }
+         ]
+        ],
+        "rows": [
+         [
+          [
+           {
+            "text": "Herfindahl-Hirschman concentration"
+           }
+          ],
+          [
+           {
+            "math": "H = \\sum_i p_i^2"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Rae fractionalisation"
+           }
+          ],
+          [
+           {
+            "math": "F = 1 - H"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "effective number (Laakso-Taagepera)"
+           }
+          ],
+          [
+           {
+            "math": "N = 1 / H"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "Golosov"
+           }
+          ],
+          [
+           {
+            "math": "N_G = \\sum_i p_i / (p_i + p_1^2 - p_i^2)"
+           },
+           {
+            "text": ", "
+           },
+           {
+            "math": "p_1"
+           },
+           {
+            "text": " the largest"
+           }
+          ]
+         ],
+         [
+          [
+           {
+            "text": "largest share"
+           }
+          ],
+          [
+           {
+            "math": "p_1 = \\max_i p_i"
+           }
+          ]
+         ]
+        ]
+       }
+      },
+      {
+       "p": [
+        {
+         "text": "Votes or seats go in as counts; the shares are taken here "
+        },
+        {
+         "cite": [
+          "Laakso.EffectiveNumberParties.1979",
+          "Golosov.EffectiveNumberParties.2010"
+         ]
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "effective_number",
+       "qualname": "wahlwerk_calc.fragmentation.effective_number",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The effective number of parties (Laakso-Taagepera): "
+        },
+        {
+         "math": "N = 1 / \\sum_i p_i^2"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "fractionalization",
+       "qualname": "wahlwerk_calc.fragmentation.fractionalization",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Rae: "
+        },
+        {
+         "math": "F = 1 - \\sum_i p_i^2"
+        },
+        {
+         "text": ", the chance that two random votes differ."
+        }
+       ]
+      },
+      {
+       "name": "golosov",
+       "qualname": "wahlwerk_calc.fragmentation.golosov",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Golosov: "
+        },
+        {
+         "math": "N_G = \\sum_i p_i / (p_i + p_1^2 - p_i^2)"
+        },
+        {
+         "text": ", less sensitive to the largest key than "
+        },
+        {
+         "math": "N"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "herfindahl",
+       "qualname": "wahlwerk_calc.fragmentation.herfindahl",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Herfindahl-Hirschman: "
+        },
+        {
+         "math": "H = \\sum_i p_i^2"
+        },
+        {
+         "text": "; 1 for a single key."
+        }
+       ]
+      },
+      {
+       "name": "largest_share",
+       "qualname": "wahlwerk_calc.fragmentation.largest_share",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The share of the largest key, "
+        },
+        {
+         "math": "p_1 = \\max_i p_i"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "cites": [
+      "Laakso.EffectiveNumberParties.1979",
+      "Golosov.EffectiveNumberParties.2010"
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Coalitions and power",
+   "modules": [
+    {
+     "name": "coalition",
+     "qualname": "wahlwerk_calc.coalition",
+     "title": [
+      {
+       "text": "Coalitions: which groups of keys (caucuses) hold a majority of the seats."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "A coalition "
+        },
+        {
+         "math": "C"
+        },
+        {
+         "text": " of keys with seats "
+        },
+        {
+         "math": "s_i"
+        },
+        {
+         "text": " weighs "
+        },
+        {
+         "math": "w(C) = \\sum_{i\\in C} s_i"
+        },
+        {
+         "text": " and is "
+        },
+        {
+         "strong": "winning"
+        },
+        {
+         "text": " when "
+        },
+        {
+         "math": "w(C) \\ge T"
+        },
+        {
+         "text": ", the quota (by default the majority of all seats, "
+        },
+        {
+         "math": "T = \\lfloor S/2 \\rfloor + 1"
+        },
+        {
+         "text": "). It is "
+        },
+        {
+         "strong": "minimal winning"
+        },
+        {
+         "text": " when every member is needed, "
+        },
+        {
+         "math": "w(C) - s_i < T"
+        },
+        {
+         "text": " for each "
+        },
+        {
+         "math": "i \\in C"
+        },
+        {
+         "text": ", and "
+        },
+        {
+         "strong": "minimum winning"
+        },
+        {
+         "text": " when no winning coalition weighs less "
+        },
+        {
+         "cite": [
+          "Riker.TheoryPoliticalCoalitions.1962"
+         ]
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "p": [
+        {
+         "text": "Coalitions come back as "
+        },
+        {
+         "code": "frozenset"
+        },
+        {
+         "text": " of keys (indices for array input), heaviest first, then by their members. Every subset is checked, so this is for chambers of up to about twenty caucuses."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "is_winning",
+       "qualname": "wahlwerk_calc.coalition.is_winning",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Whether "
+        },
+        {
+         "math": "w(C) \\ge T"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "minimal_winning",
+       "qualname": "wahlwerk_calc.coalition.minimal_winning",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Every minimal winning coalition: winning, and losing without any one member."
+        }
+       ]
+      },
+      {
+       "name": "minimum_winning",
+       "qualname": "wahlwerk_calc.coalition.minimum_winning",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The winning coalitions of the smallest weight (the size principle)."
+        }
+       ]
+      },
+      {
+       "name": "surplus",
+       "qualname": "wahlwerk_calc.coalition.surplus",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The seats beyond the quota, "
+        },
+        {
+         "math": "w(C) - T"
+        },
+        {
+         "text": "; negative when short."
+        }
+       ]
+      },
+      {
+       "name": "weight",
+       "qualname": "wahlwerk_calc.coalition.weight",
+       "kind": "function",
+       "summary": [
+        {
+         "math": "w(C) = \\sum_{i \\in C} s_i"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "winning",
+       "qualname": "wahlwerk_calc.coalition.winning",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "Every winning coalition, "
+        },
+        {
+         "math": "w(C) \\ge T"
+        },
+        {
+         "text": "."
+        }
+       ]
+      }
+     ],
+     "cites": [
+      "Riker.TheoryPoliticalCoalitions.1962"
+     ]
+    },
+    {
+     "name": "power",
+     "qualname": "wahlwerk_calc.power",
+     "title": [
+      {
+       "text": "Power indices: how often a key decides, in a weighted vote with quota "
+      },
+      {
+       "math": "T"
+      },
+      {
+       "text": "."
+      }
+     ],
+     "body": [
+      {
+       "p": [
+        {
+         "text": "Key "
+        },
+        {
+         "math": "i"
+        },
+        {
+         "text": " is "
+        },
+        {
+         "strong": "pivotal"
+        },
+        {
+         "text": " (a swing) for a coalition "
+        },
+        {
+         "math": "C \\not\\ni i"
+        },
+        {
+         "text": " when "
+        },
+        {
+         "math": "w(C) < T \\le w(C) + s_i"
+        },
+        {
+         "text": ". With "
+        },
+        {
+         "math": "\\eta_i"
+        },
+        {
+         "text": " the number of such coalitions and "
+        },
+        {
+         "math": "n"
+        },
+        {
+         "text": " keys:"
+        }
+       ]
+      },
+      {
+       "list": [
+        [
+         {
+          "text": "Banzhaf "
+         },
+         {
+          "cite": [
+           "Banzhaf.WeightedVotingDoesnt.1965"
+          ]
+         },
+         {
+          "text": ", normalised: "
+         },
+         {
+          "math": "\\beta_i = \\eta_i / \\sum_j \\eta_j"
+         },
+         {
+          "text": "; absolute (Penrose): "
+         },
+         {
+          "math": "\\beta'_i = \\eta_i / 2^{n-1}"
+         },
+         {
+          "text": "."
+         }
+        ],
+        [
+         {
+          "text": "Shapley-Shubik "
+         },
+         {
+          "cite": [
+           "Shapley.MethodEvaluatingDistribution.1954"
+          ]
+         },
+         {
+          "text": ": the share of the "
+         },
+         {
+          "math": "n!"
+         },
+         {
+          "text": " orders in which "
+         },
+         {
+          "math": "i"
+         },
+         {
+          "text": " is pivotal, "
+         },
+         {
+          "math": "\\phi_i = \\sum_{C \\not\\ni i \\text{ swing}} |C|!\\,(n-|C|-1)!/n!"
+         },
+         {
+          "text": "."
+         }
+        ]
+       ]
+      },
+      {
+       "p": [
+        {
+         "text": "Weights must be whole (seats); the results are exact fractions, counted by dynamic programming over the weights, not by listing coalitions."
+        }
+       ]
+      }
+     ],
+     "functions": [
+      {
+       "name": "banzhaf",
+       "qualname": "wahlwerk_calc.power.banzhaf",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The normalised Banzhaf index "
+        },
+        {
+         "math": "\\beta_i = \\eta_i / \\sum_j \\eta_j"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "penrose",
+       "qualname": "wahlwerk_calc.power.penrose",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The absolute Banzhaf (Penrose) index "
+        },
+        {
+         "math": "\\beta'_i = \\eta_i / 2^{n-1}"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "shapley_shubik",
+       "qualname": "wahlwerk_calc.power.shapley_shubik",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The Shapley-Shubik index "
+        },
+        {
+         "math": "\\phi_i"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
+       "name": "swings",
+       "qualname": "wahlwerk_calc.power.swings",
+       "kind": "function",
+       "summary": [
+        {
+         "math": "\\eta_i"
+        },
+        {
+         "text": ", the coalitions for which key "
+        },
+        {
+         "math": "i"
+        },
+        {
+         "text": " is pivotal."
+        }
+       ]
+      }
+     ],
+     "cites": [
+      "Banzhaf.WeightedVotingDoesnt.1965",
+      "Shapley.MethodEvaluatingDistribution.1954"
+     ]
+    }
+   ]
+  }
+ ]
+}

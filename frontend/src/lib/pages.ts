@@ -1,16 +1,16 @@
 /**
- * The pages of the site and the hash routes that reach them. The four
- * component pages follow the engine's roles in order, so the home cards, the
+ * The pages of the site and the hash routes that reach them. The component
+ * pages follow the engine's roles in order, the formulas they compute with last, so the home cards, the
  * top navigation and the prev/next links all read from this one list.
  */
 
-export type ComponentId = 'vote' | 'law' | 'allocation' | 'chamber';
+export type ComponentId = 'vote' | 'law' | 'allocation' | 'chamber' | 'formulas';
 export type PageId = 'home' | ComponentId | 'impressum' | 'style';
 
 export interface ComponentPage {
   id: ComponentId;
   /** The engine's role for this component. */
-  role: 'input' | 'protocol' | 'process' | 'state';
+  role: 'input' | 'protocol' | 'process' | 'state' | 'formula';
   title: string;
   /** One sentence under the page title. */
   lede: string;
@@ -54,6 +54,15 @@ export const COMPONENTS: ComponentPage[] = [
       'The chamber the engine derives from the votes, equal to the official Sitzverteilung party by party.',
     card:
       'Every golden election seat by seat: Wahlkreis and list seats, votes and shares, and the source of each.',
+  },
+  {
+    id: 'formulas',
+    role: 'formula',
+    title: 'Formulas',
+    lede:
+      'Every formula the engine computes with, each written once in wahlwerk-calc: seat methods, quotas, thresholds, majorities, measures, coalitions and power.',
+    card:
+      'The arithmetic under every step, in one notation: divisor and quota methods, proportionality, the effective number of parties, Banzhaf and Shapley-Shubik.',
   },
 ];
 

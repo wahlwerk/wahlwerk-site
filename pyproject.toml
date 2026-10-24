@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "wahlwerk>=0.1.0",
+    "wahlwerk-calc>=0.1.0",
     "wahlwerk-ui>=0.1.0",
 ]
 
@@ -15,6 +16,7 @@ package = false
 
 [tool.uv.sources]
 wahlwerk = { path = "../wahlwerk", editable = true }
+wahlwerk-calc = { path = "../wahlwerk/calc", editable = true }
 wahlwerk-ui = { path = "../wahlwerk-ui", editable = true }
 
 [tool.mypy]

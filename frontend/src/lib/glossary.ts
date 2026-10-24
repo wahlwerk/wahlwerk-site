@@ -40,6 +40,10 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
   // units
   Land: { concept: 'unit', system: 'de', gloss: 'a federal state of Germany' },
   Wahlkreis: { concept: 'unit', system: 'de', gloss: 'an electoral district that elects one member by plurality' },
+  // seats
+  Überhang: { concept: 'overhang', system: 'de', gloss: 'seats a party won in Wahlkreise beyond its proportional share' },
+  Ausgleich: { concept: 'compensation', system: 'de', gloss: 'growing the house until every party\'s Wahlkreis seats are covered proportionally' },
+  Grundmandatsklausel: { concept: 'threshold', system: 'de', gloss: 'a party passes with enough Wahlkreis seats, whatever its share' },
   Wahlbezirk: { concept: 'unit', system: 'de', gloss: 'the smallest unit of a German election: one polling station, counted on its own' },
   Briefwahlbezirk: { concept: 'unit', system: 'de', gloss: 'a unit in which postal votes are counted; nobody is registered in it' },
   Gemeinde: { concept: 'unit', system: 'de', gloss: 'a municipality, a unit of the administrative hierarchy' },
