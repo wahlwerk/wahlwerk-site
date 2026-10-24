@@ -60,8 +60,12 @@ docs/                     <- GitHub Pages root, committed
 frontend/src/
   main.ts                 <- installs the tokens, mounts App
   app.css                 <- global element styles; colours and fonts via var(--...)
-  App.svelte              <- loads elections.json, follows the hash route, top bar and footer
+  App.svelte              <- loads the data, follows the hash route (a #place link scrolls and
+                             keeps the route), top bar, side panel, footer
   components/
+    Sidebar.svelte        <- the side panel, as in IR-bands: the pages on top, the outline of the
+                             page shown below (its h2/h3, read from the page, the one being read
+                             marked); docked from 1080 px, a drawer behind the menu button below
     Home.svelte           <- hero, live stats, one card per component
     Icon.svelte           <- one symbol per component, in currentColor
     Vote.svelte           <- Vote page: a vote, who votes, what is voted on, what is recorded
@@ -108,6 +112,9 @@ frontend/src/
   Running prose (a section's paragraphs and plain lists, `.prose`) is justified with
   hyphenation, list markers hang outside the column; below 600 px prose is ragged and
   markers sit inside. No component sets its own `max-width` on prose.
+- **The side panel** holds the site's pages and the page's outline, nothing else for now.
+  The outline is read from the page's headings, so a heading is the outline entry; a
+  heading that should not be listed sits inside `data-outline="skip"`.
 - **Phone width.** The page works at 390 px with a 16 px gutter and no sideways page scroll;
   wide tables scroll inside `.table-wrap`.
 - **Sources are named.** Every result shows its publisher, title, licence and attribution

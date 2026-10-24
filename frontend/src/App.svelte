@@ -6,6 +6,7 @@
   import { COMPONENTS, href, pageFromHash } from './lib/pages';
   import type { PageId } from './lib/pages';
   import ThemeToggle from './components/ThemeToggle.svelte';
+  import Sidebar from './components/Sidebar.svelte';
   import Home from './components/Home.svelte';
   import Vote from './components/Vote.svelte';
   import Protocol from './components/Protocol.svelte';
@@ -25,9 +26,28 @@
   $: prev = index > 0 ? COMPONENTS[index - 1] : null;
   $: next = index >= 0 && index < COMPONENTS.length - 1 ? COMPONENTS[index + 1] : null;
 
+  /** The page's own element, read by the side panel for its outline. */
+  let content: HTMLElement | null = null;
+  /** Below WIDE_MIN_PX the side panel is a drawer, closed until the menu button opens it. */
+  let drawerOpen = false;
+  $: contentKey = `${page}:${data ? 1 : 0}:${sketches ? 1 : 0}:${references ? 1 : 0}`;
+
   function follow(): void {
+    const id = window.location.hash.replace(/^#\/?/, '');
+    // A link to a place on the page (#law-de.bund.gg, #ref-key) is not a route: put the
+    // route back and scroll there, so the page shown stays the page shown.
+    if (window.location.hash && !window.location.hash.startsWith('#/') && document.getElementById(id)) {
+      history.replaceState(null, '', href(page));
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     page = pageFromHash(window.location.hash);
+    drawerOpen = false;
     window.scrollTo(0, 0);
+  }
+
+  function key(event: KeyboardEvent): void {
+    if (event.key === 'Escape') drawerOpen = false;
   }
 
   async function json<T>(path: string): Promise<T> {
@@ -50,22 +70,39 @@
 
   onMount(() => {
     window.addEventListener('hashchange', follow);
+    window.addEventListener('keydown', key);
     void load();
-    return () => window.removeEventListener('hashchange', follow);
+    return () => {
+      window.removeEventListener('hashchange', follow);
+      window.removeEventListener('keydown', key);
+    };
   });
 </script>
 
 <header class="bar">
+  <button
+    class="menu"
+    type="button"
+    on:click={() => (drawerOpen = !drawerOpen)}
+    aria-expanded={drawerOpen}
+    aria-controls="sidebar"
+    aria-label={drawerOpen ? 'Close the side panel' : 'Open the side panel'}>{drawerOpen ? '✕' : '☰'}</button
+  >
   <a class="brand" href={href('home')} aria-current={page === 'home' ? 'page' : undefined}>wahlwerk</a>
-  <nav aria-label="Components">
-    {#each COMPONENTS as c}
-      <a href={href(c.id)} class:active={page === c.id} aria-current={page === c.id ? 'page' : undefined}>{c.title}</a>
-    {/each}
-  </nav>
   <ThemeToggle />
 </header>
 
-<main class:wide={page === 'home'}>
+<div class="shell">
+  {#if drawerOpen}
+    <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+    <div class="backdrop" on:click={() => (drawerOpen = false)}></div>
+  {/if}
+  <aside id="sidebar" class="sidebar" class:open={drawerOpen} aria-label="Side panel">
+    <Sidebar {page} {contentKey} {content} on:navigate={() => (drawerOpen = false)} />
+  </aside>
+
+
+<main class:wide={page === 'home'} bind:this={content}>
   {#if page === 'home'}
     <Home {data} />
   {:else if component}
@@ -107,6 +144,7 @@
     <StyleGuide {sketches} />
   {/if}
 </main>
+</div>
 
 <footer>
   <p>
@@ -122,17 +160,20 @@
 </footer>
 
 <style>
+  /* The shell: the top bar across, then the side panel beside the page, then the
+     footer. From WIDE_MIN_PX (1080 px; a media query cannot read a token) the panel is
+     docked and sticky; below it, it is a drawer over the page, opened by the menu
+     button. */
   .bar,
-  main.wide,
+  .shell,
   footer {
-    max-width: var(--wide-width);
+    max-width: calc(var(--sidebar-width) + 48px + var(--wide-width));
+    margin-inline: auto;
   }
   .bar {
-    margin: 0 auto;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 10px 20px;
+    gap: 10px 16px;
     padding: 16px 0 14px;
     border-bottom: 2px solid var(--ink);
   }
@@ -140,43 +181,88 @@
     font: 650 1.25rem/1 var(--serif);
     text-decoration: none;
   }
-  .bar nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 18px;
-    flex: 1;
-    order: 2;
-  }
-  .bar :global(button) {
-    order: 1;
+  .bar :global(button:last-child) {
     margin-left: auto;
   }
-  @media (min-width: 600px) {
-    .bar nav { order: 0; }
-    .bar :global(button) { order: 0; }
-  }
-  @media (max-width: 599px) {
-    .bar nav { flex-basis: 100%; }
-  }
-  .bar nav a {
-    font: 500 0.9rem var(--sans);
-    color: var(--muted);
-    text-decoration: none;
-    padding: 4px 0;
-    border-bottom: 2px solid transparent;
-  }
-  .bar nav a:hover {
+  .menu {
+    font: 500 1.1rem/1 var(--sans);
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    background: none;
     color: var(--ink);
-  }
-  .bar nav a.active {
-    color: var(--ink);
-    border-bottom-color: var(--accent);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
   }
 
+  .shell {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+    gap: 48px;
+  }
+  .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    max-height: 100dvh;
+    overflow-y: auto;
+    padding: 36px 4px 24px 0;
+  }
+  .backdrop {
+    display: none;
+  }
+  @media (min-width: 1080px) {
+    .menu {
+      display: none;
+    }
+  }
+  @media (max-width: 1079px) {
+    .shell {
+      display: block;
+    }
+    .sidebar {
+      position: fixed;
+      z-index: 20;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      height: 100dvh;
+      width: min(280px, 85vw);
+      max-height: none;
+      padding: 20px 14px;
+      background: var(--bg);
+      border-right: 1px solid var(--line);
+      box-shadow: 0 0 24px var(--shadow);
+      transform: translateX(-105%);
+      transition: transform 0.18s ease;
+    }
+    .sidebar.open {
+      transform: none;
+    }
+    .backdrop {
+      display: block;
+      position: fixed;
+      z-index: 19;
+      inset: 0;
+      background: var(--shadow);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar {
+      transition: none;
+    }
+  }
+
+  main.wide {
+    max-width: var(--wide-width);
+  }
   main {
     max-width: var(--page-width);
     margin: 0 auto;
     padding-top: 36px;
+    min-width: 0;
   }
 
   .steps {

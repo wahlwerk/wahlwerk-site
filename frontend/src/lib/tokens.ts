@@ -67,6 +67,9 @@ export const LAYOUT = {
   /** Width of the one column of a content page: text, drawings, tables and sources all
    *  span it edge to edge, so every left and right edge on the page is the same. */
   'page-width': '760px',
+  /** Width of the docked side panel (Sidebar.svelte): the pages above, the outline below.
+   *  Docked from 1080 px, a drawer below. */
+  'sidebar-width': '220px',
   /** Width of the home page and the top bar, where cards sit four abreast. */
   'wide-width': '1100px',
   /** Side gutter at phone width. */
