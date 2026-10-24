@@ -30,13 +30,14 @@
   <h2>Kinds of step</h2>
   <p class="prose">
     A step is one rule, and it reads like a function: it <b>takes</b> facts as its arguments
-    (<code>votes=wahlkreis:option:erststimme</code>), has settings of its own, and its results
+    (<code>votes=erststimme by wahlkreis × option</code>), has settings of its own, and its results
     are the facts it writes. Each kind below is a class in the engine; a law uses it with its
     own settings and cites its own paragraph. The facts a step takes must be written by an
-    earlier step; the facts it writes are what later steps can take. A table of counts is named
-    by its headers: <code>wahlkreis:option:erststimme</code> has a row per
+    earlier step; the facts it writes are what later steps can take. A table of counts is named by
+    what it counts and by what: <code>erststimme by wahlkreis × option</code> has a row per
     <Term t="Wahlkreis" />, a column per option, and the <Term t="Erststimme">Erststimmen</Term>
-    in it. A step that holds steps (a sequence, a loop) reads and writes what its steps do.
+    in it, each row one contest; <code>zweitstimme by land × party</code> adds up each party's
+    <Term t="Zweitstimme">Zweitstimmen</Term>, what the seats are divided by. A step that holds steps (a sequence, a loop) reads and writes what its steps do.
   </p>
 </section>
 

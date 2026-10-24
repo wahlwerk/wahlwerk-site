@@ -169,7 +169,7 @@ export interface ProtocolStep {
   path: (number | string)[];
   kind: string;
   title: string;
-  /** Its arguments: each name and the fact it takes, e.g. votes=wahlkreis:option:erststimme. */
+  /** Its arguments: each name and the fact it takes, e.g. votes=erststimme by wahlkreis × option. */
   inputs: [string, string][];
   parameters: [string, string][];
   citation: string | null;
