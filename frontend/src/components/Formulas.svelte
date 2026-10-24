@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Formulas page: every formula of wahlwerk-calc, by layer, as its docstrings write
+  // Formulas page: every formula of wahlwerk.calc, by layer, as its docstrings write
   // it (build.py reads them into formulas.json; nothing here is typed by hand), with
   // the one table of symbols they all use and the literature they cite.
   import type { Formulas, References } from '../lib/types';
@@ -30,8 +30,8 @@
     <p>
       Every number the engine derives comes from a <b>formula</b>: a divisor method dividing seats,
       a quota, a threshold, a majority, a measure of how proportional a result is. Each formula is
-      a plain function in one package, <code>wahlwerk_calc</code>, which knows nothing of laws,
-      parties or the engine: numbers in, numbers out. The engine computes only through it, so a
+      a plain function in one part of the engine, <code>wahlwerk.calc</code>, which knows nothing
+      of laws, parties or the rest of the engine: numbers in, numbers out. The engine computes only through it, so a
       step in a law and a formula called by hand give the same seats.
     </p>
     <p>
@@ -42,7 +42,7 @@
       returns the keys that are tied.
     </p>
   </div>
-  <CodeRef names={['wahlwerk_calc.divisor.sainte_lague', 'wahlwerk_calc.result.SeatResult', 'wahlwerk.state.chamber.Chamber.apply']} />
+  <CodeRef names={['wahlwerk.calc.divisor.sainte_lague', 'wahlwerk.calc.result.SeatResult', 'wahlwerk.state.chamber.Chamber']} />
 </section>
 
 {#if !formulas}
@@ -108,7 +108,7 @@
   {/each}
 
   <RefList {references} {literature} />
-  <p class="muted small">Formulas of wahlwerk-calc {formulas.calc}.</p>
+  <p class="muted small">Formulas of wahlwerk {formulas.calc}.</p>
 {/if}
 
 <style>

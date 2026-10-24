@@ -20,16 +20,12 @@ const PAGES: Record<string, string> = {
   apportionment: 'apportionment',
   process: 'process',
   law: 'law',
+  calc: 'calc',
   io: 'io',
 };
 
-/** wahlwerk-calc, the formulas: one API page, its source beside the engine's. */
-const CALC = 'wahlwerk_calc';
-const CALC_SOURCE = 'https://github.com/wahlwerk/wahlwerk/blob/main/calc/src';
-
 /** "wahlwerk.vote.popular.tally.TallyRow" -> its anchor in the API reference. */
 export function apiHref(qualname: string): string {
-  if (qualname.split('.')[0] === CALC) return `${API_BASE}/api/calc.html#${qualname}`;
   const page = PAGES[qualname.split('.')[1]] ?? 'index';
   return `${API_BASE}/api/${page}.html#${qualname}`;
 }
@@ -37,7 +33,6 @@ export function apiHref(qualname: string): string {
 /** The source file an object is defined in. Objects are named by their full path. */
 export function sourceHref(qualname: string): string {
   const parts = qualname.split('.');
-  if (parts[0] === CALC) return `${CALC_SOURCE}/${parts.slice(0, 2).join('/')}.py`;
   return `${SOURCE_BASE}/${parts.slice(0, -1).join('/')}.py`;
 }
 

@@ -60,7 +60,7 @@ export const COMPONENTS: ComponentPage[] = [
     role: 'formula',
     title: 'Formulas',
     lede:
-      'Every formula the engine computes with, each written once in wahlwerk-calc: seat methods, quotas, thresholds, majorities, measures, coalitions and power.',
+      'Every formula the engine computes with, each written once in wahlwerk.calc: seat methods, quotas, thresholds, majorities, measures, coalitions and power.',
     card:
       'The arithmetic under every step, in one notation: divisor and quota methods, proportionality, the effective number of parties, Banzhaf and Shapley-Shubik.',
   },

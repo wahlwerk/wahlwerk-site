@@ -1,11 +1,11 @@
-"""The formulas of the site, read from wahlwerk-calc: written once, in its docstrings.
+"""The formulas of the site, read from wahlwerk.calc: written once, in its docstrings.
 
-Each module of ``wahlwerk_calc`` documents its formulas in its docstrings (reST, with
+Each module of ``wahlwerk.calc`` documents its formulas in its docstrings (reST, with
 ``:math:`` and ``.. math::`` for the formulas and ``:cite:`` for the literature); the
 API reference renders them with Sphinx, and this module reads the same docstrings into
 ``docs/data/formulas.json`` for the Formulas page, which renders the math with KaTeX.
 So a formula is written once and reads the same in the code, the reference and here,
-with the symbols of ``wahlwerk_calc.notation``.
+with the symbols of ``wahlwerk.calc.notation``.
 
 The reader knows the few reST forms the docstrings use (paragraphs, ``.. math::``
 blocks, simple tables, and the roles ``math``, ``cite``, ``func``, ``class``, ``mod``,
@@ -20,8 +20,8 @@ import inspect
 import re
 from typing import Any
 
-import wahlwerk_calc
-from wahlwerk_calc.notation import SYMBOLS
+import wahlwerk.calc
+from wahlwerk.calc.notation import SYMBOLS
 
 __all__ = ["build_formulas", "segments"]
 
@@ -141,7 +141,7 @@ def _cites(blocks: list[dict[str, Any]]) -> list[str]:
 
 
 def _module(name: str) -> dict[str, Any]:
-    module = importlib.import_module(f"wahlwerk_calc.{name}")
+    module = importlib.import_module(f"wahlwerk.calc.{name}")
     blocks = _blocks(module.__doc__ or "")
     title = blocks.pop(0)["p"] if blocks and "p" in blocks[0] else []
     functions = []
@@ -154,7 +154,7 @@ def _module(name: str) -> dict[str, Any]:
         functions.append(
             {
                 "name": item,
-                "qualname": f"wahlwerk_calc.{name}.{item}",
+                "qualname": f"wahlwerk.calc.{name}.{item}",
                 "kind": "class" if inspect.isclass(obj) else "function",
                 "summary": summary,
             }
@@ -162,7 +162,7 @@ def _module(name: str) -> dict[str, Any]:
     every = [*blocks, *(f["summary"] for f in functions)]
     return {
         "name": name,
-        "qualname": f"wahlwerk_calc.{name}",
+        "qualname": f"wahlwerk.calc.{name}",
         "title": title,
         "body": blocks,
         "functions": functions,
@@ -171,14 +171,14 @@ def _module(name: str) -> dict[str, Any]:
 
 
 def build_formulas() -> dict[str, Any]:
-    """``formulas.json``: the symbols, then every module of wahlwerk-calc by layer."""
+    """``formulas.json``: the symbols, then every module of wahlwerk.calc by layer."""
     return {
-        "calc": importlib.metadata.version("wahlwerk-calc"),
+        "calc": importlib.metadata.version("wahlwerk"),
         "symbols": [
             {"latex": s.latex, "meaning": s.meaning, "group": s.group} for s in SYMBOLS
         ],
         "layers": [
             {"title": title, "modules": [_module(name) for name in names]}
-            for title, names in wahlwerk_calc.LAYERS
+            for title, names in wahlwerk.calc.LAYERS
         ],
     }

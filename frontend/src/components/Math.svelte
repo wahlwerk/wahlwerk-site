@@ -1,5 +1,5 @@
 <script lang="ts">
-  // A formula, written in LaTeX in wahlwerk-calc's docstrings and rendered by KaTeX
+  // A formula, written in LaTeX in wahlwerk.calc's docstrings and rendered by KaTeX
   // here, as Sphinx renders the same LaTeX in the API reference.
   import katex from 'katex';
 

@@ -113,7 +113,7 @@
    "modules": [
     {
      "name": "share",
-     "qualname": "wahlwerk_calc.share",
+     "qualname": "wahlwerk.calc.share",
      "title": [
       {
        "text": "Shares: each key's part of the whole, the first step of most formulas."
@@ -168,12 +168,77 @@
          "text": "."
         }
        ]
+      },
+      {
+       "p": [
+        {
+         "text": "Both directions, with "
+        },
+        {
+         "code": "per"
+        },
+        {
+         "text": " for the unit of a share (1 for fractions, 100 for percent): "
+        },
+        {
+         "code": "shares()"
+        },
+        {
+         "text": " takes counts to shares, "
+        },
+        {
+         "code": "counts()"
+        },
+        {
+         "text": " shares back to counts of a given total, always exactly."
+        }
+       ]
       }
      ],
      "functions": [
       {
+       "name": "counts",
+       "qualname": "wahlwerk.calc.share.counts",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The absolute counts of shares of a given total, "
+        },
+        {
+         "math": "v_i = p_i V"
+        },
+        {
+         "text": "; with the shares in units of "
+        },
+        {
+         "code": "per"
+        },
+        {
+         "text": " ("
+        },
+        {
+         "code": "per=100"
+        },
+        {
+         "text": " for percent), "
+        },
+        {
+         "math": "v_i = p_i V /"
+        },
+        {
+         "text": " "
+        },
+        {
+         "code": "per"
+        },
+        {
+         "text": "."
+        }
+       ]
+      },
+      {
        "name": "share_array",
-       "qualname": "wahlwerk_calc.share.share_array",
+       "qualname": "wahlwerk.calc.share.share_array",
        "kind": "function",
        "summary": [
         {
@@ -183,17 +248,29 @@
       },
       {
        "name": "shares",
-       "qualname": "wahlwerk_calc.share.shares",
+       "qualname": "wahlwerk.calc.share.shares",
        "kind": "function",
        "summary": [
         {
-         "text": "Each key's share "
+         "text": "Each key's share of the total, "
         },
         {
          "math": "p_i = v_i / V"
         },
         {
-         "text": "; raises "
+         "text": ", in units of "
+        },
+        {
+         "code": "per"
+        },
+        {
+         "text": " ("
+        },
+        {
+         "code": "per=100"
+        },
+        {
+         "text": " for percent): exact for exact input, floats for floats. Raises "
         },
         {
          "code": "ValueError"
@@ -211,7 +288,7 @@
       },
       {
        "name": "total",
-       "qualname": "wahlwerk_calc.share.total",
+       "qualname": "wahlwerk.calc.share.total",
        "kind": "function",
        "summary": [
         {
@@ -230,7 +307,7 @@
     },
     {
      "name": "quota",
-     "qualname": "wahlwerk_calc.quota",
+     "qualname": "wahlwerk.calc.quota",
      "title": [
       {
        "text": "Quotas: the votes one seat is worth, given "
@@ -354,7 +431,7 @@
      "functions": [
       {
        "name": "droop",
-       "qualname": "wahlwerk_calc.quota.droop",
+       "qualname": "wahlwerk.calc.quota.droop",
        "kind": "function",
        "summary": [
         {
@@ -376,7 +453,7 @@
       },
       {
        "name": "hagenbach_bischoff",
-       "qualname": "wahlwerk_calc.quota.hagenbach_bischoff",
+       "qualname": "wahlwerk.calc.quota.hagenbach_bischoff",
        "kind": "function",
        "summary": [
         {
@@ -392,7 +469,7 @@
       },
       {
        "name": "hare",
-       "qualname": "wahlwerk_calc.quota.hare",
+       "qualname": "wahlwerk.calc.quota.hare",
        "kind": "function",
        "summary": [
         {
@@ -408,7 +485,7 @@
       },
       {
        "name": "imperiali",
-       "qualname": "wahlwerk_calc.quota.imperiali",
+       "qualname": "wahlwerk.calc.quota.imperiali",
        "kind": "function",
        "summary": [
         {
@@ -424,7 +501,7 @@
       },
       {
        "name": "whole_seats",
-       "qualname": "wahlwerk_calc.quota.whole_seats",
+       "qualname": "wahlwerk.calc.quota.whole_seats",
        "kind": "function",
        "summary": [
         {
@@ -443,7 +520,7 @@
     },
     {
      "name": "result",
-     "qualname": "wahlwerk_calc.result",
+     "qualname": "wahlwerk.calc.result",
      "title": [
       {
        "text": "The result of a seat formula: the seats decided, and the seats still tied."
@@ -461,7 +538,7 @@
      "functions": [
       {
        "name": "SeatResult",
-       "qualname": "wahlwerk_calc.result.SeatResult",
+       "qualname": "wahlwerk.calc.result.SeatResult",
        "kind": "class",
        "summary": [
         {
@@ -479,7 +556,7 @@
    "modules": [
     {
      "name": "divisor",
-     "qualname": "wahlwerk_calc.divisor",
+     "qualname": "wahlwerk.calc.divisor",
      "title": [
       {
        "text": "Divisor methods (highest averages): seats in proportion, by one common divisor."
@@ -773,7 +850,7 @@
      "functions": [
       {
        "name": "Signposts",
-       "qualname": "wahlwerk_calc.divisor.Signposts",
+       "qualname": "wahlwerk.calc.divisor.Signposts",
        "kind": "class",
        "summary": [
         {
@@ -801,7 +878,7 @@
       },
       {
        "name": "adams",
-       "qualname": "wahlwerk_calc.divisor.adams",
+       "qualname": "wahlwerk.calc.divisor.adams",
        "kind": "function",
        "summary": [
         {
@@ -817,7 +894,7 @@
       },
       {
        "name": "d_hondt",
-       "qualname": "wahlwerk_calc.divisor.d_hondt",
+       "qualname": "wahlwerk.calc.divisor.d_hondt",
        "kind": "function",
        "summary": [
         {
@@ -833,7 +910,7 @@
       },
       {
        "name": "danish",
-       "qualname": "wahlwerk_calc.divisor.danish",
+       "qualname": "wahlwerk.calc.divisor.danish",
        "kind": "function",
        "summary": [
         {
@@ -849,7 +926,7 @@
       },
       {
        "name": "dean",
-       "qualname": "wahlwerk_calc.divisor.dean",
+       "qualname": "wahlwerk.calc.divisor.dean",
        "kind": "function",
        "summary": [
         {
@@ -865,7 +942,7 @@
       },
       {
        "name": "divisor_range",
-       "qualname": "wahlwerk_calc.divisor.divisor_range",
+       "qualname": "wahlwerk.calc.divisor.divisor_range",
        "kind": "function",
        "summary": [
         {
@@ -887,7 +964,7 @@
       },
       {
        "name": "highest_averages",
-       "qualname": "wahlwerk_calc.divisor.highest_averages",
+       "qualname": "wahlwerk.calc.divisor.highest_averages",
        "kind": "function",
        "summary": [
         {
@@ -909,7 +986,7 @@
       },
       {
        "name": "huntington_hill",
-       "qualname": "wahlwerk_calc.divisor.huntington_hill",
+       "qualname": "wahlwerk.calc.divisor.huntington_hill",
        "kind": "function",
        "summary": [
         {
@@ -925,7 +1002,7 @@
       },
       {
        "name": "imperiali",
-       "qualname": "wahlwerk_calc.divisor.imperiali",
+       "qualname": "wahlwerk.calc.divisor.imperiali",
        "kind": "function",
        "summary": [
         {
@@ -941,7 +1018,7 @@
       },
       {
        "name": "modified_sainte_lague",
-       "qualname": "wahlwerk_calc.divisor.modified_sainte_lague",
+       "qualname": "wahlwerk.calc.divisor.modified_sainte_lague",
        "kind": "function",
        "summary": [
         {
@@ -963,7 +1040,7 @@
       },
       {
        "name": "sainte_lague",
-       "qualname": "wahlwerk_calc.divisor.sainte_lague",
+       "qualname": "wahlwerk.calc.divisor.sainte_lague",
        "kind": "function",
        "summary": [
         {
@@ -979,7 +1056,7 @@
       },
       {
        "name": "seats_at",
-       "qualname": "wahlwerk_calc.divisor.seats_at",
+       "qualname": "wahlwerk.calc.divisor.seats_at",
        "kind": "function",
        "summary": [
         {
@@ -1007,7 +1084,7 @@
     },
     {
      "name": "remainder",
-     "qualname": "wahlwerk_calc.remainder",
+     "qualname": "wahlwerk.calc.remainder",
      "title": [
       {
        "text": "Largest remainder methods (quota methods): whole seats, then the largest remainders."
@@ -1049,7 +1126,7 @@
      "functions": [
       {
        "name": "hare_niemeyer",
-       "qualname": "wahlwerk_calc.remainder.hare_niemeyer",
+       "qualname": "wahlwerk.calc.remainder.hare_niemeyer",
        "kind": "function",
        "summary": [
         {
@@ -1071,7 +1148,7 @@
       },
       {
        "name": "largest_remainder",
-       "qualname": "wahlwerk_calc.remainder.largest_remainder",
+       "qualname": "wahlwerk.calc.remainder.largest_remainder",
        "kind": "function",
        "summary": [
         {
@@ -1098,7 +1175,7 @@
     },
     {
      "name": "plurality",
-     "qualname": "wahlwerk_calc.plurality",
+     "qualname": "wahlwerk.calc.plurality",
      "title": [
       {
        "text": "Plurality: the keys with the most votes win, one seat each."
@@ -1134,7 +1211,7 @@
      "functions": [
       {
        "name": "plurality",
-       "qualname": "wahlwerk_calc.plurality.plurality",
+       "qualname": "wahlwerk.calc.plurality.plurality",
        "kind": "function",
        "summary": [
         {
@@ -1164,7 +1241,7 @@
    "modules": [
     {
      "name": "majority",
-     "qualname": "wahlwerk_calc.majority",
+     "qualname": "wahlwerk.calc.majority",
      "title": [
       {
        "text": "Majorities: how many are needed, and the clause that secures one."
@@ -1222,7 +1299,7 @@
      "functions": [
       {
        "name": "is_majority",
-       "qualname": "wahlwerk_calc.majority.is_majority",
+       "qualname": "wahlwerk.calc.majority.is_majority",
        "kind": "function",
        "summary": [
         {
@@ -1256,7 +1333,7 @@
       },
       {
        "name": "majority_first",
-       "qualname": "wahlwerk_calc.majority.majority_first",
+       "qualname": "wahlwerk.calc.majority.majority_first",
        "kind": "function",
        "summary": [
         {
@@ -1272,7 +1349,7 @@
       },
       {
        "name": "majority_of",
-       "qualname": "wahlwerk_calc.majority.majority_of",
+       "qualname": "wahlwerk.calc.majority.majority_of",
        "kind": "function",
        "summary": [
         {
@@ -1294,7 +1371,7 @@
       },
       {
        "name": "qualified_majority",
-       "qualname": "wahlwerk_calc.majority.qualified_majority",
+       "qualname": "wahlwerk.calc.majority.qualified_majority",
        "kind": "function",
        "summary": [
         {
@@ -1337,7 +1414,7 @@
     },
     {
      "name": "threshold",
-     "qualname": "wahlwerk_calc.threshold",
+     "qualname": "wahlwerk.calc.threshold",
      "title": [
       {
        "text": "Thresholds: which keys take part at all."
@@ -1397,7 +1474,7 @@
      "functions": [
       {
        "name": "count_threshold",
-       "qualname": "wahlwerk_calc.threshold.count_threshold",
+       "qualname": "wahlwerk.calc.threshold.count_threshold",
        "kind": "function",
        "summary": [
         {
@@ -1431,7 +1508,7 @@
       },
       {
        "name": "effective_threshold",
-       "qualname": "wahlwerk_calc.threshold.effective_threshold",
+       "qualname": "wahlwerk.calc.threshold.effective_threshold",
        "kind": "function",
        "summary": [
         {
@@ -1461,7 +1538,7 @@
       },
       {
        "name": "seat_threshold",
-       "qualname": "wahlwerk_calc.threshold.seat_threshold",
+       "qualname": "wahlwerk.calc.threshold.seat_threshold",
        "kind": "function",
        "summary": [
         {
@@ -1477,7 +1554,7 @@
       },
       {
        "name": "share_threshold",
-       "qualname": "wahlwerk_calc.threshold.share_threshold",
+       "qualname": "wahlwerk.calc.threshold.share_threshold",
        "kind": "function",
        "summary": [
         {
@@ -1510,7 +1587,7 @@
     },
     {
      "name": "compensation",
-     "qualname": "wahlwerk_calc.compensation",
+     "qualname": "wahlwerk.calc.compensation",
      "title": [
       {
        "text": "Überhang and Ausgleich: when keys hold more seats than their proportional share."
@@ -1546,7 +1623,7 @@
      "functions": [
       {
        "name": "overhang",
-       "qualname": "wahlwerk_calc.compensation.overhang",
+       "qualname": "wahlwerk.calc.compensation.overhang",
        "kind": "function",
        "summary": [
         {
@@ -1562,7 +1639,7 @@
       },
       {
        "name": "remaining",
-       "qualname": "wahlwerk_calc.compensation.remaining",
+       "qualname": "wahlwerk.calc.compensation.remaining",
        "kind": "function",
        "summary": [
         {
@@ -1578,7 +1655,7 @@
       },
       {
        "name": "smallest_house",
-       "qualname": "wahlwerk_calc.compensation.smallest_house",
+       "qualname": "wahlwerk.calc.compensation.smallest_house",
        "kind": "function",
        "summary": [
         {
@@ -1614,7 +1691,7 @@
    "modules": [
     {
      "name": "proportionality",
-     "qualname": "wahlwerk_calc.proportionality",
+     "qualname": "wahlwerk.calc.proportionality",
      "title": [
       {
        "text": "Disproportionality: how far seat shares "
@@ -1836,7 +1913,7 @@
      "functions": [
       {
        "name": "advantage_ratio",
-       "qualname": "wahlwerk_calc.proportionality.advantage_ratio",
+       "qualname": "wahlwerk.calc.proportionality.advantage_ratio",
        "kind": "function",
        "summary": [
         {
@@ -1858,7 +1935,7 @@
       },
       {
        "name": "d_hondt",
-       "qualname": "wahlwerk_calc.proportionality.d_hondt",
+       "qualname": "wahlwerk.calc.proportionality.d_hondt",
        "kind": "function",
        "summary": [
         {
@@ -1880,7 +1957,7 @@
       },
       {
        "name": "gallagher",
-       "qualname": "wahlwerk_calc.proportionality.gallagher",
+       "qualname": "wahlwerk.calc.proportionality.gallagher",
        "kind": "function",
        "summary": [
         {
@@ -1904,7 +1981,7 @@
       },
       {
        "name": "gallagher_squared",
-       "qualname": "wahlwerk_calc.proportionality.gallagher_squared",
+       "qualname": "wahlwerk.calc.proportionality.gallagher_squared",
        "kind": "function",
        "summary": [
         {
@@ -1920,7 +1997,7 @@
       },
       {
        "name": "lijphart",
-       "qualname": "wahlwerk_calc.proportionality.lijphart",
+       "qualname": "wahlwerk.calc.proportionality.lijphart",
        "kind": "function",
        "summary": [
         {
@@ -1936,7 +2013,7 @@
       },
       {
        "name": "loosemore_hanby",
-       "qualname": "wahlwerk_calc.proportionality.loosemore_hanby",
+       "qualname": "wahlwerk.calc.proportionality.loosemore_hanby",
        "kind": "function",
        "summary": [
         {
@@ -1952,7 +2029,7 @@
       },
       {
        "name": "rae",
-       "qualname": "wahlwerk_calc.proportionality.rae",
+       "qualname": "wahlwerk.calc.proportionality.rae",
        "kind": "function",
        "summary": [
         {
@@ -1974,7 +2051,7 @@
       },
       {
        "name": "regression",
-       "qualname": "wahlwerk_calc.proportionality.regression",
+       "qualname": "wahlwerk.calc.proportionality.regression",
        "kind": "function",
        "summary": [
         {
@@ -1990,7 +2067,7 @@
       },
       {
        "name": "rose",
-       "qualname": "wahlwerk_calc.proportionality.rose",
+       "qualname": "wahlwerk.calc.proportionality.rose",
        "kind": "function",
        "summary": [
         {
@@ -2006,7 +2083,7 @@
       },
       {
        "name": "sainte_lague",
-       "qualname": "wahlwerk_calc.proportionality.sainte_lague",
+       "qualname": "wahlwerk.calc.proportionality.sainte_lague",
        "kind": "function",
        "summary": [
         {
@@ -2033,7 +2110,7 @@
     },
     {
      "name": "fragmentation",
-     "qualname": "wahlwerk_calc.fragmentation",
+     "qualname": "wahlwerk.calc.fragmentation",
      "title": [
       {
        "text": "Fragmentation: how many keys matter, from their shares "
@@ -2153,7 +2230,7 @@
      "functions": [
       {
        "name": "effective_number",
-       "qualname": "wahlwerk_calc.fragmentation.effective_number",
+       "qualname": "wahlwerk.calc.fragmentation.effective_number",
        "kind": "function",
        "summary": [
         {
@@ -2169,7 +2246,7 @@
       },
       {
        "name": "fractionalization",
-       "qualname": "wahlwerk_calc.fragmentation.fractionalization",
+       "qualname": "wahlwerk.calc.fragmentation.fractionalization",
        "kind": "function",
        "summary": [
         {
@@ -2185,7 +2262,7 @@
       },
       {
        "name": "golosov",
-       "qualname": "wahlwerk_calc.fragmentation.golosov",
+       "qualname": "wahlwerk.calc.fragmentation.golosov",
        "kind": "function",
        "summary": [
         {
@@ -2207,7 +2284,7 @@
       },
       {
        "name": "herfindahl",
-       "qualname": "wahlwerk_calc.fragmentation.herfindahl",
+       "qualname": "wahlwerk.calc.fragmentation.herfindahl",
        "kind": "function",
        "summary": [
         {
@@ -2223,7 +2300,7 @@
       },
       {
        "name": "largest_share",
-       "qualname": "wahlwerk_calc.fragmentation.largest_share",
+       "qualname": "wahlwerk.calc.fragmentation.largest_share",
        "kind": "function",
        "summary": [
         {
@@ -2250,7 +2327,7 @@
    "modules": [
     {
      "name": "coalition",
-     "qualname": "wahlwerk_calc.coalition",
+     "qualname": "wahlwerk.calc.coalition",
      "title": [
       {
        "text": "Coalitions: which groups of keys (caucuses) hold a majority of the seats."
@@ -2349,7 +2426,7 @@
      "functions": [
       {
        "name": "is_winning",
-       "qualname": "wahlwerk_calc.coalition.is_winning",
+       "qualname": "wahlwerk.calc.coalition.is_winning",
        "kind": "function",
        "summary": [
         {
@@ -2365,7 +2442,7 @@
       },
       {
        "name": "minimal_winning",
-       "qualname": "wahlwerk_calc.coalition.minimal_winning",
+       "qualname": "wahlwerk.calc.coalition.minimal_winning",
        "kind": "function",
        "summary": [
         {
@@ -2375,7 +2452,7 @@
       },
       {
        "name": "minimum_winning",
-       "qualname": "wahlwerk_calc.coalition.minimum_winning",
+       "qualname": "wahlwerk.calc.coalition.minimum_winning",
        "kind": "function",
        "summary": [
         {
@@ -2385,7 +2462,7 @@
       },
       {
        "name": "surplus",
-       "qualname": "wahlwerk_calc.coalition.surplus",
+       "qualname": "wahlwerk.calc.coalition.surplus",
        "kind": "function",
        "summary": [
         {
@@ -2401,7 +2478,7 @@
       },
       {
        "name": "weight",
-       "qualname": "wahlwerk_calc.coalition.weight",
+       "qualname": "wahlwerk.calc.coalition.weight",
        "kind": "function",
        "summary": [
         {
@@ -2414,7 +2491,7 @@
       },
       {
        "name": "winning",
-       "qualname": "wahlwerk_calc.coalition.winning",
+       "qualname": "wahlwerk.calc.coalition.winning",
        "kind": "function",
        "summary": [
         {
@@ -2435,7 +2512,7 @@
     },
     {
      "name": "power",
-     "qualname": "wahlwerk_calc.power",
+     "qualname": "wahlwerk.calc.power",
      "title": [
       {
        "text": "Power indices: how often a key decides, in a weighted vote with quota "
@@ -2562,7 +2639,7 @@
      "functions": [
       {
        "name": "banzhaf",
-       "qualname": "wahlwerk_calc.power.banzhaf",
+       "qualname": "wahlwerk.calc.power.banzhaf",
        "kind": "function",
        "summary": [
         {
@@ -2578,7 +2655,7 @@
       },
       {
        "name": "penrose",
-       "qualname": "wahlwerk_calc.power.penrose",
+       "qualname": "wahlwerk.calc.power.penrose",
        "kind": "function",
        "summary": [
         {
@@ -2594,7 +2671,7 @@
       },
       {
        "name": "shapley_shubik",
-       "qualname": "wahlwerk_calc.power.shapley_shubik",
+       "qualname": "wahlwerk.calc.power.shapley_shubik",
        "kind": "function",
        "summary": [
         {
@@ -2610,7 +2687,7 @@
       },
       {
        "name": "swings",
-       "qualname": "wahlwerk_calc.power.swings",
+       "qualname": "wahlwerk.calc.power.swings",
        "kind": "function",
        "summary": [
         {

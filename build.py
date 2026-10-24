@@ -14,7 +14,7 @@ Writes three files to ``docs/data/``:
 - ``references.json``: the sources, from their three homes (``references.py``): the
   engine's ``docs/references.bib`` (Zotero) and ``docs/statutes.toml``, its law
   registry, the bundles; the same sources as the engine's API reference.
-- ``formulas.json``: the formulas of wahlwerk-calc with their symbols, prose, tables
+- ``formulas.json``: the formulas of wahlwerk.calc with their symbols, prose, tables
   and citations, read from its docstrings (``formulas.py``), the same text the API
   reference renders.
 """

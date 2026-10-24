@@ -51,12 +51,12 @@ stay in `docs/assets/`; delete the stale ones before committing.
 build.py                  <- data build: engine + wahlwerk-data in, docs/data/*.json out
 sketches.py               <- the Vote page's sketch plates, drawn with wahlwerk-ui from a real bundle
 references.py             <- sources from their three homes: references.bib, the law registry, bundles
-formulas.py               <- the Formulas page's content, read from wahlwerk-calc's docstrings
+formulas.py               <- the Formulas page's content, read from wahlwerk.calc's docstrings
 docs/                     <- GitHub Pages root, committed
   data/elections.json     <- written by build.py only
   data/sketches.json      <- written by build.py only: one SVG per panel, plus wahlwerk-ui's style plates
   data/references.json    <- written by build.py only: literature, statutes, data
-  data/formulas.json      <- written by build.py only: wahlwerk-calc's symbols, formulas, tables, citations
+  data/formulas.json      <- written by build.py only: wahlwerk.calc's symbols, formulas, tables, citations
   index.html, assets/     <- written by npm run build only
   favicon.svg, .nojekyll  <- hand-written
 frontend/src/
@@ -80,7 +80,7 @@ frontend/src/
     RefList.svelte        <- a page's sources: literature, statutes, data
     Protocol.svelte       <- Law page: the LWG LSA as the engine's protocol (law/de/st/lwg.py)
     Pieces.svelte         <- Allocation page: the four roles and the modules
-    Formulas.svelte       <- Formulas page: every formula of wahlwerk-calc by layer, the notation, the literature
+    Formulas.svelte       <- Formulas page: every formula of wahlwerk.calc by layer, the notation, the literature
     Segments.svelte       <- docstring text from formulas.json: inline math, code, citations, terms of art
     Math.svelte           <- one formula in LaTeX, rendered by KaTeX
     Results.svelte        <- Chamber page: election tabs, seat grid, result table, note, source
@@ -107,9 +107,9 @@ frontend/src/
   count that the page can show from `elections.json` is shown from there.
 - **Only golden elections.** `ELECTIONS` in `build.py` lists elections whose official result
   the engine's golden tests reproduce. Add one only when its golden test exists.
-- **Formulas are written once, in wahlwerk-calc.** The Formulas page shows the LaTeX,
-  prose and tables of `wahlwerk_calc`'s docstrings (`formulas.py`), with the symbols of
-  `wahlwerk_calc.notation`; it never types a formula itself. A formula wrong on the page is
+- **Formulas are written once, in wahlwerk.calc.** The Formulas page shows the LaTeX,
+  prose and tables of `wahlwerk.calc`'s docstrings (`formulas.py`), with the symbols of
+  `wahlwerk.calc.notation`; it never types a formula itself. A formula wrong on the page is
   fixed in the docstring, which fixes the API reference too.
 - **Protocol text follows the engine.** Step names and fields in `Protocol.svelte` copy
   `law/de/st/lwg.py`; when the engine renames a step, update the page.

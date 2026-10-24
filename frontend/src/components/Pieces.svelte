@@ -17,7 +17,7 @@
     ['Law', 'law/', 'one law version as one object with its protocol; a registry finds the law in force for a body and date'],
     ['Allocation, AllocationStep', 'process/allocation/', 'the working record, and the rules that fill it; each step declares what it reads and writes'],
     ['Chamber, Mandate, Caucus', 'state/', 'the chamber a process forms: seats, and the caucuses over them'],
-    ['formulas', 'wahlwerk_calc', 'every formula the pieces above compute with, written once: seat methods, quotas, thresholds, measures, power'],
+    ['formulas', 'wahlwerk.calc', 'every formula the pieces above compute with, written once: seat methods, quotas, thresholds, measures, power'],
   ];
 </script>
 

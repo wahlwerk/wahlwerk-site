@@ -1,5 +1,5 @@
 <script lang="ts">
-  // Running text from a wahlwerk-calc docstring: text, bold, inline formulas, code and
+  // Running text from a wahlwerk.calc docstring: text, bold, inline formulas, code and
   // citations, as formulas.py split it. A term of art in the text is set as one
   // (Term), so the docstrings need no markup for the site.
   import type { Segment } from '../lib/types';

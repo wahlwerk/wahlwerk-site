@@ -106,7 +106,7 @@ export interface References {
   data: Record<string, DataSource>;
 }
 
-/** A piece of running text from a wahlwerk-calc docstring (formulas.py). */
+/** A piece of running text from a wahlwerk.calc docstring (formulas.py). */
 export type Segment =
   | { text: string }
   | { strong: string }
@@ -123,7 +123,7 @@ export type Block =
 
 export interface CalcFunction {
   name: string;
-  /** Full dotted name, e.g. wahlwerk_calc.divisor.sainte_lague. */
+  /** Full dotted name, e.g. wahlwerk.calc.divisor.sainte_lague. */
   qualname: string;
   kind: 'function' | 'class';
   /** The first paragraph of its docstring. */
@@ -146,7 +146,7 @@ export interface CalcSymbol {
   group: string;
 }
 
-/** docs/data/formulas.json: wahlwerk-calc's formulas, read from its docstrings. */
+/** docs/data/formulas.json: wahlwerk.calc's formulas, read from its docstrings. */
 export interface Formulas {
   calc: string;
   symbols: CalcSymbol[];
