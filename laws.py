@@ -175,5 +175,5 @@ def _aside(allocation: Allocation, order: list[str | None]) -> dict[str, Any]:
         "seats": seats,
         "free": max(size - sum(due.values()), 0),
         "standing": standing,
-        "caption": f"{filled} filled",
+        "caption": f"{filled} filled" + (f", +{sum(n for _, n in standing)} outside" if standing else ""),
     }

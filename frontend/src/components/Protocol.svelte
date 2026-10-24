@@ -101,8 +101,8 @@
         the middle, counting
         {ELECTION_TEXT[law.replay]?.label ?? law.replay}: hollow seats are not yet anyone's, a
         party's colour solid where a winner of a single-seat unit fills the seat, as an edge
-        where a list seat is still to fill. Members a party won beyond its seats stand without
-        one, until the chamber is raised for them.
+        where a list seat is still to fill. Members a party won beyond its seats stand below the
+        floor, outside the chamber, until it is raised for them.
       </p>
     {/if}
     <div class="parts">
