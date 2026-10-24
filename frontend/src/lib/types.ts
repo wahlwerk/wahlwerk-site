@@ -183,8 +183,6 @@ export interface ProtocolStep {
   holds: string | null;
   /** The core concepts it computes with, outermost first, each down to its functions in wahlwerk.calc. */
   uses: Concept[];
-  /** The functions in wahlwerk.calc it calls itself. */
-  calls: FormulaCall[];
   children: ProtocolStep[];
   /** Top-level steps only: the first and last position it could move to, same result. */
   movable?: [number, number];
@@ -242,8 +240,6 @@ export interface StepKind {
   uses: { law: string; short: string; citation: string | null; path: (number | string)[] }[];
   /** The core concepts it computes with in the laws shown, each down to its functions. */
   computes: Concept[];
-  /** The functions in wahlwerk.calc it calls itself. */
-  calls: FormulaCall[];
 }
 
 /** docs/data/laws.json: the laws the site shows and every kind of step in them. */

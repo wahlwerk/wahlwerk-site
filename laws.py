@@ -75,7 +75,6 @@ def _note_kind(kinds: dict[str, dict[str, Any]], step: AllocationStep, law: Law,
             "holds": any(isinstance(getattr(step, f), tuple) and getattr(step, f) and isinstance(getattr(step, f)[0], AllocationStep) for f in cls.model_fields),
             "uses": [],
             "computes": [],
-            "calls": [],
             "order": len(kinds),
         },
     )
@@ -83,10 +82,6 @@ def _note_kind(kinds: dict[str, dict[str, Any]], step: AllocationStep, law: Law,
         concept = use.model_dump(mode="json")
         if concept not in entry["computes"]:
             entry["computes"].append(concept)
-    for call in flow.calls_of(step):
-        own = call.model_dump(mode="json")
-        if own not in entry["calls"]:
-            entry["calls"].append(own)
     entry["uses"].append({"law": law.id, "short": SHORT.get(law.id, law.id), "citation": step.citation, "path": list(path)})
 
 

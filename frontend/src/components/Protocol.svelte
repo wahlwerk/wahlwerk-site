@@ -80,7 +80,9 @@
       colour. Inside it, on plain paper, sits each <b>core concept</b> it computes with: a
       method, a threshold, free of any law, with the functions of the
       <a href={href('formulas')}>formulas</a> it calls, and a concept that holds another holds
-      its block the same way. Electing in the <Term t="Wahlkreis">Wahlkreise</Term> is a step;
+      its block the same way. A step calls no function itself: whatever it computes, a concept
+      it holds computes, even taking the seats won off a number
+      (<i>Deduction</i>) or raising a size (<i>Increment</i>). Electing in the <Term t="Wahlkreis">Wahlkreise</Term> is a step;
       under it is <i>plurality</i>, the most votes win, here for one seat; under that, one
       function. Plurality knows nothing of units or parties, so the same concept serves
       wherever a law says the most votes win.

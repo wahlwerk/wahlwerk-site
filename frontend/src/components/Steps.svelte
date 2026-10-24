@@ -58,12 +58,9 @@
         {/if}
         <dt>writes</dt>
         <dd>{#each k.writes as f}<code class="fact">{f}</code>{/each}</dd>
-        {#if k.computes.length || k.calls.length}
+        {#if k.computes.length}
           <dt>computes with</dt>
           <dd class="chain">
-            {#each k.calls as f}
-              <a href={apiHref(f.formula)}><code>{name(f.formula)}</code></a>
-            {/each}
             {#each k.computes as c}
               <span class="concept" style="margin-left:{depth(c.field)}em">
                 <code class="name">{c.kind}</code>
