@@ -5,6 +5,6 @@ __pycache__/
 .ruff_cache/
 
 # Frontend
-frontend/node_modules/
+frontend/node_modules
 frontend/test-results/
 *.log
