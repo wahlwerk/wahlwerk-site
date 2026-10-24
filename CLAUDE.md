@@ -36,14 +36,19 @@ cd frontend
 npm install
 npm run dev                              # serves docs/ as public dir, so data/ resolves
 npm run check                            # svelte-check, must report 0 errors and 0 warnings
-npm run build                            # docs/index.html + docs/assets/
+npm run build                            # docs/index.html + docs/assets/, then prunes them
+node scripts/prune-assets.mjs --dry-run  # list the stale bundles without deleting
 ```
 
 `uv run mypy --strict build.py` fails on the engine's imports until the engine ships a
 `py.typed` marker.
 
-`npm run build` does not empty `docs/` (it would delete `docs/data/`), so old hashed files
-stay in `docs/assets/`; delete the stale ones before committing.
+`npm run build` does not empty `docs/` (it would delete `docs/data/`), so every build would
+leave its old hashed bundles in `docs/assets/`. The `postbuild` script
+(`frontend/scripts/prune-assets.mjs`, as in IR-bands) removes them: it keeps the files
+`docs/index.html` loads and everything those name in turn (the KaTeX fonts in the CSS),
+deletes the rest of `docs/assets/`, and touches nothing else; if `index.html` names no
+bundle it deletes nothing and fails.
 
 ## Architecture
 
@@ -57,8 +62,10 @@ docs/                     <- GitHub Pages root, committed
   data/sketches.json      <- written by build.py only: one SVG per panel, plus wahlwerk-ui's style plates
   data/references.json    <- written by build.py only: literature, statutes, data
   data/formulas.json      <- written by build.py only: wahlwerk.calc's symbols, formulas, tables, citations
-  index.html, assets/     <- written by npm run build only
+  index.html, assets/     <- written by npm run build only; stale bundles pruned after it
   favicon.svg, .nojekyll  <- hand-written
+frontend/scripts/
+  prune-assets.mjs        <- postbuild: deletes the hashed bundles in docs/assets that index.html no longer uses
 frontend/src/
   main.ts                 <- installs the tokens, mounts App
   app.css                 <- global element styles; colours and fonts via var(--...)
