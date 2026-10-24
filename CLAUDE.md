@@ -54,8 +54,9 @@ bundle it deletes nothing and fails.
 
 ```
 build.py                  <- data build: engine + wahlwerk-data in, docs/data/*.json out
-sketches.py               <- the Vote page's sketch plates and the home plate (electorate, tally, allocation,
-                             chamber, each box a link), drawn with wahlwerk-ui from a real bundle
+sketches.py               <- the Vote page's sketch plates, the home plate (electorate, tally, allocation,
+                             chamber, each box a link) and per law the overhang plate (the engine's rounds of
+                             its loop on one election, OVERHANG), drawn with wahlwerk-ui from real bundles
 references.py             <- sources from their three homes: references.bib, the law registry, bundles
 formulas.py               <- the Formulas page's content, read from wahlwerk.calc's docstrings
 laws.py                   <- the Law pages' content: each law's protocol, stages, move ranges, facts and
@@ -92,7 +93,8 @@ frontend/src/
     Cite.svelte           <- a literature citation, a superscript number
     RefList.svelte        <- a page's sources: literature, statutes, data
     Protocol.svelte       <- Law page: a law is a list of steps; per law (tabs) the drawing, the stages and
-                             move ranges, the facts the allocation holds; sequences, loops, changing a law
+                             move ranges, the facts the allocation holds; sequences, loops, the overhang
+                             loop round by round (plate), changing a law
     Steps.svelte          <- Law › Steps (#/law/steps): every kind of step, its docstring, reads, writes,
                              what it computes with down to the formula, uses
     Pieces.svelte         <- Law › Allocation (#/law/allocation): the four roles and the modules

@@ -22,7 +22,9 @@ from __future__ import annotations
 from typing import Any
 
 from wahlwerk.law.base import Law
-from wahlwerk.process.allocation.allocate import allocate
+from wahlwerk.process.allocation.allocate import allocate, derive
+from wahlwerk.process.allocation.base import Allocation
+from wahlwerk.process.allocation.overhang import RaiseByOverhang, RaiseUntilBalanced
 from wahlwerk.vote.popular.popular_vote import PopularVote
 from wahlwerk.vote.popular.tally import TallyKind
 from wahlwerk_ui.plot.chamber.common import party_tones
@@ -441,9 +443,86 @@ def home_plate(vote: PopularVote, law: Law) -> tuple[Plate, dict[str, list[Link]
     return plate, links
 
 
-def build_sketches(vote: PopularVote, law: Law, home_vote: PopularVote | None = None) -> dict[str, Any]:
+OVERHANG: dict[str, str] = {"de.st.lwg.2021": "de.landtag.st.2021", "de.mv.lkwg.2011": "de.landtag.mv.2021"}
+"""Per law, the election its overhang plate replays: the one whose chamber grew most
+(Sachsen-Anhalt 2021: 83 to 97 seats; Mecklenburg-Vorpommern 2021: 71 to 79)."""
+
+LOOPS = (RaiseByOverhang, RaiseUntilBalanced)
+
+
+def overhang_plate(vote: PopularVote, law: Law) -> Plate:
+    """The law's overhang loop round by round, from the engine's own rounds.
+
+    One panel per run of the repeated block that changes something: the first, each
+    one where the overhang changes, and the last. Each party is a row: its entitlement
+    is the outlined bar, the units it won the solid bar inside. Where a party won more
+    units than it is entitled to, the solid bar runs past the outline: that is the
+    overhang, and the loop raises the chamber size, by the law's own rule.
+    """
+    at = next(i for i, step in enumerate(law.protocol) if isinstance(step, LOOPS))
+    loop = law.protocol[at]
+    assert isinstance(loop, LOOPS)
+    every = loop.rounds(derive(vote, law.protocol[:at]))
+
+    def excess(result: Allocation) -> int:
+        return sum(n for _, n in result.overhang or ())
+
+    shown = [r for i, r in enumerate(every) if i in (0, len(every) - 1) or excess(r) != excess(every[i - 1])]
+    first = every[0]
+    assert first.entitlement is not None
+    parties = [p for p, _ in sorted(first.entitlement.seats, key=lambda kv: -kv[1])]
+    most = max(
+        max(n for r in every for _, n in (r.entitlement.seats if r.entitlement else ())),
+        max(first.unit_wins().values(), default=0),
+    )
+    plate = Plate(f"overhang-{law.id}", "raising the chamber size for overhang")
+    left, width, row = 52.0, 250.0, 18.0
+    scale = (width - left - 52) / most
+    tones = dict(party_tones([(p, 1) for p in parties], None))
+    for number, result in enumerate(shown, start=1):
+        assert result.entitlement is not None
+        entitled = dict(result.entitlement.seats)
+        wins = result.unit_wins()
+        size = result.chamber_size or 0
+        later = every[every.index(result) + 1 :]
+        if excess(result) and isinstance(loop, RaiseByOverhang):
+            note = (f"overhang {excess(result)}: next", f"{size} + {loop.factor} × {excess(result)} = {size + loop.factor * excess(result)}")
+        elif excess(result):
+            steps = next((i + 1 for i, r in enumerate(later) if excess(r) != excess(result)), len(later))
+            note = (f"overhang {excess(result)}: a seat", f"at a time, {steps} more")
+        elif later:
+            note = (f"balanced at {size}, even:", "one seat more")
+        else:
+            note = ("no overhang left:", "done")
+        height = 6 + row * len(parties)
+        p = plate.panel(f"round-{number}", f"{size} seats", width=width, height=height, caption=(f"round {every.index(result) + 1}", *note))
+        a = p.art
+        for key in parties:
+            a.parties.setdefault(key, tones[key])
+        for i, party in enumerate(parties):
+            y = 4 + i * row
+            due, won_n = entitled.get(party, 0), wins.get(party, 0)
+            sk.text(a, left - 6, y + 9, party, ink="faint", anchor="end")
+            sk.box(a, left, y, max(due * scale, 0.5), 11, cls="hollow", rx=0)
+            if won_n:
+                sk.box(a, left, y + 2, won_n * scale, 7, cls=f"party-{party}", rx=0)
+            end = max(due, won_n) * scale
+            if won_n > due:
+                sk.text(a, left + end + 4, y + 9, f"{due} +{won_n - due}", ink="strong", anchor="start")
+            else:
+                sk.text(a, left + end + 4, y + 9, str(due), ink="faint", anchor="start")
+    return plate
+
+
+def build_sketches(
+    vote: PopularVote,
+    law: Law,
+    home_vote: PopularVote | None = None,
+    overhang: list[tuple[PopularVote, Law]] | None = None,
+) -> dict[str, Any]:
     """Every plate of the site, as the page reads them. ``home_vote`` (the vote the home
-    plate's numbers come from) is ``vote`` unless given."""
+    plate's numbers come from) is ``vote`` unless given; ``overhang`` holds the vote and
+    law of each overhang plate (:data:`OVERHANG`)."""
     home, links = home_plate(home_vote or vote, law)
     home_dict = home.to_dict()
     for panel in home_dict["panels"]:
@@ -455,6 +534,7 @@ def build_sketches(vote: PopularVote, law: Law, home_vote: PopularVote | None = 
             plate.name: plate.to_dict()
             for plate in (vote_plate(vote), who_plate(), what_plate(), recorded_plate(vote))
         }
-        | {"home": home_dict},
+        | {"home": home_dict}
+        | {plate.name: plate.to_dict() for plate in (overhang_plate(v, law) for v, law in overhang or ())},
         "style": [plate.to_dict() for plate in guide.plates()],
     }

@@ -42,7 +42,7 @@ from formulas import build_formulas
 from laws import build_laws
 from references import build_references
 from sketches import KEY as SKETCH_KEY
-from sketches import build_sketches
+from sketches import OVERHANG, build_sketches
 
 logger = logging.getLogger("build")
 
@@ -152,7 +152,12 @@ def main() -> None:
 
     sketch_vote = PopularVote.from_key(SKETCH_KEY, data_dir)
     sketch_law = next(LAWS.in_force(body, day) for key, body, day in ELECTIONS if key == SKETCH_KEY)
-    write(DATA / "sketches.json", build_sketches(sketch_vote, sketch_law))
+    overhang = [
+        (PopularVote.from_key(key, data_dir), LAWS.in_force(body, day))
+        for key, body, day in ELECTIONS
+        if key in OVERHANG.values()
+    ]
+    write(DATA / "sketches.json", build_sketches(sketch_vote, sketch_law, overhang=overhang))
     write(
         DATA / "references.json",
         build_references(

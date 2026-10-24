@@ -3,14 +3,18 @@
   // the engine's (laws.json, written by build.py through laws.py): the steps and their
   // paragraphs, the stages and move ranges derived from what each step reads and writes,
   // and the drawing, made by wahlwerk-ui. The page only explains and shows.
-  import type { LawData, Laws, References } from '../lib/types';
+  import type { LawData, Laws, References, Sketches } from '../lib/types';
   import { href } from '../lib/pages';
   import CodeRef from './CodeRef.svelte';
+  import Plate from './Plate.svelte';
   import RefList from './RefList.svelte';
   import Term from './Term.svelte';
 
   export let laws: Laws | null;
   export let references: References | null;
+  export let sketches: Sketches | null = null;
+
+  $: overhang = law && sketches ? sketches.plates[`overhang-${law.id}`] : undefined;
 
   let chosen = 0;
   $: law = laws ? (laws.laws[chosen] as LawData | undefined) : undefined;
@@ -168,6 +172,32 @@
     </div>
     <CodeRef names={[`${F}.sequence.StepSequence`, `${F}.overhang.RaiseByOverhang`, `${F}.overhang.RaiseUntilBalanced`, `${F}.eligibility.SetChamberSize`]} />
   </section>
+
+  {#if overhang}
+    <section>
+      <h2>Raising for overhang, round by round</h2>
+      <div class="prose">
+        <p>
+          A party can win more single-seat units than its share of the votes entitles it to;
+          the difference is its <b>overhang</b> (<Term t="Überhang" />). It keeps those seats, so
+          the law raises the size of the chamber and divides the seats again until the
+          others have caught up, or until its own limit. Each panel is one run of the
+          repeated block, from the engine's own rounds of this election: a party's
+          entitlement is the outlined bar, the units it won the solid bar inside, and where
+          the solid bar runs past the outline, that is the overhang.
+        </p>
+        <p>
+          The two laws differ only in the loop. The {laws.laws[0].short} raises by twice the
+          overhang at once, twice over, and further only while the overhang left exceeds half
+          a caucus; the {laws.laws[1]?.short ?? 'other law'} raises one seat at a time, up to
+          twice the first overhang, and makes an even chamber odd. Swap the loop and the same
+          votes give another chamber: the rest of the law does not change.
+        </p>
+      </div>
+      <Plate plate={overhang} />
+      <CodeRef names={[`${F}.overhang.RaiseByOverhang.rounds`, `${F}.overhang.RaiseUntilBalanced.rounds`]} />
+    </section>
+  {/if}
 
   <section>
     <h2>Changing a law</h2>

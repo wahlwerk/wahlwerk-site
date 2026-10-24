@@ -124,7 +124,7 @@
       {#if page === 'vote'}
         <Vote {sketches} {references} />
       {:else if page === 'law'}
-        <Protocol {laws} {references} />
+        <Protocol {laws} {references} {sketches} />
       {:else if page === 'formulas'}
         <Formulas {formulas} {references} />
       {:else if data}
