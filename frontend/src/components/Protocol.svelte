@@ -166,7 +166,7 @@
         law gives two numbers, the protocol takes two.
       </p>
     </div>
-    <CodeRef names={[`${F}.sequence.StepSequence`, `${F}.mehrsitze.RepeatForMehrsitze`, `${F}.mehrsitze.RaiseForAusgleich`, `${F}.eligibility.SetChamberSize`]} />
+    <CodeRef names={[`${F}.sequence.StepSequence`, `${F}.overhang.RaiseByOverhang`, `${F}.overhang.RaiseUntilBalanced`, `${F}.eligibility.SetChamberSize`]} />
   </section>
 
   <section>

@@ -15,8 +15,9 @@
 
   // A concept inside another (method.method) is drawn inside it.
   const depth = (field: string): number => field.split('.').filter((p) => !/^\d+$/.test(p)).length - 1;
-  // remainder.largest_remainder: the module of wahlwerk.calc, then the call.
-  const module = (formula: string): string => formula.replace(/^wahlwerk\.calc\./, '').replace(/\.[^.]+$/, '');
+  // remainder.largest_remainder: a function by name, its module of wahlwerk.calc first;
+  // what it needs stands above it.
+  const name = (formula: string): string => formula.replace(/^wahlwerk\.calc\./, '');
 
   // The step docstrings cite no literature; a citer that is never called.
   const noCite = (key: string): number => {
@@ -50,13 +51,14 @@
           <dt>computes with</dt>
           <dd class="chain">
             {#each k.calls as f}
-              <a href={apiHref(f.formula)}><code>{module(f.formula)}.{f.call}</code></a>
+              <a href={apiHref(f.formula)}><code>{name(f.formula)}</code></a>
             {/each}
             {#each k.computes as c}
               <span class="concept" style="margin-left:{depth(c.field)}em">
-                <code class="name">{c.kind}</code>{#if c.parameters.length}<small> {c.parameters.map(([p, v]) => `${p}=${v}`).join(', ')}</small>{/if}
+                <code class="name">{c.kind}</code>
+                {#if c.arguments.length || c.parameters.length}<small>{[...c.arguments, ...c.parameters].map(([p, v]) => `${p}=${v}`).join(', ')}</small>{/if}
                 {#each c.calls as f}
-                  <a href={apiHref(f.formula)}><code>{module(f.formula)}.{f.call}</code></a>
+                  <a href={apiHref(f.formula)}><code>{name(f.formula)}</code></a>
                 {/each}
               </span>
             {/each}
