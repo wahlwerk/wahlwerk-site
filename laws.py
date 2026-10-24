@@ -105,9 +105,9 @@ def _facts(steps: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return list(facts.values())
 
 
-STEP_WIDTH = 560
-"""The width a step is drawn at, beside its chamber: with the chamber and the gap between
-them, the page's column (760 px)."""
+STEP_WIDTH = 640
+"""The width a step is drawn at, as the whole drawing was: scaled to the page's column,
+with its chamber in the margin beside it where the window has room."""
 
 CHAMBER_WIDTH = 176
 """The width of the chamber beside each step."""
@@ -154,9 +154,9 @@ def _aside(allocation: Allocation, order: list[str | None]) -> dict[str, Any]:
     if allocation.chamber is not None:
         held = allocation.chamber.seats_by_party
         seats = [[p, held[p], 0] for p in order if held.get(p)]
-        return {"seats": seats, "free": 0, "standing": [], "caption": f"{allocation.chamber.size} seats, all filled"}
+        return {"seats": seats, "free": 0, "standing": [], "caption": "all filled"}
     if allocation.unit_mandates is None:
-        return {"seats": [], "free": size, "standing": [], "caption": f"{size} seats, none filled" if size else ""}
+        return {"seats": [], "free": size, "standing": [], "caption": "none filled" if size else ""}
     wins: dict[str | None, int] = dict(allocation.unit_wins())
     independent = sum(1 for d in allocation.unit_mandates if d.party is None)
     if independent:
@@ -167,7 +167,7 @@ def _aside(allocation: Allocation, order: list[str | None]) -> dict[str, Any]:
     if not due:
         seats = [[p, wins[p], 0] for p in order if wins.get(p)]
         filled = sum(wins.values())
-        return {"seats": seats, "free": max(size - filled, 0), "standing": [], "caption": f"{size} seats, {filled} filled"}
+        return {"seats": seats, "free": max(size - filled, 0), "standing": [], "caption": f"{filled} filled"}
     seats = [[p, min(due.get(p, 0), wins.get(p, 0)), due.get(p, 0) - min(due.get(p, 0), wins.get(p, 0))] for p in order if due.get(p)]
     standing = [[p, wins.get(p, 0) - due.get(p, 0)] for p in order if wins.get(p, 0) > due.get(p, 0)]
     filled = sum(s[1] for s in seats)
@@ -175,5 +175,5 @@ def _aside(allocation: Allocation, order: list[str | None]) -> dict[str, Any]:
         "seats": seats,
         "free": max(size - sum(due.values()), 0),
         "standing": standing,
-        "caption": f"{size} seats, {filled} filled",
+        "caption": f"{filled} filled",
     }

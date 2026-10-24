@@ -97,7 +97,8 @@
     </p>
     {#if law.replay}
       <p class="prose">
-        Beside each step stands the chamber as the engine had it after that step, counting
+        Beside each step stands the chamber as the engine had it after that step, its size in
+        the middle, counting
         {ELECTION_TEXT[law.replay]?.label ?? law.replay}: hollow seats are not yet anyone's, a
         party's colour solid where a winner of a single-seat unit fills the seat, as an edge
         where a list seat is still to fill. Members a party won beyond its seats stand without
@@ -282,8 +283,10 @@
     margin: 0;
     overflow-x: auto;
   }
-  /* Two columns, as IR-bands' spread: the step left, the chamber after it right, its top
-     level with the step's; one column when the section is narrower than both. */
+  /* Each step spans the column like the text; the chamber after it stands in the right
+     margin, its top level with the step's, where the window has room for it (IR-bands'
+     spread). Narrower, the two share the column; at phone width the chamber follows its
+     step. */
   .parts {
     container-type: inline-size;
   }
@@ -310,6 +313,17 @@
     width: 100%;
     height: auto;
   }
+  /* Room for the margin: the side panel, its gap, the column and twice the chamber with
+     its gap, so the column stays centred (a media query cannot read a token). */
+  @media (min-width: 1500px) {
+    /* The grid reaches into the margin by the chamber and its gap, so the step keeps the
+       column's width and a row is as tall as the taller of the two. */
+    .part {
+      grid-template-columns: minmax(0, 1fr) 176px;
+      gap: 32px;
+      margin-right: -208px;
+    }
+  }
   @container (max-width: 600px) {
     .part {
       grid-template-columns: minmax(0, 1fr);
@@ -320,12 +334,6 @@
       max-width: 176px;
       margin-bottom: 12px;
     }
-  }
-  /* The drawing spans the column like the text, scaled to its width. */
-  .drawing :global(svg) {
-    display: block;
-    width: 100%;
-    height: auto;
   }
   td small {
     display: block;
