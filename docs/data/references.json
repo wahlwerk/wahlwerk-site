@@ -29,7 +29,7 @@
   "de.bund.gobt": {
    "short": "GO-BT",
    "title": "Geschäftsordnung des Deutschen Bundestages",
-   "citation": "cited in the version in force today; Sec. 10 (1) is the engine's caucus protocol (wahlwerk.law.de.bund.gobt)",
+   "citation": "cited in the version in force today; Sec. 10 (1) is the caucus protocol in wahlwerk.law.de.bund.gobt",
    "source": "https://www.gesetze-im-internet.de/btgo_1980/",
    "implemented": false
   }

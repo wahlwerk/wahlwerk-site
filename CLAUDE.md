@@ -69,6 +69,7 @@ frontend/src/
     Plate.svelte          <- a sketch plate: numbered panels that wrap at phone width
     CodeRef.svelte        <- "in the code": links into the API reference and the source
     Law.svelte            <- a statute cited inline (Art. 63 GG), linked to its version
+    Term.svelte           <- a term of art (Landtag): italic, dotted underline, concept on hover
     Cite.svelte           <- a literature citation, a superscript number
     RefList.svelte        <- a page's sources: literature, statutes, data
     Protocol.svelte       <- Law page: the LWG LSA as the engine's protocol (law/de/st/lwg.py)
@@ -85,6 +86,7 @@ frontend/src/
     types.ts              <- the shape of elections.json
     elections.ts          <- per-election labels and notes (prose only)
     citations.ts          <- formats literature, statutes and data sources
+    glossary.ts           <- every term of art: the concept it instantiates, its system, a gloss
     api.ts                <- links to the API reference (wahlwerk.github.io/wahlwerk) and to the source
 ```
 
@@ -115,5 +117,12 @@ frontend/src/
 - **Every claim has a source**, from its own home: literature numbered from the engine's
   `docs/references.bib` (Zotero), statutes inline in their own form (`Art. 63 GG`) linked to
   the version in the engine's law registry, data named with publisher, licence and
-  attribution. A statute the engine does not implement goes in `CITED_STATUTES`.
+  attribution. A statute the engine does not implement goes in the engine's
+  `docs/statutes.toml`, which the API reference reads too.
+- **Concepts first, systems as examples.** Write about what holds in any system, in plain
+  words, and use one system as the worked example. Four roles of text: a concept plain
+  (bold where defined); a term of art, the name one system gives a concept, through
+  `<Term t="Landtag" />` (italic, dotted underline, its concept on hover), every one in
+  `lib/glossary.ts`; code in monospace, linked by `CodeRef`; a statute through `<Law>`.
+  The style guide's Writing section shows them.
 - No em-dashes in any text.

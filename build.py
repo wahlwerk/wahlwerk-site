@@ -12,7 +12,8 @@ Writes three files to ``docs/data/``:
 - ``sketches.json``: the sketches of the Vote page (``sketches.py``), drawn with
   wahlwerk-ui from a real bundle, one SVG per panel, and wahlwerk-ui's style guide.
 - ``references.json``: the sources, from their three homes (``references.py``): the
-  engine's ``docs/references.bib`` (Zotero), the engine's law registry, the bundles.
+  engine's ``docs/references.bib`` (Zotero) and ``docs/statutes.toml``, its law
+  registry, the bundles; the same sources as the engine's API reference.
 """
 
 from __future__ import annotations
@@ -124,7 +125,8 @@ def main() -> None:
         "--engine",
         type=Path,
         default=HERE.parent / "wahlwerk",
-        help="the wahlwerk checkout, for docs/references.bib (default: beside this repository)",
+        help="the wahlwerk checkout, for docs/references.bib and docs/statutes.toml "
+        "(default: beside this repository)",
     )
     args = parser.parse_args()
     data_dir: Path = args.data
@@ -145,6 +147,7 @@ def main() -> None:
         DATA / "references.json",
         build_references(
             args.engine / "docs" / "references.bib",
+            args.engine / "docs" / "statutes.toml",
             LAWS.laws,
             {SKETCH_KEY: sketch_vote},
         ),

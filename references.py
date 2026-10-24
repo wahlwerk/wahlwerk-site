@@ -6,7 +6,8 @@
 - **Statutes**: the engine's law registry, one entry per version (``Law.id``, the
   citation of its Fassung, its source, the dates it was in force), so a citation names
   the version it means. A statute the page cites but the engine does not implement
-  (the Grundgesetz, the GO-BT) is in :data:`CITED_STATUTES` until the engine records it.
+  (the Grundgesetz, the GO-BT) is in the engine's ``docs/statutes.toml`` until the engine
+  records it; the API reference reads the same file.
   Cited inline in the German form, with the section: ``Art. 63 GG``.
 - **Data**: each bundle's ``[source]``, as the engine reads it.
 
@@ -25,7 +26,7 @@ from typing import Any
 from wahlwerk.law.base import Law
 from wahlwerk.vote.popular.popular_vote import PopularVote
 
-__all__ = ["CITED_STATUTES", "KEEP", "build_references", "parse_bibtex", "read_bibtex"]
+__all__ = ["KEEP", "build_references", "parse_bibtex", "read_bibtex", "read_cited_statutes"]
 
 KEEP = (
     "author",
@@ -52,23 +53,28 @@ KEEP = (
 SHORT: dict[str, str] = {"de.st.lwg.2021": "LWG LSA", "de.mv.lkwg.2011": "LKWG M-V"}
 """The abbreviation a law is cited with, by law id; the engine's Law has no field yet."""
 
-CITED_STATUTES: dict[str, dict[str, Any]] = {
-    "de.bund.gg": {
-        "short": "GG",
-        "title": "Grundgesetz für die Bundesrepublik Deutschland",
-        "citation": "cited in the version in force today",
-        "source": "https://www.gesetze-im-internet.de/gg/",
-        "implemented": False,
-    },
-    "de.bund.gobt": {
-        "short": "GO-BT",
-        "title": "Geschäftsordnung des Deutschen Bundestages",
-        "citation": "cited in the version in force today; Sec. 10 (1) is the engine's caucus protocol (wahlwerk.law.de.bund.gobt)",
-        "source": "https://www.gesetze-im-internet.de/btgo_1980/",
-        "implemented": False,
-    },
-}
-"""Statutes the site cites that the engine does not record as a ``Law`` yet."""
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10; tomli is a dependency of the engine there
+    import tomli as tomllib
+
+
+def read_cited_statutes(path: Path) -> dict[str, dict[str, Any]]:
+    """Statutes cited but not implemented, from the engine's ``docs/statutes.toml``."""
+    if not path.exists():
+        return {}
+    cited = tomllib.loads(path.read_text(encoding="utf-8"))
+    return {
+        law_id: {
+            "short": entry["short"],
+            "title": entry["title"],
+            "citation": entry["version"],
+            "source": entry.get("source"),
+            "implemented": False,
+        }
+        for law_id, entry in cited.items()
+    }
+
 
 _ENTRY = re.compile(r"@(\w+)\s*\{\s*([^,\s]+)\s*,", re.MULTILINE)
 _FIELD = re.compile(r"\s*(\w+)\s*=\s*")
@@ -137,11 +143,15 @@ def _statute(law: Law) -> dict[str, Any]:
 
 
 def build_references(
-    bib: Path, laws: Iterable[Law], votes: dict[str, PopularVote]
+    bib: Path, cited: Path, laws: Iterable[Law], votes: dict[str, PopularVote]
 ) -> dict[str, Any]:
-    """Literature, statutes and data sources, as ``references.json``."""
+    """Literature, statutes and data sources, as ``references.json``.
+
+    ``bib`` and ``cited`` are the engine's ``docs/references.bib`` and
+    ``docs/statutes.toml``, the files its API reference reads too.
+    """
     statutes: dict[str, dict[str, Any]] = {str(law.id): _statute(law) for law in laws}
-    statutes.update(CITED_STATUTES)
+    statutes.update(read_cited_statutes(cited))
     return {
         "literature": read_bibtex(bib),
         "statutes": statutes,

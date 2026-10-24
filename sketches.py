@@ -39,7 +39,11 @@ def _short(unit: str) -> str:
 
 
 def vote_plate(vote: PopularVote) -> Plate:
-    """A popular vote in four steps: electorate, Stimmzettel, counting, tally."""
+    """A popular vote in four steps: electorate, ballot paper, counting, tally.
+
+    The panels that show data use the example's own unit names (wahlkreis, wbz); the
+    schematic panels elsewhere use general ones (region, district, unit).
+    """
     rows = vote.tally.filter(unit=UNIT).rows
     plate = Plate("vote", "a popular vote, from the electorate to a tally")
 
@@ -48,7 +52,7 @@ def vote_plate(vote: PopularVote) -> Plate:
         "who votes",
         width=240,
         height=150,
-        caption=("the electorate", "wahlberechtigte, each in one", "wahlbezirk of a wahlkreis"),
+        caption=("the electorate", "voters, each registered in", "one unit of one district"),
     )
     a = p.art
     sk.unit(a, 1, 1, 238, 148, "wahlkreis 001")
@@ -60,13 +64,13 @@ def vote_plate(vote: PopularVote) -> Plate:
     sk.crowd(a, 184, 40, 44, 90, 7, cls="hollow", r=2.2)
 
     p = plate.panel(
-        "stimmzettel",
+        "ballot",
         "what each voter does",
         width=220,
         height=150,
-        caption=("the stimmzettel", "two sections, one mark each:", "a person and a list"),
+        caption=("the ballot paper", "two sections, one mark each:", "a person and a list"),
     )
-    sk.stimmzettel(
+    sk.ballot_paper(
         p.art,
         1,
         20,
@@ -82,7 +86,7 @@ def vote_plate(vote: PopularVote) -> Plate:
         "how it is counted",
         width=220,
         height=150,
-        caption=("counted per unit", "urne in its wahlbezirk, brief", "in a briefwahlbezirk"),
+        caption=("counted per unit", "at the polling station, and", "by post in a unit of its own"),
     )
     a = p.art
     sk.box(a, 10, 26, 52, 40)  # the urn
@@ -141,13 +145,13 @@ def who_plate() -> Plate:
         caption=("the electorate", "anonymous and secret, counted", "per unit, summed up the tree"),
     )
     a = p.art
-    sk.text(a, 150, 14, "land", ink="strong", is_name=True)
+    sk.text(a, 150, 14, "region", ink="strong", is_name=True)
     for i, wk in enumerate((75, 225)):
         sk.link(a, 150, 19, wk, 40)
-        sk.text(a, wk, 52, f"wahlkreis {i + 1}", ink="plain")
+        sk.text(a, wk, 52, f"district {i + 1}", ink="plain")
         for j, x in enumerate((wk - 38, wk + 38)):
             sk.link(a, wk, 57, x, 76)
-            sk.unit(a, x - 32, 78, 64, 86, f"wbz {2 * i + j + 1}")
+            sk.unit(a, x - 32, 78, 64, 86, f"unit {2 * i + j + 1}")
             sk.crowd(a, x - 28, 96, 56, 64, 12 + 3 * j)
 
     p = plate.panel(
@@ -165,7 +169,7 @@ def who_plate() -> Plate:
     choices = ["yes"] * 9 + ["no"] * 6 + ["abstain"] * 2 + ["yes"] * 4 + ["absent"] + ["no"] * 3
     seats = sk.chamber(a, 150, 150, 110, choices)
     sk.leader(a, 40, 24, seats[3][0], seats[3][1])
-    sk.text(a, 38, 20, "spd.004: yes", anchor="end" if False else "start")
+    sk.text(a, 38, 20, "mandate 4: yes", anchor="start")
     sk.leader(a, 262, 24, seats[21][0], seats[21][1])
     sk.text(a, 262, 20, "absent", ink="faint", anchor="end")
     sk.text(a, 150, 140, f"{len(choices)} mandates", ink="faint")
@@ -184,7 +188,7 @@ def what_plate() -> Plate:
         height=h,
         caption=("a party list", "one mark,", "counted per party"),
     )
-    sk.stimmzettel(p.art, 1, 10, 168, [("zweitstimme", ["afd", "cdu", "linke", "spd"], 2)])
+    sk.ballot_paper(p.art, 1, 10, 168, [("zweitstimme", ["afd", "cdu", "linke", "spd"], 2)])
 
     p = plate.panel(
         "person",
@@ -193,23 +197,23 @@ def what_plate() -> Plate:
         height=h,
         caption=("a person", "one mark,", "counted per candidate"),
     )
-    sk.stimmzettel(p.art, 1, 10, 168, [("erststimme", ["a · afd", "b · cdu", "c · spd"], 1)])
+    sk.ballot_paper(p.art, 1, 10, 168, [("erststimme", ["a · afd", "b · cdu", "c · spd"], 1)])
 
     p = plate.panel(
         "option",
         "yes or no",
         width=w,
         height=h,
-        caption=("an option", "yes, no, sometimes more:", "a volksentscheid, a motion"),
+        caption=("an option", "yes, no, sometimes more:", "a referendum, a motion"),
     )
-    sk.stimmzettel(p.art, 1, 10, 168, [("volksentscheid", ["ja", "nein"], 0)])
+    sk.ballot_paper(p.art, 1, 10, 168, [("volksentscheid", ["ja", "nein"], 0)])
 
     p = plate.panel(
         "several",
         "several marks",
         width=w,
         height=h,
-        caption=("several marks", "kumulieren, panaschieren:", "bigger counts, more rows"),
+        caption=("several marks", "more than one per person,", "or across lists"),
     )
     a = p.art
     sk.box(a, 1, 10, 168, 100)
@@ -279,7 +283,7 @@ def recorded_plate(vote: PopularVote) -> Plate:
         "the kinds",
         width=280,
         height=170,
-        caption=("per wahlbezirk", "eligible, voters, invalid and", "votes; valid is a sum"),
+        caption=("per unit", "eligible, voters, invalid and", "votes; valid is a sum"),
     )
     a = p.art
     full = 260
@@ -313,20 +317,20 @@ def recorded_plate(vote: PopularVote) -> Plate:
         height=170,
         caption=(
             "two hierarchies",
-            "the law counts along wahlkreise;",
-            "a gemeinde can cross them",
+            "the law counts along one;",
+            "an administrative unit crosses it",
         ),
     )
     a = p.art
-    sk.text(a, 150, 14, "land", ink="strong", is_name=True)
+    sk.text(a, 150, 14, "region", ink="strong", is_name=True)
     xs = (40, 110, 190, 260)
     for i, wk in enumerate((75, 225)):
         sk.link(a, 150, 19, wk, 40)
-        sk.text(a, wk, 52, f"wahlkreis {i + 1}")
+        sk.text(a, wk, 52, f"district {i + 1}")
         for x in xs[2 * i : 2 * i + 2]:
             sk.link(a, wk, 57, x, 80)
             sk.dot(a, x, 86, 6, cls="subject")
-    sk.unit(a, 96, 102, 108, 50, "gemeinde")
+    sk.unit(a, 96, 102, 108, 50, "municipality")
     sk.axis(a, 110, 92, 110, 102)
     sk.axis(a, 190, 92, 190, 102)
     sk.text(a, 150, 166, "administrative, beside the ids", ink="faint")

@@ -5,6 +5,7 @@
   import type { ColorToken } from '../lib/tokens';
   import type { Sketches } from '../lib/types';
   import Plate from './Plate.svelte';
+  import Term from './Term.svelte';
 
   /** The drawing style guide's plates, drawn by wahlwerk-ui (sketch/guide.py). */
   export let sketches: Sketches | null = null;
@@ -135,6 +136,50 @@
       {/each}
     </dl>
   </section>
+  <section>
+    <h2>Writing</h2>
+    <p>
+      The site is written about concepts that hold in any system, with one system as the worked
+      example. Four roles of text, each with one look:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Role</th><th>Looks like</th><th>When</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>concept</td>
+            <td>a chamber, <b>the tally</b></td>
+            <td>Plain words for what holds in every system; bold where the page defines it.</td>
+          </tr>
+          <tr>
+            <td>term of art</td>
+            <td><Term t="Landtag" />, <Term t="Wahlkreis" /></td>
+            <td>
+              The name one system gives to a concept, in the system's own language: italic, dotted
+              underline, and hovering says which concept it is. Every term is in
+              <code>lib/glossary.ts</code>; a term not there fails the build.
+            </td>
+          </tr>
+          <tr>
+            <td>code</td>
+            <td><code>TallyRow</code>, <code>vote/chamber/</code></td>
+            <td>The object in the engine, when the sentence is about the code; linked to the API reference where it is named in a "in the code" line.</td>
+          </tr>
+          <tr>
+            <td>statute</td>
+            <td><span class="law">Art. 63 (2) GG</span></td>
+            <td>A provision, in the citation form of its own system, linked to the version cited.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Say the concept first and the term of art second: "a <b>chamber</b> such as a
+      <Term t="Landtag" />", never the reverse. A term of art is italic in prose only; in a
+      drawing every label is set in the one face of the plate.
+    </p>
+  </section>
+
   <section>
     <h2>Drawings</h2>
     <p>
