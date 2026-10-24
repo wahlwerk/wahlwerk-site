@@ -13,6 +13,11 @@
 
   $: statutes = laws ? laws.laws.map((l) => l.id) : [];
 
+  // A concept inside another (method.method) is drawn inside it.
+  const depth = (field: string): number => field.split('.').filter((p) => !/^\d+$/.test(p)).length - 1;
+  // remainder.largest_remainder: the module of wahlwerk.calc, then the call.
+  const module = (formula: string): string => formula.replace(/^wahlwerk\.calc\./, '').replace(/\.[^.]+$/, '');
+
   // The step docstrings cite no literature; a citer that is never called.
   const noCite = (key: string): number => {
     throw new Error(`unexpected citation ${key}`);
@@ -41,11 +46,19 @@
         <dd>{#each k.reads as f}<code class="fact">{f}</code>{/each}</dd>
         <dt>writes</dt>
         <dd>{#each k.writes as f}<code class="fact">{f}</code>{/each}</dd>
-        {#if k.computes.length}
+        {#if k.computes.length || k.calls.length}
           <dt>computes with</dt>
           <dd class="chain">
+            {#each k.calls as f}
+              <a href={apiHref(f.formula)}><code>{module(f.formula)}.{f.call}</code></a>
+            {/each}
             {#each k.computes as c}
-              <span style="padding-left:{c.field.split('.').length - 1}em">↳ <code>{c.kind}</code> → <a href={apiHref(c.formula)}><code>{c.formula.replace(/^wahlwerk\./, '')}</code></a></span>
+              <span class="concept" style="margin-left:{depth(c.field)}em">
+                <code class="name">{c.kind}</code>{#if c.parameters.length}<small> {c.parameters.map(([p, v]) => `${p}=${v}`).join(', ')}</small>{/if}
+                {#each c.calls as f}
+                  <a href={apiHref(f.formula)}><code>{module(f.formula)}.{f.call}</code></a>
+                {/each}
+              </span>
             {/each}
           </dd>
         {/if}
@@ -81,7 +94,21 @@
   }
   .chain {
     flex-direction: column;
+    gap: 4px;
+  }
+  /* A core concept: plain paper, apart from the step it serves (the drawing's two
+     styles); its functions inside it. */
+  .concept {
+    display: flex;
+    flex-direction: column;
     gap: 2px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 4px 8px;
+  }
+  .concept .name {
+    font-weight: 600;
   }
   .fact {
     font-size: 0.8rem;

@@ -179,8 +179,10 @@ export interface ProtocolStep {
   /** Positions of the steps at its level it reads from. */
   depends_on: number[];
   holds: string | null;
-  /** The models it computes with, outermost first, each down to its formula in wahlwerk.calc. */
-  uses: FormulaLink[];
+  /** The core concepts it computes with, outermost first, each down to its functions in wahlwerk.calc. */
+  uses: Concept[];
+  /** The functions in wahlwerk.calc it calls itself. */
+  calls: FormulaCall[];
   children: ProtocolStep[];
   /** Top-level steps only: the first and last position it could move to, same result. */
   movable?: [number, number];
@@ -205,13 +207,21 @@ export interface LawData {
   drawing: string;
 }
 
-/** A model a step computes with and the function in wahlwerk.calc it calls. */
-export interface FormulaLink {
+/** One function of wahlwerk.calc and how it is called. */
+export interface FormulaCall {
+  /** Full dotted name, e.g. wahlwerk.calc.plurality.plurality. */
+  formula: string;
+  /** As written, defaults included: plurality(votes, seats=1). */
+  call: string;
+}
+
+/** A core concept a step computes with (a method, a threshold), law-free. */
+export interface Concept {
   /** Where it sits in the step: method, method.method. */
   field: string;
   kind: string;
-  /** Full dotted name, e.g. wahlwerk.calc.plurality.plurality. */
-  formula: string;
+  parameters: [string, string][];
+  calls: FormulaCall[];
 }
 
 export interface StepKind {
@@ -224,8 +234,10 @@ export interface StepKind {
   /** Whether it holds steps of its own (a sequence, a loop). */
   holds: boolean;
   uses: { law: string; short: string; citation: string | null; path: (number | string)[] }[];
-  /** What it computes with in the laws shown, each down to its formula. */
-  computes: FormulaLink[];
+  /** The core concepts it computes with in the laws shown, each down to its functions. */
+  computes: Concept[];
+  /** The functions in wahlwerk.calc it calls itself. */
+  calls: FormulaCall[];
 }
 
 /** docs/data/laws.json: the laws the site shows and every kind of step in them. */

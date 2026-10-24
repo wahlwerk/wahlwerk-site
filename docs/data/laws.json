@@ -33,6 +33,7 @@
      "depends_on": [],
      "holds": null,
      "uses": [],
+     "calls": [],
      "children": [],
      "movable": [
       0,
@@ -59,6 +60,7 @@
      "depends_on": [],
      "holds": "steps",
      "uses": [],
+     "calls": [],
      "children": [
       {
        "path": [
@@ -86,6 +88,7 @@
        "depends_on": [],
        "holds": null,
        "uses": [],
+       "calls": [],
        "children": []
       },
       {
@@ -114,6 +117,7 @@
        "depends_on": [],
        "holds": null,
        "uses": [],
+       "calls": [],
        "children": []
       }
      ],
@@ -145,6 +149,7 @@
      ],
      "holds": "steps",
      "uses": [],
+     "calls": [],
      "children": [
       {
        "path": [
@@ -183,9 +188,16 @@
         {
          "field": "method",
          "kind": "Plurality",
-         "formula": "wahlwerk.calc.plurality.plurality"
+         "parameters": [],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.plurality.plurality",
+           "call": "plurality(votes, seats=1)"
+          }
+         ]
         }
        ],
+       "calls": [],
        "children": []
       },
       {
@@ -221,7 +233,25 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
-       "uses": [],
+       "uses": [
+        {
+         "field": "threshold",
+         "kind": "RelativeThreshold",
+         "parameters": [
+          [
+           "share",
+           "1/20"
+          ]
+         ],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.threshold.share_threshold",
+           "call": "share_threshold(votes, share, *, accept_equal=True)"
+          }
+         ]
+        }
+       ],
+       "calls": [],
        "children": []
       }
      ],
@@ -264,7 +294,37 @@
       2
      ],
      "holds": "protocol",
-     "uses": [],
+     "uses": [
+      {
+       "field": "fraktion",
+       "kind": "FraktionSize",
+       "parameters": [
+        [
+         "share",
+         "1/20"
+        ],
+        [
+         "section",
+         "zweitstimme"
+        ],
+        [
+         "level",
+         "land"
+        ]
+       ],
+       "calls": [
+        {
+         "formula": "wahlwerk.calc.quota.hare",
+         "call": "hare(votes, seats)"
+        },
+        {
+         "formula": "wahlwerk.calc.quota.whole_seats",
+         "call": "whole_seats(votes, quota)"
+        }
+       ]
+      }
+     ],
+     "calls": [],
      "children": [
       {
        "path": [
@@ -293,6 +353,7 @@
        "depends_on": [],
        "holds": "steps",
        "uses": [],
+       "calls": [],
        "children": [
         {
          "path": [
@@ -319,6 +380,7 @@
          "depends_on": [],
          "holds": null,
          "uses": [],
+         "calls": [],
          "children": []
         },
         {
@@ -364,14 +426,31 @@
           {
            "field": "method",
            "kind": "MajorityFirst",
-           "formula": "wahlwerk.calc.majority.majority_first"
+           "parameters": [],
+           "calls": [
+            {
+             "formula": "wahlwerk.calc.majority.majority_first",
+             "call": "majority_first(votes, seats, quota=hare)"
+            }
+           ]
           },
           {
            "field": "method.method",
            "kind": "HareNiemeyer",
-           "formula": "wahlwerk.calc.remainder.largest_remainder"
+           "parameters": [],
+           "calls": [
+            {
+             "formula": "wahlwerk.calc.remainder.largest_remainder",
+             "call": "largest_remainder(votes, seats, quota=hare, *, first=None)"
+            },
+            {
+             "formula": "wahlwerk.calc.quota.hare",
+             "call": "hare(votes, seats)"
+            }
+           ]
           }
          ],
+         "calls": [],
          "children": []
         },
         {
@@ -401,6 +480,16 @@
          ],
          "holds": null,
          "uses": [],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.compensation.remaining",
+           "call": "remaining(seats, won)"
+          },
+          {
+           "formula": "wahlwerk.calc.compensation.overhang",
+           "call": "overhang(seats, minimum)"
+          }
+         ],
          "children": []
         }
        ]
@@ -437,6 +526,7 @@
      ],
      "holds": null,
      "uses": [],
+     "calls": [],
      "children": [],
      "movable": [
       4,
@@ -550,7 +640,7 @@
      "read": []
     }
    ],
-   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-c889b909\" class=\"ww\" width=\"640\" height=\"697\" viewBox=\"0 0 640 697\" role=\"img\" aria-label=\"Wahlgesetz des Landes Sachsen-Anhalt (LWG)\">\n  <style>#ww-c889b909{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-c889b909{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-c889b909{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-c889b909{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-c889b909 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-c889b909 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-c889b909 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-c889b909 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-c889b909 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-c889b909 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-c889b909 .subject-dot{fill:var(--ww-subject-line)}#ww-c889b909 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-c889b909 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-c889b909 .arrowhead{fill:var(--ww-content)}#ww-c889b909 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-c889b909 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-c889b909 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-c889b909 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-c889b909 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-c889b909 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-c889b909 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-c889b909 .name{font-weight:600}#ww-c889b909.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-c889b909 .card-title{margin-bottom:6px}#ww-c889b909 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-c889b909 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-c889b909 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-c889b909 .legend td.num{padding-right:0;text-align:right}#ww-c889b909 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-construction\" inkscape:groupmode=\"layer\" inkscape:label=\"construction\">\n    <rect class=\"construction\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" />\n    <rect class=\"construction\" x=\"30\" y=\"208\" width=\"402\" height=\"151\" />\n    <rect class=\"construction\" x=\"30\" y=\"373\" width=\"402\" height=\"266\" />\n    <rect class=\"construction\" x=\"38\" y=\"415\" width=\"386\" height=\"216\" />\n  </g>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"paper\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"250\" width=\"386\" height=\"51\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"302\" x2=\"231\" y2=\"309\" />\n      <polygon class=\"arrowhead\" points=\"231,314 228.75,309 233.25,309\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"315\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"360\" x2=\"231\" y2=\"367\" />\n      <polygon class=\"arrowhead\" points=\"231,372 228.75,367 233.25,367\" />\n    </g>\n    <rect class=\"paper\" x=\"46\" y=\"457\" width=\"370\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"494\" x2=\"231\" y2=\"501\" />\n      <polygon class=\"arrowhead\" points=\"231,506 228.75,501 233.25,501\" />\n    </g>\n    <rect class=\"paper\" x=\"46\" y=\"507\" width=\"370\" height=\"66\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"574\" x2=\"231\" y2=\"581\" />\n      <polygon class=\"arrowhead\" points=\"231,586 228.75,581 233.25,581\" />\n    </g>\n    <rect class=\"paper\" x=\"46\" y=\"587\" width=\"370\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"640\" x2=\"231\" y2=\"647\" />\n      <polygon class=\"arrowhead\" points=\"231,652 228.75,647 233.25,647\" />\n    </g>\n    <rect class=\"paper\" x=\"30\" y=\"653\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→ chamber_size</text>\n    <text class=\"label plain\" x=\"442\" y=\"38\" text-anchor=\"start\">  minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Sec. 1 (1)</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=83</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">count the votes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 31, 32, 35 (2)</text>\n    <text class=\"label plain\" x=\"434\" y=\"115\" text-anchor=\"start\">→ total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 31, 32</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"434\" y=\"165\" text-anchor=\"start\">→ total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 35 (2)</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">decide the Wahlkreise and who takes part</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 33, 35 (3)</text>\n    <text class=\"label plain\" x=\"434\" y=\"265\" text-anchor=\"start\">→ unit_winners</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">ElectPerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 33</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">method=Plurality, section=erststimme, level=wahlkreis</text>\n    <text class=\"label plain\" x=\"44\" y=\"295\" text-anchor=\"start\">↳ Plurality: calc.plurality.plurality</text>\n    <text class=\"label plain\" x=\"434\" y=\"330\" text-anchor=\"start\">→ eligible</text>\n    <text class=\"label strong name\" x=\"44\" y=\"330\" text-anchor=\"start\">ApplyThreshold</text>\n    <text class=\"label faint\" x=\"418\" y=\"330\" text-anchor=\"end\">Sec. 35 (3)</text>\n    <text class=\"label faint\" x=\"44\" y=\"345\" text-anchor=\"start\">threshold=RelativeThreshold(1/20), section=zweitstimme,…</text>\n    <text class=\"label faint\" x=\"19\" y=\"388\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"388\" text-anchor=\"start\">RepeatForMehrsitze (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"403\" text-anchor=\"start\">Sec. 35 (8), (8a) · fraktion=FraktionSize(1/20, zweitstimm…</text>\n    <text class=\"label plain name\" x=\"44\" y=\"430\" text-anchor=\"start\">allocate the seats of one chamber size</text>\n    <text class=\"label faint\" x=\"44\" y=\"445\" text-anchor=\"start\">Sec. 35 (4) to (7)</text>\n    <text class=\"label plain\" x=\"426\" y=\"472\" text-anchor=\"start\">→ seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"472\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"472\" text-anchor=\"end\">Sec. 35 (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"487\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label plain\" x=\"426\" y=\"522\" text-anchor=\"start\">→ entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"522\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"522\" text-anchor=\"end\">Sec. 35 (5), (6)</text>\n    <text class=\"label faint\" x=\"52\" y=\"537\" text-anchor=\"start\">method=MajorityFirst(HareNiemeyer), section=zweitstim…</text>\n    <text class=\"label plain\" x=\"52\" y=\"552\" text-anchor=\"start\">↳ MajorityFirst: calc.majority.majority_first</text>\n    <text class=\"label plain\" x=\"52\" y=\"567\" text-anchor=\"start\">  ↳ HareNiemeyer: calc.remainder.largest_remainder</text>\n    <text class=\"label plain\" x=\"426\" y=\"602\" text-anchor=\"start\">→ list_seats, overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"602\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"602\" text-anchor=\"end\">Sec. 35 (7)</text>\n    <text class=\"label faint\" x=\"52\" y=\"617\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label faint\" x=\"19\" y=\"668\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"668\" text-anchor=\"start\">→ chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"668\" text-anchor=\"start\">FormChamber</text>\n    <text class=\"label faint\" x=\"36\" y=\"683\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
+   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-ca7271e3\" class=\"ww\" width=\"640\" height=\"932\" viewBox=\"0 0 640 932\" role=\"img\" aria-label=\"Wahlgesetz des Landes Sachsen-Anhalt (LWG)\">\n  <style>#ww-ca7271e3{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-ca7271e3{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-ca7271e3{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-ca7271e3{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-ca7271e3 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-ca7271e3 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-ca7271e3 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-ca7271e3 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-ca7271e3 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-ca7271e3 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-ca7271e3 .subject-dot{fill:var(--ww-subject-line)}#ww-ca7271e3 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-ca7271e3 .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-ca7271e3 .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-ca7271e3 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-ca7271e3 .arrowhead{fill:var(--ww-content)}#ww-ca7271e3 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-ca7271e3 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-ca7271e3 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-ca7271e3 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-ca7271e3 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-ca7271e3 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-ca7271e3 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-ca7271e3 .name{font-weight:600}#ww-ca7271e3.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-ca7271e3 .card-title{margin-bottom:6px}#ww-ca7271e3 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-ca7271e3 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-ca7271e3 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-ca7271e3 .legend td.num{padding-right:0;text-align:right}#ww-ca7271e3 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"step\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"208\" width=\"402\" height=\"224\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"250\" width=\"386\" height=\"80\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"286\" width=\"370\" height=\"38\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"331\" x2=\"231\" y2=\"338\" />\n      <polygon class=\"arrowhead\" points=\"231,343 228.75,338 233.25,338\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"344\" width=\"386\" height=\"80\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"380\" width=\"370\" height=\"38\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"433\" x2=\"231\" y2=\"440\" />\n      <polygon class=\"arrowhead\" points=\"231,445 228.75,440 233.25,440\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"446\" width=\"402\" height=\"428\" rx=\"2\" />\n    <rect class=\"paper\" x=\"38\" y=\"488\" width=\"386\" height=\"53\" rx=\"2\" />\n    <rect class=\"step-frame\" x=\"38\" y=\"547\" width=\"386\" height=\"319\" rx=\"2\" />\n    <rect class=\"step\" x=\"46\" y=\"589\" width=\"370\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"626\" x2=\"231\" y2=\"633\" />\n      <polygon class=\"arrowhead\" points=\"231,638 228.75,633 233.25,633\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"639\" width=\"370\" height=\"139\" rx=\"2\" />\n    <rect class=\"paper\" x=\"54\" y=\"675\" width=\"354\" height=\"97\" rx=\"2\" />\n    <rect class=\"paper\" x=\"62\" y=\"711\" width=\"338\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"779\" x2=\"231\" y2=\"786\" />\n      <polygon class=\"arrowhead\" points=\"231,791 228.75,786 233.25,786\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"792\" width=\"370\" height=\"66\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"875\" x2=\"231\" y2=\"882\" />\n      <polygon class=\"arrowhead\" points=\"231,887 228.75,882 233.25,882\" />\n    </g>\n    <rect class=\"step\" x=\"30\" y=\"888\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→ chamber_size</text>\n    <text class=\"label plain\" x=\"442\" y=\"38\" text-anchor=\"start\">  minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Sec. 1 (1)</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=83</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">count the votes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 31, 32, 35 (2)</text>\n    <text class=\"label plain\" x=\"434\" y=\"115\" text-anchor=\"start\">→ total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 31, 32</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"434\" y=\"165\" text-anchor=\"start\">→ total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 35 (2)</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">decide the Wahlkreise and who takes part</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 33, 35 (3)</text>\n    <text class=\"label plain\" x=\"434\" y=\"265\" text-anchor=\"start\">→ unit_winners</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">ElectPerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 33</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">section=erststimme, level=wahlkreis</text>\n    <text class=\"label strong name\" x=\"52\" y=\"301\" text-anchor=\"start\">Plurality</text>\n    <text class=\"label plain\" x=\"52\" y=\"316\" text-anchor=\"start\">plurality.plurality(votes, seats=1)</text>\n    <text class=\"label plain\" x=\"434\" y=\"359\" text-anchor=\"start\">→ eligible</text>\n    <text class=\"label strong name\" x=\"44\" y=\"359\" text-anchor=\"start\">ApplyThreshold</text>\n    <text class=\"label faint\" x=\"418\" y=\"359\" text-anchor=\"end\">Sec. 35 (3)</text>\n    <text class=\"label faint\" x=\"44\" y=\"374\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"395\" text-anchor=\"start\">RelativeThreshold</text>\n    <text class=\"label faint\" x=\"410\" y=\"395\" text-anchor=\"end\">share=1/20</text>\n    <text class=\"label plain\" x=\"52\" y=\"410\" text-anchor=\"start\">threshold.share_threshold(votes, share, *, accept_equ…</text>\n    <text class=\"label faint\" x=\"19\" y=\"461\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"461\" text-anchor=\"start\">RepeatForMehrsitze (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"476\" text-anchor=\"start\">Sec. 35 (8), (8a)</text>\n    <text class=\"label strong name\" x=\"44\" y=\"503\" text-anchor=\"start\">FraktionSize</text>\n    <text class=\"label faint\" x=\"418\" y=\"503\" text-anchor=\"end\">share=1/20, section=zweitstimme, level=land</text>\n    <text class=\"label plain\" x=\"44\" y=\"518\" text-anchor=\"start\">quota.hare(votes, seats)</text>\n    <text class=\"label plain\" x=\"44\" y=\"533\" text-anchor=\"start\">quota.whole_seats(votes, quota)</text>\n    <text class=\"label plain name\" x=\"44\" y=\"562\" text-anchor=\"start\">allocate the seats of one chamber size</text>\n    <text class=\"label faint\" x=\"44\" y=\"577\" text-anchor=\"start\">Sec. 35 (4) to (7)</text>\n    <text class=\"label plain\" x=\"426\" y=\"604\" text-anchor=\"start\">→ seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"604\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"604\" text-anchor=\"end\">Sec. 35 (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"619\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label plain\" x=\"426\" y=\"654\" text-anchor=\"start\">→ entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"654\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"654\" text-anchor=\"end\">Sec. 35 (5), (6)</text>\n    <text class=\"label faint\" x=\"52\" y=\"669\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"60\" y=\"690\" text-anchor=\"start\">MajorityFirst</text>\n    <text class=\"label plain\" x=\"60\" y=\"705\" text-anchor=\"start\">majority.majority_first(votes, seats, quota=hare)</text>\n    <text class=\"label strong name\" x=\"68\" y=\"726\" text-anchor=\"start\">HareNiemeyer</text>\n    <text class=\"label plain\" x=\"68\" y=\"741\" text-anchor=\"start\">remainder.largest_remainder(votes, seats, quota=…</text>\n    <text class=\"label plain\" x=\"68\" y=\"756\" text-anchor=\"start\">quota.hare(votes, seats)</text>\n    <text class=\"label plain\" x=\"426\" y=\"807\" text-anchor=\"start\">→ list_seats, overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"807\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"807\" text-anchor=\"end\">Sec. 35 (7)</text>\n    <text class=\"label faint\" x=\"52\" y=\"822\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label plain\" x=\"52\" y=\"837\" text-anchor=\"start\">compensation.remaining(seats, won)</text>\n    <text class=\"label plain\" x=\"52\" y=\"852\" text-anchor=\"start\">compensation.overhang(seats, minimum)</text>\n    <text class=\"label faint\" x=\"19\" y=\"903\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"903\" text-anchor=\"start\">→ chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"903\" text-anchor=\"start\">FormChamber</text>\n    <text class=\"label faint\" x=\"36\" y=\"918\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
   },
   {
    "id": "de.mv.lkwg.2011",
@@ -585,6 +675,7 @@
      "depends_on": [],
      "holds": null,
      "uses": [],
+     "calls": [],
      "children": [],
      "movable": [
       0,
@@ -611,6 +702,7 @@
      "depends_on": [],
      "holds": "steps",
      "uses": [],
+     "calls": [],
      "children": [
       {
        "path": [
@@ -638,6 +730,7 @@
        "depends_on": [],
        "holds": null,
        "uses": [],
+       "calls": [],
        "children": []
       },
       {
@@ -666,6 +759,7 @@
        "depends_on": [],
        "holds": null,
        "uses": [],
+       "calls": [],
        "children": []
       }
      ],
@@ -697,6 +791,7 @@
      ],
      "holds": "steps",
      "uses": [],
+     "calls": [],
      "children": [
       {
        "path": [
@@ -735,9 +830,16 @@
         {
          "field": "method",
          "kind": "Plurality",
-         "formula": "wahlwerk.calc.plurality.plurality"
+         "parameters": [],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.plurality.plurality",
+           "call": "plurality(votes, seats=1)"
+          }
+         ]
         }
        ],
+       "calls": [],
        "children": []
       },
       {
@@ -773,7 +875,25 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
-       "uses": [],
+       "uses": [
+        {
+         "field": "threshold",
+         "kind": "RelativeThreshold",
+         "parameters": [
+          [
+           "share",
+           "1/20"
+          ]
+         ],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.threshold.share_threshold",
+           "call": "share_threshold(votes, share, *, accept_equal=True)"
+          }
+         ]
+        }
+       ],
+       "calls": [],
        "children": []
       }
      ],
@@ -821,6 +941,7 @@
      ],
      "holds": "protocol",
      "uses": [],
+     "calls": [],
      "children": [
       {
        "path": [
@@ -849,6 +970,7 @@
        "depends_on": [],
        "holds": "steps",
        "uses": [],
+       "calls": [],
        "children": [
         {
          "path": [
@@ -875,6 +997,7 @@
          "depends_on": [],
          "holds": null,
          "uses": [],
+         "calls": [],
          "children": []
         },
         {
@@ -920,14 +1043,31 @@
           {
            "field": "method",
            "kind": "MajorityFirst",
-           "formula": "wahlwerk.calc.majority.majority_first"
+           "parameters": [],
+           "calls": [
+            {
+             "formula": "wahlwerk.calc.majority.majority_first",
+             "call": "majority_first(votes, seats, quota=hare)"
+            }
+           ]
           },
           {
            "field": "method.method",
            "kind": "HareNiemeyer",
-           "formula": "wahlwerk.calc.remainder.largest_remainder"
+           "parameters": [],
+           "calls": [
+            {
+             "formula": "wahlwerk.calc.remainder.largest_remainder",
+             "call": "largest_remainder(votes, seats, quota=hare, *, first=None)"
+            },
+            {
+             "formula": "wahlwerk.calc.quota.hare",
+             "call": "hare(votes, seats)"
+            }
+           ]
           }
          ],
+         "calls": [],
          "children": []
         },
         {
@@ -957,6 +1097,16 @@
          ],
          "holds": null,
          "uses": [],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.compensation.remaining",
+           "call": "remaining(seats, won)"
+          },
+          {
+           "formula": "wahlwerk.calc.compensation.overhang",
+           "call": "overhang(seats, minimum)"
+          }
+         ],
          "children": []
         }
        ]
@@ -993,6 +1143,7 @@
      ],
      "holds": null,
      "uses": [],
+     "calls": [],
      "children": [],
      "movable": [
       4,
@@ -1106,7 +1257,7 @@
      "read": []
     }
    ],
-   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-c041d08d\" class=\"ww\" width=\"640\" height=\"697\" viewBox=\"0 0 640 697\" role=\"img\" aria-label=\"Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)\">\n  <style>#ww-c041d08d{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-c041d08d{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-c041d08d{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-c041d08d{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-c041d08d .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-c041d08d .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-c041d08d .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-c041d08d .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-c041d08d .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-c041d08d .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-c041d08d .subject-dot{fill:var(--ww-subject-line)}#ww-c041d08d .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-c041d08d .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-c041d08d .arrowhead{fill:var(--ww-content)}#ww-c041d08d .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-c041d08d .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-c041d08d .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-c041d08d .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-c041d08d .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-c041d08d .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-c041d08d .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-c041d08d .name{font-weight:600}#ww-c041d08d.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-c041d08d .card-title{margin-bottom:6px}#ww-c041d08d .card-body{display:flex;align-items:flex-end;gap:14px}#ww-c041d08d .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-c041d08d .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-c041d08d .legend td.num{padding-right:0;text-align:right}#ww-c041d08d .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-construction\" inkscape:groupmode=\"layer\" inkscape:label=\"construction\">\n    <rect class=\"construction\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" />\n    <rect class=\"construction\" x=\"30\" y=\"208\" width=\"402\" height=\"151\" />\n    <rect class=\"construction\" x=\"30\" y=\"373\" width=\"402\" height=\"266\" />\n    <rect class=\"construction\" x=\"38\" y=\"415\" width=\"386\" height=\"216\" />\n  </g>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"paper\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"250\" width=\"386\" height=\"51\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"302\" x2=\"231\" y2=\"309\" />\n      <polygon class=\"arrowhead\" points=\"231,314 228.75,309 233.25,309\" />\n    </g>\n    <rect class=\"paper\" x=\"38\" y=\"315\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"360\" x2=\"231\" y2=\"367\" />\n      <polygon class=\"arrowhead\" points=\"231,372 228.75,367 233.25,367\" />\n    </g>\n    <rect class=\"paper\" x=\"46\" y=\"457\" width=\"370\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"494\" x2=\"231\" y2=\"501\" />\n      <polygon class=\"arrowhead\" points=\"231,506 228.75,501 233.25,501\" />\n    </g>\n    <rect class=\"paper\" x=\"46\" y=\"507\" width=\"370\" height=\"66\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"574\" x2=\"231\" y2=\"581\" />\n      <polygon class=\"arrowhead\" points=\"231,586 228.75,581 233.25,581\" />\n    </g>\n    <rect class=\"paper\" x=\"46\" y=\"587\" width=\"370\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"640\" x2=\"231\" y2=\"647\" />\n      <polygon class=\"arrowhead\" points=\"231,652 228.75,647 233.25,647\" />\n    </g>\n    <rect class=\"paper\" x=\"30\" y=\"653\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→ chamber_size</text>\n    <text class=\"label plain\" x=\"442\" y=\"38\" text-anchor=\"start\">  minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Art. 20 (2) Verf. M-V</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=71</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">count the votes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 57, 58 (2) S. 1</text>\n    <text class=\"label plain\" x=\"434\" y=\"115\" text-anchor=\"start\">→ total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"434\" y=\"165\" text-anchor=\"start\">→ total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 58 (2) S. 1</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">decide the Wahlkreise and who takes part</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 57, 58 (1)</text>\n    <text class=\"label plain\" x=\"434\" y=\"265\" text-anchor=\"start\">→ unit_winners</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">ElectPerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">method=Plurality, section=erststimme, level=wahlkreis</text>\n    <text class=\"label plain\" x=\"44\" y=\"295\" text-anchor=\"start\">↳ Plurality: calc.plurality.plurality</text>\n    <text class=\"label plain\" x=\"434\" y=\"330\" text-anchor=\"start\">→ eligible</text>\n    <text class=\"label strong name\" x=\"44\" y=\"330\" text-anchor=\"start\">ApplyThreshold</text>\n    <text class=\"label faint\" x=\"418\" y=\"330\" text-anchor=\"end\">Sec. 58 (1)</text>\n    <text class=\"label faint\" x=\"44\" y=\"345\" text-anchor=\"start\">threshold=RelativeThreshold(1/20), section=zweitstimme,…</text>\n    <text class=\"label faint\" x=\"19\" y=\"388\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"388\" text-anchor=\"start\">RaiseForAusgleich (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"403\" text-anchor=\"start\">Sec. 58 (6) · limit=2, has_odd_size=True</text>\n    <text class=\"label plain name\" x=\"44\" y=\"430\" text-anchor=\"start\">allocate the seats of one chamber size</text>\n    <text class=\"label faint\" x=\"44\" y=\"445\" text-anchor=\"start\">Sec. 58 (2) S. 3 to (5)</text>\n    <text class=\"label plain\" x=\"426\" y=\"472\" text-anchor=\"start\">→ seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"472\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"472\" text-anchor=\"end\">Sec. 58 (2) S. 3</text>\n    <text class=\"label faint\" x=\"52\" y=\"487\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label plain\" x=\"426\" y=\"522\" text-anchor=\"start\">→ entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"522\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"522\" text-anchor=\"end\">Sec. 58 (3), (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"537\" text-anchor=\"start\">method=MajorityFirst(HareNiemeyer), section=zweitstim…</text>\n    <text class=\"label plain\" x=\"52\" y=\"552\" text-anchor=\"start\">↳ MajorityFirst: calc.majority.majority_first</text>\n    <text class=\"label plain\" x=\"52\" y=\"567\" text-anchor=\"start\">  ↳ HareNiemeyer: calc.remainder.largest_remainder</text>\n    <text class=\"label plain\" x=\"426\" y=\"602\" text-anchor=\"start\">→ list_seats, overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"602\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"602\" text-anchor=\"end\">Sec. 58 (5)</text>\n    <text class=\"label faint\" x=\"52\" y=\"617\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label faint\" x=\"19\" y=\"668\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"668\" text-anchor=\"start\">→ chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"668\" text-anchor=\"start\">FormChamber</text>\n    <text class=\"label faint\" x=\"36\" y=\"683\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
+   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-decf6710\" class=\"ww\" width=\"640\" height=\"873\" viewBox=\"0 0 640 873\" role=\"img\" aria-label=\"Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)\">\n  <style>#ww-decf6710{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-decf6710{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-decf6710{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-decf6710{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-decf6710 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-decf6710 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-decf6710 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-decf6710 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-decf6710 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-decf6710 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-decf6710 .subject-dot{fill:var(--ww-subject-line)}#ww-decf6710 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-decf6710 .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-decf6710 .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-decf6710 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-decf6710 .arrowhead{fill:var(--ww-content)}#ww-decf6710 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-decf6710 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-decf6710 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-decf6710 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-decf6710 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-decf6710 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-decf6710 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-decf6710 .name{font-weight:600}#ww-decf6710.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-decf6710 .card-title{margin-bottom:6px}#ww-decf6710 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-decf6710 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-decf6710 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-decf6710 .legend td.num{padding-right:0;text-align:right}#ww-decf6710 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"step\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"208\" width=\"402\" height=\"224\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"250\" width=\"386\" height=\"80\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"286\" width=\"370\" height=\"38\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"331\" x2=\"231\" y2=\"338\" />\n      <polygon class=\"arrowhead\" points=\"231,343 228.75,338 233.25,338\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"344\" width=\"386\" height=\"80\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"380\" width=\"370\" height=\"38\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"433\" x2=\"231\" y2=\"440\" />\n      <polygon class=\"arrowhead\" points=\"231,445 228.75,440 233.25,440\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"446\" width=\"402\" height=\"369\" rx=\"2\" />\n    <rect class=\"step-frame\" x=\"38\" y=\"488\" width=\"386\" height=\"319\" rx=\"2\" />\n    <rect class=\"step\" x=\"46\" y=\"530\" width=\"370\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"567\" x2=\"231\" y2=\"574\" />\n      <polygon class=\"arrowhead\" points=\"231,579 228.75,574 233.25,574\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"580\" width=\"370\" height=\"139\" rx=\"2\" />\n    <rect class=\"paper\" x=\"54\" y=\"616\" width=\"354\" height=\"97\" rx=\"2\" />\n    <rect class=\"paper\" x=\"62\" y=\"652\" width=\"338\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"720\" x2=\"231\" y2=\"727\" />\n      <polygon class=\"arrowhead\" points=\"231,732 228.75,727 233.25,727\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"733\" width=\"370\" height=\"66\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"816\" x2=\"231\" y2=\"823\" />\n      <polygon class=\"arrowhead\" points=\"231,828 228.75,823 233.25,823\" />\n    </g>\n    <rect class=\"step\" x=\"30\" y=\"829\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→ chamber_size</text>\n    <text class=\"label plain\" x=\"442\" y=\"38\" text-anchor=\"start\">  minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Art. 20 (2) Verf. M-V</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=71</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">count the votes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 57, 58 (2) S. 1</text>\n    <text class=\"label plain\" x=\"434\" y=\"115\" text-anchor=\"start\">→ total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"434\" y=\"165\" text-anchor=\"start\">→ total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 58 (2) S. 1</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">decide the Wahlkreise and who takes part</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 57, 58 (1)</text>\n    <text class=\"label plain\" x=\"434\" y=\"265\" text-anchor=\"start\">→ unit_winners</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">ElectPerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">section=erststimme, level=wahlkreis</text>\n    <text class=\"label strong name\" x=\"52\" y=\"301\" text-anchor=\"start\">Plurality</text>\n    <text class=\"label plain\" x=\"52\" y=\"316\" text-anchor=\"start\">plurality.plurality(votes, seats=1)</text>\n    <text class=\"label plain\" x=\"434\" y=\"359\" text-anchor=\"start\">→ eligible</text>\n    <text class=\"label strong name\" x=\"44\" y=\"359\" text-anchor=\"start\">ApplyThreshold</text>\n    <text class=\"label faint\" x=\"418\" y=\"359\" text-anchor=\"end\">Sec. 58 (1)</text>\n    <text class=\"label faint\" x=\"44\" y=\"374\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"395\" text-anchor=\"start\">RelativeThreshold</text>\n    <text class=\"label faint\" x=\"410\" y=\"395\" text-anchor=\"end\">share=1/20</text>\n    <text class=\"label plain\" x=\"52\" y=\"410\" text-anchor=\"start\">threshold.share_threshold(votes, share, *, accept_equ…</text>\n    <text class=\"label faint\" x=\"19\" y=\"461\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"461\" text-anchor=\"start\">RaiseForAusgleich (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"476\" text-anchor=\"start\">Sec. 58 (6) · limit=2, has_odd_size=True</text>\n    <text class=\"label plain name\" x=\"44\" y=\"503\" text-anchor=\"start\">allocate the seats of one chamber size</text>\n    <text class=\"label faint\" x=\"44\" y=\"518\" text-anchor=\"start\">Sec. 58 (2) S. 3 to (5)</text>\n    <text class=\"label plain\" x=\"426\" y=\"545\" text-anchor=\"start\">→ seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"545\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"545\" text-anchor=\"end\">Sec. 58 (2) S. 3</text>\n    <text class=\"label faint\" x=\"52\" y=\"560\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label plain\" x=\"426\" y=\"595\" text-anchor=\"start\">→ entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"595\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"595\" text-anchor=\"end\">Sec. 58 (3), (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"610\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"60\" y=\"631\" text-anchor=\"start\">MajorityFirst</text>\n    <text class=\"label plain\" x=\"60\" y=\"646\" text-anchor=\"start\">majority.majority_first(votes, seats, quota=hare)</text>\n    <text class=\"label strong name\" x=\"68\" y=\"667\" text-anchor=\"start\">HareNiemeyer</text>\n    <text class=\"label plain\" x=\"68\" y=\"682\" text-anchor=\"start\">remainder.largest_remainder(votes, seats, quota=…</text>\n    <text class=\"label plain\" x=\"68\" y=\"697\" text-anchor=\"start\">quota.hare(votes, seats)</text>\n    <text class=\"label plain\" x=\"426\" y=\"748\" text-anchor=\"start\">→ list_seats, overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"748\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"748\" text-anchor=\"end\">Sec. 58 (5)</text>\n    <text class=\"label faint\" x=\"52\" y=\"763\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label plain\" x=\"52\" y=\"778\" text-anchor=\"start\">compensation.remaining(seats, won)</text>\n    <text class=\"label plain\" x=\"52\" y=\"793\" text-anchor=\"start\">compensation.overhang(seats, minimum)</text>\n    <text class=\"label faint\" x=\"19\" y=\"844\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"844\" text-anchor=\"start\">→ chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"844\" text-anchor=\"start\">FormChamber</text>\n    <text class=\"label faint\" x=\"36\" y=\"859\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
   }
  ],
  "kinds": [
@@ -1151,6 +1302,7 @@
     }
    ],
    "computes": [],
+   "calls": [],
    "order": 0
   },
   {
@@ -1224,6 +1376,7 @@
     }
    ],
    "computes": [],
+   "calls": [],
    "order": 1
   },
   {
@@ -1296,6 +1449,7 @@
     }
    ],
    "computes": [],
+   "calls": [],
    "order": 2
   },
   {
@@ -1357,9 +1511,16 @@
     {
      "field": "method",
      "kind": "Plurality",
-     "formula": "wahlwerk.calc.plurality.plurality"
+     "parameters": [],
+     "calls": [
+      {
+       "formula": "wahlwerk.calc.plurality.plurality",
+       "call": "plurality(votes, seats=1)"
+      }
+     ]
     }
    ],
+   "calls": [],
    "order": 3
   },
   {
@@ -1423,7 +1584,25 @@
      ]
     }
    ],
-   "computes": [],
+   "computes": [
+    {
+     "field": "threshold",
+     "kind": "RelativeThreshold",
+     "parameters": [
+      [
+       "share",
+       "1/20"
+      ]
+     ],
+     "calls": [
+      {
+       "formula": "wahlwerk.calc.threshold.share_threshold",
+       "call": "share_threshold(votes, share, *, accept_equal=True)"
+      }
+     ]
+    }
+   ],
+   "calls": [],
    "order": 4
   },
   {
@@ -1482,7 +1661,37 @@
      ]
     }
    ],
-   "computes": [],
+   "computes": [
+    {
+     "field": "fraktion",
+     "kind": "FraktionSize",
+     "parameters": [
+      [
+       "share",
+       "1/20"
+      ],
+      [
+       "section",
+       "zweitstimme"
+      ],
+      [
+       "level",
+       "land"
+      ]
+     ],
+     "calls": [
+      {
+       "formula": "wahlwerk.calc.quota.hare",
+       "call": "hare(votes, seats)"
+      },
+      {
+       "formula": "wahlwerk.calc.quota.whole_seats",
+       "call": "whole_seats(votes, quota)"
+      }
+     ]
+    }
+   ],
+   "calls": [],
    "order": 5
   },
   {
@@ -1541,6 +1750,7 @@
     }
    ],
    "computes": [],
+   "calls": [],
    "order": 6
   },
   {
@@ -1626,14 +1836,31 @@
     {
      "field": "method",
      "kind": "MajorityFirst",
-     "formula": "wahlwerk.calc.majority.majority_first"
+     "parameters": [],
+     "calls": [
+      {
+       "formula": "wahlwerk.calc.majority.majority_first",
+       "call": "majority_first(votes, seats, quota=hare)"
+      }
+     ]
     },
     {
      "field": "method.method",
      "kind": "HareNiemeyer",
-     "formula": "wahlwerk.calc.remainder.largest_remainder"
+     "parameters": [],
+     "calls": [
+      {
+       "formula": "wahlwerk.calc.remainder.largest_remainder",
+       "call": "largest_remainder(votes, seats, quota=hare, *, first=None)"
+      },
+      {
+       "formula": "wahlwerk.calc.quota.hare",
+       "call": "hare(votes, seats)"
+      }
+     ]
     }
    ],
+   "calls": [],
    "order": 7
   },
   {
@@ -1692,6 +1919,16 @@
     }
    ],
    "computes": [],
+   "calls": [
+    {
+     "formula": "wahlwerk.calc.compensation.remaining",
+     "call": "remaining(seats, won)"
+    },
+    {
+     "formula": "wahlwerk.calc.compensation.overhang",
+     "call": "overhang(seats, minimum)"
+    }
+   ],
    "order": 8
   },
   {
@@ -1729,6 +1966,7 @@
     }
    ],
    "computes": [],
+   "calls": [],
    "order": 9
   },
   {
@@ -1782,6 +2020,7 @@
     }
    ],
    "computes": [],
+   "calls": [],
    "order": 10
   }
  ]

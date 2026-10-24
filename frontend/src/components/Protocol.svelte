@@ -69,11 +69,17 @@
       The <a href="#law-{law.id}">{law.short}</a> as the engine holds it. Each box is a step with
       the paragraph it follows and its settings; the facts it writes stand in the margin; the number
       in the gutter is its stage. A dashed frame holds steps that act as one: a named
-      <b>sequence</b>, or a loop that runs it again. Under a step that computes, the lines
-      marked ↳ follow it down to its <b>formula</b>: electing in the
-      <Term t="Wahlkreis">Wahlkreise</Term> uses <i>plurality</i>, the most votes win, which is
-      one function on the <a href={href('formulas')}>Formulas</a> page; it knows nothing of units
-      or parties, so the same choice can serve wherever a law says the most votes win.
+      <b>sequence</b>, or a loop that runs it again.
+    </p>
+    <p class="prose">
+      Two styles keep two things apart. A <b>step</b>, a rule of the law, is drawn in the step
+      colour. Inside it, on plain paper, sits each <b>core concept</b> it computes with: a
+      method, a threshold, free of any law, with the functions of the
+      <a href={href('formulas')}>formulas</a> it calls, and a concept that holds another holds
+      its block the same way. Electing in the <Term t="Wahlkreis">Wahlkreise</Term> is a step;
+      under it is <i>plurality</i>, the most votes win, here for one seat; under that, one
+      function. Plurality knows nothing of units or parties, so the same concept serves
+      wherever a law says the most votes win.
     </p>
     <figure class="drawing">{@html law.drawing}</figure>
   </section>
