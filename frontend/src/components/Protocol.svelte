@@ -181,10 +181,13 @@
           A party can win more single-seat units than its share of the votes entitles it to;
           the difference is its <b>overhang</b> (<Term t="Überhang" />). It keeps those seats, so
           the law raises the size of the chamber and divides the seats again until the
-          others have caught up, or until its own limit. Each panel is one run of the
-          repeated block, from the engine's own rounds of this election: a party's
-          entitlement is the outlined bar, the units it won the solid bar inside, and where
-          the solid bar runs past the outline, that is the overhang.
+          others have caught up, or until its own limit. Each half circle is the chamber
+          after one run of the repeated block, from the engine's own rounds of this
+          election: as many seats as the chamber size, each party as many as it is entitled
+          to, solid where a unit winner of the party fills it, open where a list seat is
+          still to fill. Members a party won in units beyond its seats have no seat yet and
+          stand below the floor: the overhang. The next round raises the size and divides
+          again, until everyone is seated.
         </p>
         <p>
           The two laws differ only in the loop. The {laws.laws[0].short} raises by twice the

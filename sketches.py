@@ -451,13 +451,15 @@ LOOPS = (RaiseByOverhang, RaiseUntilBalanced)
 
 
 def overhang_plate(vote: PopularVote, law: Law) -> Plate:
-    """The law's overhang loop round by round, from the engine's own rounds.
+    """The law's overhang loop round by round, from the engine's own rounds, each round a
+    half circle of the chamber at that size.
 
-    One panel per run of the repeated block that changes something: the first, each
-    one where the overhang changes, and the last. Each party is a row: its entitlement
-    is the outlined bar, the units it won the solid bar inside. Where a party won more
-    units than it is entitled to, the solid bar runs past the outline: that is the
-    overhang, and the loop raises the chamber size, by the law's own rule.
+    One panel per run of the repeated block that changes something: the first, each one
+    where the overhang changes, and the last. The chamber has as many seats as its size,
+    each party as many as it is entitled to: solid where a unit winner of the party
+    fills it, open (its colour as the edge) where a list seat is still to fill. A party
+    that won more units than its seats has members with no seat yet: they stand below
+    the floor, the overhang, until the chamber is raised enough to seat them.
     """
     at = next(i for i, step in enumerate(law.protocol) if isinstance(step, LOOPS))
     loop = law.protocol[at]
@@ -471,14 +473,10 @@ def overhang_plate(vote: PopularVote, law: Law) -> Plate:
     first = every[0]
     assert first.entitlement is not None
     parties = [p for p, _ in sorted(first.entitlement.seats, key=lambda kv: -kv[1])]
-    most = max(
-        max(n for r in every for _, n in (r.entitlement.seats if r.entitlement else ())),
-        max(first.unit_wins().values(), default=0),
-    )
-    plate = Plate(f"overhang-{law.id}", "raising the chamber size for overhang")
-    left, width, row = 52.0, 250.0, 18.0
-    scale = (width - left - 52) / most
     tones = dict(party_tones([(p, 1) for p in parties], None))
+    plate = Plate(f"overhang-{law.id}", "raising the chamber size for overhang")
+    width, radius = 240.0, 108.0
+    cx, floor = width / 2, 4 + radius
     for number, result in enumerate(shown, start=1):
         assert result.entitlement is not None
         entitled = dict(result.entitlement.seats)
@@ -493,24 +491,33 @@ def overhang_plate(vote: PopularVote, law: Law) -> Plate:
         elif later:
             note = (f"balanced at {size}, even:", "one seat more")
         else:
-            note = ("no overhang left:", "done")
-        height = 6 + row * len(parties)
-        p = plate.panel(f"round-{number}", f"{size} seats", width=width, height=height, caption=(f"round {every.index(result) + 1}", *note))
+            note = ("every member seated:", "done")
+        p = plate.panel(f"round-{number}", f"{size} seats", width=width, height=floor + 34, caption=(f"round {every.index(result) + 1}", *note))
         a = p.art
         for key in parties:
             a.parties.setdefault(key, tones[key])
-        for i, party in enumerate(parties):
-            y = 4 + i * row
+        # Seats left to right, party by party: its unit winners first, then its open list seats.
+        kinds: list[str] = []
+        for party in parties:
             due, won_n = entitled.get(party, 0), wins.get(party, 0)
-            sk.text(a, left - 6, y + 9, party, ink="faint", anchor="end")
-            sk.box(a, left, y, max(due * scale, 0.5), 11, cls="hollow", rx=0)
-            if won_n:
-                sk.box(a, left, y + 2, won_n * scale, 7, cls=f"party-{party}", rx=0)
-            end = max(due, won_n) * scale
-            if won_n > due:
-                sk.text(a, left + end + 4, y + 9, f"{due} +{won_n - due}", ink="strong", anchor="start")
-            else:
-                sk.text(a, left + end + 4, y + 9, str(due), ink="faint", anchor="start")
+            kinds += [f"party-{party}"] * min(due, won_n) + [f"party-{party}-open"] * (due - min(due, won_n))
+        centres, seat_r = seat_layout(len(kinds))
+        scale = radius / (1 + seat_r)
+        for (x, y), cls in zip(centres, kinds):
+            sk.dot(a, cx + x * scale, floor - y * scale, seat_r * scale * 0.85, cls=cls)
+        a.line("structure", 4, floor + seat_r * scale + 2, width - 4, floor + seat_r * scale + 2)
+        sk.text(a, cx, floor - 6, str(size), ink="strong", is_name=True)
+        # Members without a seat: the overhang, standing below the floor.
+        standing = [(party, wins.get(party, 0) - entitled.get(party, 0)) for party in parties]
+        standing = [(party, n) for party, n in standing if n > 0]
+        x = 10.0
+        r = seat_r * scale * 0.85
+        for party, n in standing:
+            for _ in range(n):
+                sk.dot(a, x, floor + 18, r, cls=f"party-{party}")
+                x += 2.6 * r
+            sk.text(a, x + 2, floor + 22, f"{party} +{n}: no seat yet", ink="plain", anchor="start")
+            x += 120
     return plate
 
 
