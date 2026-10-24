@@ -169,7 +169,8 @@ def main() -> None:
     )
     write(DATA / "formulas.json", build_formulas())
     shown = [LAWS.in_force(body, day) for _, body, day in ELECTIONS]
-    write(DATA / "laws.json", build_laws(list({law.id: law for law in shown}.values())))
+    replays = {law.id: (OVERHANG[law.id], vote) for vote, law in overhang}
+    write(DATA / "laws.json", build_laws(list({law.id: law for law in shown}.values()), replays))
 
 
 def write(path: Path, payload: object) -> None:

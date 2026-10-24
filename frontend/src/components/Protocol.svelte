@@ -5,6 +5,7 @@
   // and the drawing, made by wahlwerk-ui. The page only explains and shows.
   import type { LawData, Laws, References, Sketches } from '../lib/types';
   import { href } from '../lib/pages';
+  import { ELECTION_TEXT } from '../lib/elections';
   import CodeRef from './CodeRef.svelte';
   import Plate from './Plate.svelte';
   import RefList from './RefList.svelte';
@@ -94,7 +95,28 @@
       name, and each setting the law fixes (<code>seats=83</code>, <code>share=1/20</code>,
       <code>factor=2</code>). Change one of those and the same votes give another chamber.
     </p>
-    <figure class="drawing">{@html law.drawing}</figure>
+    {#if law.replay}
+      <p class="prose">
+        Beside each step stands the chamber as the engine had it after that step, counting
+        {ELECTION_TEXT[law.replay]?.label ?? law.replay}: hollow seats are not yet anyone's, a
+        party's colour solid where a winner of a single-seat unit fills the seat, as an edge
+        where a list seat is still to fill. Members a party won beyond its seats stand without
+        one, until the chamber is raised for them.
+      </p>
+    {/if}
+    <div class="parts">
+      {#each law.parts as part, i}
+        <div class="part">
+          <figure class="drawing">{@html part.drawing}</figure>
+          {#if part.chamber}
+            <figure class="state">
+              <figcaption class="state-label">after step {i + 1}</figcaption>
+              {@html part.chamber}
+            </figure>
+          {/if}
+        </div>
+      {/each}
+    </div>
   </section>
 
   <section>
@@ -259,6 +281,45 @@
   .drawing {
     margin: 0;
     overflow-x: auto;
+  }
+  /* Two columns, as IR-bands' spread: the step left, the chamber after it right, its top
+     level with the step's; one column when the section is narrower than both. */
+  .parts {
+    container-type: inline-size;
+  }
+  .part {
+    display: grid;
+    grid-template-columns: minmax(0, 560fr) minmax(0, 176fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .state {
+    margin: 0;
+  }
+  .state-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 8px 0 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .state :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @container (max-width: 600px) {
+    .part {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+    }
+    /* At its own size, so its labels match the step's, not larger. */
+    .state {
+      max-width: 176px;
+      margin-bottom: 12px;
+    }
   }
   /* The drawing spans the column like the text, scaled to its width. */
   .drawing :global(svg) {

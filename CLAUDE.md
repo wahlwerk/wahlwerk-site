@@ -60,7 +60,9 @@ sketches.py               <- the Vote page's sketch plates, the home plate (elec
 references.py             <- sources from their three homes: references.bib, the law registry, bundles
 formulas.py               <- the Formulas page's content, read from wahlwerk.calc's docstrings
 laws.py                   <- the Law pages' content: each law's protocol, stages, move ranges, facts and
-                             drawing (wahlwerk-ui plot.protocol), and every kind of step, from the engine
+                             drawing (wahlwerk-ui plot.protocol) in parts, one per top-level step, each with
+                             the chamber after it on the law's OVERHANG election (asides), and every kind of
+                             step, from the engine
 docs/                     <- GitHub Pages root, committed
   data/elections.json     <- written by build.py only
   data/sketches.json      <- written by build.py only: one SVG per panel, plus wahlwerk-ui's style plates
@@ -92,7 +94,8 @@ frontend/src/
     Term.svelte           <- a term of art (Landtag): italic, dotted underline, concept on hover
     Cite.svelte           <- a literature citation, a superscript number
     RefList.svelte        <- a page's sources: literature, statutes, data
-    Protocol.svelte       <- Law page: a law is a list of steps; per law (tabs) the drawing, the stages and
+    Protocol.svelte       <- Law page: a law is a list of steps; per law (tabs) the drawing, step by step
+                             in two columns (the step left, the chamber after it right), the stages and
                              move ranges, the facts the allocation holds; sequences, loops, the overhang
                              loop round by round (plate), changing a law
     Steps.svelte          <- Law › Steps (#/law/steps): every kind of step, its docstring, reads, writes,
@@ -143,6 +146,9 @@ frontend/src/
   Running prose (a section's paragraphs and plain lists, `.prose`) is justified with
   hyphenation, list markers hang outside the column; below 600 px prose is ragged and
   markers sit inside. No component sets its own `max-width` on prose.
+  One exception: the Law page sets each top-level step beside the chamber after it, two
+  columns inside the same measure (the step 560, the chamber 176, as IR-bands' spread),
+  one column when the section is narrower than 600 px.
 - **The side panel** holds the site's pages and the page's outline, nothing else for now.
   The outline is read from the page's headings, so a heading is the outline entry; a
   heading that should not be listed sits inside `data-outline="skip"`.

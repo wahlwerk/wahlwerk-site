@@ -203,8 +203,11 @@ export interface LawData {
   body: string;
   steps: ProtocolStep[];
   facts: LawFact[];
-  /** The protocol drawn by wahlwerk-ui, an SVG. */
-  drawing: string;
+  /** The protocol drawn by wahlwerk-ui in parts, one per top-level step: the step, and
+   *  the chamber as the replayed election had it after that step (both SVGs). */
+  parts: { drawing: string; chamber: string | null }[];
+  /** The election whose chambers stand beside the steps, a key of ELECTION_TEXT. */
+  replay: string | null;
 }
 
 /** One function of wahlwerk.calc and how it is called. */

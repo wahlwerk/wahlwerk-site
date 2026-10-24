@@ -6,7 +6,9 @@ each follows are the engine's law objects (``wahlwerk.law``); the stages, what e
 reads from which, and where each step could move without changing the result come from
 ``wahlwerk.process.allocation.flow``, derived from what the steps read and write; the
 drawing is wahlwerk-ui's ``plot.protocol``; what a kind of step does is the first
-paragraph of its docstring (read like the formulas, :func:`formulas.segments`).
+paragraph of its docstring (read like the formulas, :func:`formulas.segments`). Beside
+each top-level step of the drawing stands the chamber as one election's run had decided
+it after that step (:func:`asides`), from the engine's own allocation.
 """
 
 from __future__ import annotations
@@ -16,8 +18,9 @@ from typing import Any
 
 from wahlwerk.law.base import Law
 from wahlwerk.process.allocation import flow
-from wahlwerk.process.allocation.base import AllocationStep
-from wahlwerk_ui.plot.protocol import protocol_svg
+from wahlwerk.process.allocation.base import Allocation, AllocationStep, check_protocol
+from wahlwerk.vote.popular.popular_vote import PopularVote
+from wahlwerk_ui.plot.protocol import aside_svg, margin_of, protocol_svg
 
 from formulas import segments
 
@@ -27,8 +30,10 @@ SHORT: dict[str, str] = {"de.st.lwg.2021": "LWG LSA", "de.mv.lkwg.2011": "LKWG M
 """The abbreviation a law is cited with, by law id; the engine's Law has no field yet."""
 
 
-def build_laws(laws: list[Law]) -> dict[str, Any]:
-    """``laws.json``: each law with its steps and drawing, then every kind of step."""
+def build_laws(laws: list[Law], replays: dict[str, tuple[str, PopularVote]] | None = None) -> dict[str, Any]:
+    """``laws.json``: each law with its steps and drawing, then every kind of step.
+    ``replays`` gives per law id the election (its key and vote) whose chamber the
+    drawing shows beside each step."""
     kinds: dict[str, dict[str, Any]] = {}
     out = []
     for law in laws:
@@ -37,6 +42,7 @@ def build_laws(laws: list[Law]) -> dict[str, Any]:
         for position, step in enumerate(steps):
             span = flow.movable(protocol, position)
             step["movable"] = [span.start, span.stop - 1]
+        replay = (replays or {}).get(law.id)
         out.append(
             {
                 "id": law.id,
@@ -47,7 +53,8 @@ def build_laws(laws: list[Law]) -> dict[str, Any]:
                 "body": law.body,
                 "steps": steps,
                 "facts": _facts(steps),
-                "drawing": str(protocol_svg(steps, width=640, title=law.title)),
+                "parts": _parts(steps, law, replay[1] if replay else None),
+                "replay": replay[0] if replay else None,
             }
         )
         for path, step in _every(protocol):
@@ -96,3 +103,77 @@ def _facts(steps: list[dict[str, Any]]) -> list[dict[str, Any]]:
         for fact in [*step["reads"], *step["optional_reads"]]:
             facts.setdefault(fact, {"fact": fact, "written": [], "read": []})["read"].append(name)
     return list(facts.values())
+
+
+STEP_WIDTH = 560
+"""The width a step is drawn at, beside its chamber: with the chamber and the gap between
+them, the page's column (760 px)."""
+
+CHAMBER_WIDTH = 176
+"""The width of the chamber beside each step."""
+
+
+def _parts(steps: list[dict[str, Any]], law: Law, vote: PopularVote | None) -> list[dict[str, Any]]:
+    """The drawing in parts, one per top-level step, each with the chamber after it: the
+    steps share the facts' column, so they line up when set one under the other."""
+    margin = margin_of(steps, STEP_WIDTH)
+    order, chambers = asides(vote, law) if vote is not None else ([], [None] * len(steps))
+    return [
+        {
+            "drawing": str(protocol_svg([step], width=STEP_WIDTH, margin=margin)),
+            "chamber": str(aside_svg(chamber, width=CHAMBER_WIDTH, labels=order)) if chamber else None,
+        }
+        for step, chamber in zip(steps, chambers)
+    ]
+
+
+def asides(vote: PopularVote, law: Law) -> tuple[list[str | None], list[dict[str, Any]]]:
+    """The chamber after each top-level step of ``law`` on ``vote`` (wahlwerk-ui's
+    asides), and the parties in the order of the chamber formed at the end, largest first:
+    the engine applies the steps, this only says what each result shows.
+
+    After the chamber is formed every seat is filled. Before, with an entitlement, each
+    party has as many seats as it is entitled to, filled as far as its unit winners fill
+    them and open for its list; unit winners beyond that stand without a seat (the
+    overhang). With only the units decided, their winners are seated and the rest of
+    the chamber size is free; before that the whole chamber is free.
+    """
+    check_protocol(law.protocol)
+    results = []
+    allocation = Allocation(tally=vote.tally)
+    for step in law.protocol:
+        allocation = step.apply(allocation)
+        results.append(allocation)
+    final = results[-1].chamber
+    order = [p for p, _ in sorted((final.seats_by_party if final else {}).items(), key=lambda kv: (kv[0] is None, -kv[1]))]
+    return order, [_aside(result, order) for result in results]
+
+
+def _aside(allocation: Allocation, order: list[str | None]) -> dict[str, Any]:
+    size = allocation.chamber_size or 0
+    if allocation.chamber is not None:
+        held = allocation.chamber.seats_by_party
+        seats = [[p, held[p], 0] for p in order if held.get(p)]
+        return {"seats": seats, "free": 0, "standing": [], "caption": f"{allocation.chamber.size} seats, all filled"}
+    if allocation.unit_mandates is None:
+        return {"seats": [], "free": size, "standing": [], "caption": f"{size} seats, none filled" if size else ""}
+    wins: dict[str | None, int] = dict(allocation.unit_wins())
+    independent = sum(1 for d in allocation.unit_mandates if d.party is None)
+    if independent:
+        wins[None] = independent
+    due = dict(allocation.entitlement.seats) if allocation.entitlement is not None else {}
+    if None in wins:
+        due[None] = wins[None]
+    if not due:
+        seats = [[p, wins[p], 0] for p in order if wins.get(p)]
+        filled = sum(wins.values())
+        return {"seats": seats, "free": max(size - filled, 0), "standing": [], "caption": f"{size} seats, {filled} filled"}
+    seats = [[p, min(due.get(p, 0), wins.get(p, 0)), due.get(p, 0) - min(due.get(p, 0), wins.get(p, 0))] for p in order if due.get(p)]
+    standing = [[p, wins.get(p, 0) - due.get(p, 0)] for p in order if wins.get(p, 0) > due.get(p, 0)]
+    filled = sum(s[1] for s in seats)
+    return {
+        "seats": seats,
+        "free": max(size - sum(due.values()), 0),
+        "standing": standing,
+        "caption": f"{size} seats, {filled} filled",
+    }
