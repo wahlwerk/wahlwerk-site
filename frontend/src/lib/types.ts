@@ -152,3 +152,60 @@ export interface Formulas {
   symbols: CalcSymbol[];
   layers: { title: string; modules: CalcModule[] }[];
 }
+
+/** One step of a protocol, as the engine's flow.protocol_data describes it (laws.json). */
+export interface ProtocolStep {
+  path: (number | string)[];
+  kind: string;
+  title: string;
+  parameters: [string, string][];
+  citation: string | null;
+  reads: string[];
+  optional_reads: string[];
+  writes: string[];
+  /** 0 for a step reading only the tally; one more than the latest step it reads from. */
+  stage: number;
+  /** Positions of the steps at its level it reads from. */
+  depends_on: number[];
+  holds: string | null;
+  children: ProtocolStep[];
+  /** Top-level steps only: the first and last position it could move to, same result. */
+  movable?: [number, number];
+}
+
+export interface LawFact {
+  fact: string;
+  written: string[];
+  read: string[];
+}
+
+export interface LawData {
+  id: string;
+  short: string;
+  title: string;
+  citation: string;
+  source: string | null;
+  body: string;
+  steps: ProtocolStep[];
+  facts: LawFact[];
+  /** The protocol drawn by wahlwerk-ui, an SVG. */
+  drawing: string;
+}
+
+export interface StepKind {
+  kind: string;
+  /** Full dotted name, e.g. wahlwerk.process.allocation.seats.ApportionSeats. */
+  qualname: string;
+  summary: Segment[];
+  reads: string[];
+  writes: string[];
+  /** Whether it holds steps of its own (a sequence, a loop). */
+  holds: boolean;
+  uses: { law: string; short: string; citation: string | null; path: (number | string)[] }[];
+}
+
+/** docs/data/laws.json: the laws the site shows and every kind of step in them. */
+export interface Laws {
+  laws: LawData[];
+  kinds: StepKind[];
+}

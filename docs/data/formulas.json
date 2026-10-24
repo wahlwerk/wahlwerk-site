@@ -33,7 +33,7 @@
   },
   {
    "latex": "S = \\sum_i s_i",
-   "meaning": "the seats to give: the house size",
+   "meaning": "the seats to give: the chamber size",
    "group": "seats"
   },
   {
@@ -53,7 +53,7 @@
   },
   {
    "latex": "D",
-   "meaning": "a divisor: the votes per seat that rounds to the house size",
+   "meaning": "a divisor: the votes per seat that rounds to the chamber size",
    "group": "methods"
   },
   {
@@ -1609,7 +1609,7 @@
          "math": "m_i"
         },
         {
-         "text": ". Ausgleich grows the house "
+         "text": ". Ausgleich grows the size "
         },
         {
          "math": "S"
@@ -1654,12 +1654,12 @@
        ]
       },
       {
-       "name": "smallest_house",
-       "qualname": "wahlwerk.calc.compensation.smallest_house",
+       "name": "smallest_size",
+       "qualname": "wahlwerk.calc.compensation.smallest_size",
        "kind": "function",
        "summary": [
         {
-         "text": "The apportionment of the smallest house "
+         "text": "The apportionment of the smallest size "
         },
         {
          "math": "S' \\ge S"
@@ -1671,7 +1671,7 @@
          "math": "m_i"
         },
         {
-         "text": ": each house is apportioned afresh by "
+         "text": ": each size is apportioned afresh by "
         },
         {
          "code": "method"

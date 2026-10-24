@@ -5,7 +5,12 @@
  */
 
 export type ComponentId = 'vote' | 'law' | 'allocation' | 'chamber' | 'formulas';
-export type PageId = 'home' | ComponentId | 'impressum' | 'style';
+export type PageId = 'home' | ComponentId | 'law-steps' | 'impressum' | 'style';
+
+/** Pages under a component page: shown under it in the side panel, reached by a path. */
+export const SUBPAGES: { id: PageId; parent: ComponentId; title: string; path: string }[] = [
+  { id: 'law-steps', parent: 'law', title: 'Steps', path: 'law/steps' },
+];
 
 export interface ComponentPage {
   id: ComponentId;
@@ -33,9 +38,9 @@ export const COMPONENTS: ComponentPage[] = [
     role: 'protocol',
     title: 'Law',
     lede:
-      'An electoral law written as an ordered tuple of steps, each citing the paragraph it follows.',
+      'A law is a list of steps, each citing the paragraph it follows. What depends on what follows from the facts each step reads and writes.',
     card:
-      'The Landeswahlgesetz of Sachsen-Anhalt as a protocol: every step, its paragraph, and the loop of § 35 (8).',
+      'Two Landtag laws as protocols: every step and its paragraph, drawn; which steps depend on which, and which could trade places.',
   },
   {
     id: 'allocation',
@@ -71,9 +76,13 @@ const ALL: PageId[] = ['home', ...COMPONENTS.map((c) => c.id), 'impressum', 'sty
 /** The page a location hash names; anything unknown is home. */
 export function pageFromHash(hash: string): PageId {
   const id = hash.replace(/^#\/?/, '');
+  const sub = SUBPAGES.find((s) => s.path === id);
+  if (sub) return sub.id;
   return (ALL as string[]).includes(id) ? (id as PageId) : 'home';
 }
 
 export function href(page: PageId): string {
+  const sub = SUBPAGES.find((s) => s.id === page);
+  if (sub) return `#/${sub.path}`;
   return page === 'home' ? '#/' : `#/${page}`;
 }

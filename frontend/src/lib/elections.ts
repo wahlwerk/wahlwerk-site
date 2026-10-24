@@ -19,12 +19,12 @@ export const ELECTION_TEXT: Record<string, ElectionText> = {
   'de.landtag.st.2021': {
     label: 'Sachsen-Anhalt 2021',
     note:
-      'The CDU won 40 of 41 Wahlkreise, so § 35 (8) raised the house from 83 to 97 in two rounds and balanced every Mehrsitz. All 40 CDU seats are Wahlkreis seats.',
+      'The CDU won 40 of 41 Wahlkreise, so § 35 (8) raised the chamber size from 83 to 97 in two rounds and balanced every Mehrsitz. All 40 CDU seats are Wahlkreis seats.',
   },
   'de.landtag.mv.2021': {
     label: 'Mecklenburg-Vorpommern 2021',
     note:
-      'The SPD won 34 of 36 Wahlkreise, 3 more than its 31 seats of 71. § 58 (6) LKWG M-V raised the house to 78 to balance the Überhang, and to 79 to make it odd.',
+      'The SPD won 34 of 36 Wahlkreise, 3 more than its 31 seats of 71. § 58 (6) LKWG M-V raised the chamber size to 78 to balance the Überhang, and to 79 to make it odd.',
   },
   'de.landtag.mv.2016': {
     label: 'Mecklenburg-Vorpommern 2016',

@@ -14,6 +14,9 @@ Writes three files to ``docs/data/``:
 - ``references.json``: the sources, from their three homes (``references.py``): the
   engine's ``docs/references.bib`` (Zotero) and ``docs/statutes.toml``, its law
   registry, the bundles; the same sources as the engine's API reference.
+- ``laws.json``: each law's protocol with its stages, where each step could move, the
+  facts it builds and its drawing, then every kind of step (``laws.py``), all from the
+  engine's law objects.
 - ``formulas.json``: the formulas of wahlwerk.calc with their symbols, prose, tables
   and citations, read from its docstrings (``formulas.py``), the same text the API
   reference renders.
@@ -35,6 +38,7 @@ from wahlwerk.process.allocation.allocate import derive
 from wahlwerk.vote.popular.popular_vote import PopularVote
 
 from formulas import build_formulas
+from laws import build_laws
 from references import build_references
 from sketches import KEY as SKETCH_KEY
 from sketches import build_sketches
@@ -157,6 +161,8 @@ def main() -> None:
         ),
     )
     write(DATA / "formulas.json", build_formulas())
+    shown = [LAWS.in_force(body, day) for _, body, day in ELECTIONS]
+    write(DATA / "laws.json", build_laws(list({law.id: law for law in shown}.values())))
 
 
 def write(path: Path, payload: object) -> None:

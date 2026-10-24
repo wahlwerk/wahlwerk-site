@@ -57,11 +57,14 @@ build.py                  <- data build: engine + wahlwerk-data in, docs/data/*.
 sketches.py               <- the Vote page's sketch plates, drawn with wahlwerk-ui from a real bundle
 references.py             <- sources from their three homes: references.bib, the law registry, bundles
 formulas.py               <- the Formulas page's content, read from wahlwerk.calc's docstrings
+laws.py                   <- the Law pages' content: each law's protocol, stages, move ranges, facts and
+                             drawing (wahlwerk-ui plot.protocol), and every kind of step, from the engine
 docs/                     <- GitHub Pages root, committed
   data/elections.json     <- written by build.py only
   data/sketches.json      <- written by build.py only: one SVG per panel, plus wahlwerk-ui's style plates
   data/references.json    <- written by build.py only: literature, statutes, data
   data/formulas.json      <- written by build.py only: wahlwerk.calc's symbols, formulas, tables, citations
+  data/laws.json          <- written by build.py only: the laws the site shows and the kinds of step
   index.html, assets/     <- written by npm run build only; stale bundles pruned after it
   favicon.svg, .nojekyll  <- hand-written
 frontend/scripts/
@@ -85,7 +88,9 @@ frontend/src/
     Term.svelte           <- a term of art (Landtag): italic, dotted underline, concept on hover
     Cite.svelte           <- a literature citation, a superscript number
     RefList.svelte        <- a page's sources: literature, statutes, data
-    Protocol.svelte       <- Law page: the LWG LSA as the engine's protocol (law/de/st/lwg.py)
+    Protocol.svelte       <- Law page: a law is a list of steps; per law (tabs) the drawing, the stages and
+                             move ranges, the facts the allocation holds; sequences, loops, changing a law
+    Steps.svelte          <- Law › Steps (#/law/steps): every kind of step, its docstring, reads, writes, uses
     Pieces.svelte         <- Allocation page: the four roles and the modules
     Formulas.svelte       <- Formulas page: every formula of wahlwerk.calc by layer, the notation, the literature
     Segments.svelte       <- docstring text from formulas.json: inline math, code, citations, terms of art
@@ -97,7 +102,8 @@ frontend/src/
     ThemeToggle.svelte    <- auto / light / dark
   lib/
     tokens.ts             <- DESIGN TOKENS: every colour (light and dark), party colour, font
-    pages.ts              <- the pages, hash routes (#/vote ...) and the five components in order
+    pages.ts              <- the pages, hash routes (#/vote ...), the five components in order, and the
+                             sub-pages under them (SUBPAGES: #/law/steps), listed under their parent in the side panel
     impressum.ts          <- the operator's name, address and contact for the Impressum
     types.ts              <- the shape of elections.json
     elections.ts          <- per-election labels and notes (prose only)
@@ -118,8 +124,10 @@ frontend/src/
   prose and tables of `wahlwerk.calc`'s docstrings (`formulas.py`), with the symbols of
   `wahlwerk.calc.notation`; it never types a formula itself. A formula wrong on the page is
   fixed in the docstring, which fixes the API reference too.
-- **Protocol text follows the engine.** Step names and fields in `Protocol.svelte` copy
-  `law/de/st/lwg.py`; when the engine renames a step, update the page.
+- **Laws are read, never typed.** The Law pages show the engine's law objects through
+  `laws.py` (`laws.json`): steps, settings, cited paragraphs, stages, move ranges and the
+  drawing. A step renamed or a paragraph corrected in the engine shows here on the next
+  `build.py`; the page holds only the explanation.
 - **Tokens only.** No component hard-codes a colour, font or radius; add a token to
   `lib/tokens.ts` with a `usage` note. Party colours encode parties in data and nothing else.
 - **Both themes.** Every colour token has a light and a dark value; check both.

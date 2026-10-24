@@ -2,8 +2,8 @@
   // Root: loads the numbers build.py derived, follows the location hash to a
   // page, and frames it with the top bar and the footer.
   import { onMount } from 'svelte';
-  import type { Formulas as FormulasData, References, SiteData, Sketches } from './lib/types';
-  import { COMPONENTS, href, pageFromHash } from './lib/pages';
+  import type { Formulas as FormulasData, Laws, References, SiteData, Sketches } from './lib/types';
+  import { COMPONENTS, SUBPAGES, href, pageFromHash } from './lib/pages';
   import type { PageId } from './lib/pages';
   import ThemeToggle from './components/ThemeToggle.svelte';
   import Sidebar from './components/Sidebar.svelte';
@@ -13,6 +13,7 @@
   import Pieces from './components/Pieces.svelte';
   import Results from './components/Results.svelte';
   import Formulas from './components/Formulas.svelte';
+  import Steps from './components/Steps.svelte';
   import Impressum from './components/Impressum.svelte';
   import StyleGuide from './components/StyleGuide.svelte';
 
@@ -20,6 +21,7 @@
   let sketches: Sketches | null = null;
   let references: References | null = null;
   let formulas: FormulasData | null = null;
+  let laws: Laws | null = null;
   let error: string | null = null;
   let page: PageId = pageFromHash(window.location.hash);
 
@@ -32,7 +34,9 @@
   let content: HTMLElement | null = null;
   /** Below WIDE_MIN_PX the side panel is a drawer, closed until the menu button opens it. */
   let drawerOpen = false;
-  $: contentKey = `${page}:${data ? 1 : 0}:${sketches ? 1 : 0}:${references ? 1 : 0}:${formulas ? 1 : 0}`;
+  $: contentKey = `${page}:${data ? 1 : 0}:${sketches ? 1 : 0}:${references ? 1 : 0}:${formulas ? 1 : 0}:${laws ? 1 : 0}`;
+  $: subpage = SUBPAGES.find((s) => s.id === page) ?? null;
+  $: parent = subpage ? COMPONENTS.find((c) => c.id === subpage?.parent) ?? null : null;
 
   function follow(): void {
     const id = window.location.hash.replace(/^#\/?/, '');
@@ -60,11 +64,12 @@
 
   async function load(): Promise<void> {
     try {
-      [data, sketches, references, formulas] = await Promise.all([
+      [data, sketches, references, formulas, laws] = await Promise.all([
         json<SiteData>('data/elections.json'),
         json<Sketches>('data/sketches.json'),
         json<References>('data/references.json'),
         json<FormulasData>('data/formulas.json'),
+        json<Laws>('data/laws.json'),
       ]);
     } catch (e) {
       error = e instanceof Error ? e.message : String(e);
@@ -119,7 +124,7 @@
       {#if page === 'vote'}
         <Vote {sketches} {references} />
       {:else if page === 'law'}
-        <Protocol />
+        <Protocol {laws} {references} />
       {:else if page === 'allocation'}
         <Pieces />
       {:else if page === 'formulas'}
@@ -141,6 +146,20 @@
         {#if next}
           <a class="next" href={href(next.id)}><small>{next.role} →</small>{next.title}</a>
         {/if}
+      </nav>
+    </article>
+  {:else if subpage && parent}
+    <article class="page">
+      <header class="page-head">
+        <div class="eyebrow"><a href={href(parent.id)}>{parent.title}</a> · {subpage.title}</div>
+        <h1>{subpage.title}</h1>
+        <p class="lede">Every kind of step the laws on this site are made of: what it does, what it reads and writes, and where each law uses it.</p>
+      </header>
+      {#if page === 'law-steps'}
+        <Steps {laws} {references} />
+      {/if}
+      <nav class="steps" aria-label="Back">
+        <a href={href(parent.id)}><small>← {parent.role}</small>{parent.title}</a>
       </nav>
     </article>
   {:else if page === 'impressum'}

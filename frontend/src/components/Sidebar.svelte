@@ -8,7 +8,7 @@
   // section being read (the last heading scrolled past) and scrolls to a heading
   // without touching the hash, which holds the page route.
   import { createEventDispatcher, onDestroy, tick } from 'svelte';
-  import { COMPONENTS, href } from '../lib/pages';
+  import { COMPONENTS, SUBPAGES, href } from '../lib/pages';
   import type { PageId } from '../lib/pages';
 
   /** The page shown. */
@@ -26,9 +26,12 @@
     level: 2 | 3;
   }
 
-  const PAGES: { id: PageId; title: string; note?: string }[] = [
+  const PAGES: { id: PageId; title: string; note?: string; isSub?: boolean }[] = [
     { id: 'home', title: 'Home' },
-    ...COMPONENTS.map((c) => ({ id: c.id, title: c.title, note: c.role })),
+    ...COMPONENTS.flatMap((c) => [
+      { id: c.id, title: c.title, note: c.role },
+      ...SUBPAGES.filter((s) => s.parent === c.id).map((s) => ({ id: s.id, title: s.title, isSub: true })),
+    ]),
   ];
   const AFTER: { id: PageId; title: string }[] = [
     { id: 'style', title: 'Style guide' },
@@ -110,7 +113,7 @@
   <div class="head">Pages</div>
   <ul>
     {#each PAGES as p (p.id)}
-      <li>
+      <li class:sub={p.isSub}>
         <a
           href={href(p.id)}
           class:active={page === p.id}
@@ -156,6 +159,9 @@
 {/if}
 
 <style>
+  li.sub a {
+    padding-left: 24px;
+  }
   nav {
     display: flex;
     flex-direction: column;
