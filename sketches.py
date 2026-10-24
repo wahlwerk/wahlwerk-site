@@ -51,7 +51,7 @@ def vote_plate(vote: PopularVote) -> Plate:
     """A popular vote in four steps: electorate, ballot paper, counting, tally.
 
     The panels that show data use the example's own unit names (wahlkreis, wbz); the
-    schematic panels elsewhere use general ones (region, district, unit).
+    schematic panels elsewhere use general ones (a region and the units under it).
     """
     rows = vote.tally.filter(unit=UNIT).rows
     plate = Plate("vote", "a popular vote, from the electorate to a tally")
@@ -61,7 +61,7 @@ def vote_plate(vote: PopularVote) -> Plate:
         "who votes",
         width=240,
         height=150,
-        caption=("the electorate", "voters, each registered in", "one unit of one district"),
+        caption=("the electorate", "voters, each registered in", "one unit of the lowest level"),
     )
     a = p.art
     sk.unit(a, 1, 1, 238, 148, "wahlkreis 001")
@@ -158,10 +158,10 @@ def who_plate() -> Plate:
     sk.text(a, 150, 14, "region", ink="strong", is_name=True)
     for i, wk in enumerate((75, 225)):
         sk.link(a, 150, 19, wk, 40)
-        sk.text(a, wk, 52, f"district {i + 1}", ink="plain")
+        sk.text(a, wk, 52, f"unit {i + 1}", ink="plain")
         for j, x in enumerate((wk - 38, wk + 38)):
             sk.link(a, wk, 57, x, 76)
-            sk.unit(a, x - 32, 78, 64, 86, f"unit {2 * i + j + 1}")
+            sk.unit(a, x - 32, 78, 64, 86, f"unit {i + 1}.{j + 1}")
             sk.crowd(a, x - 28, 96, 56, 64, 12 + 3 * j)
 
     p = plate.panel(
@@ -354,7 +354,7 @@ def recorded_plate(vote: PopularVote) -> Plate:
     xs = (40, 110, 190, 260)
     for i, wk in enumerate((75, 225)):
         sk.link(a, 150, 19, wk, 40)
-        sk.text(a, wk, 52, f"district {i + 1}")
+        sk.text(a, wk, 52, f"unit {i + 1}")
         for x in xs[2 * i : 2 * i + 2]:
             sk.link(a, wk, 57, x, 80)
             sk.dot(a, x, 86, 6, cls="subject")

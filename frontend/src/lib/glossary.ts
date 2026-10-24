@@ -39,7 +39,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
   Bundeskanzler: { concept: 'office', system: 'de.bund', gloss: 'the head of the German federal government, elected by the Bundestag' },
   // units
   Land: { concept: 'unit', system: 'de', gloss: 'a federal state of Germany' },
-  Wahlkreis: { concept: 'unit', system: 'de', gloss: 'an electoral district that elects one member by plurality' },
+  Wahlkreis: { concept: 'unit', system: 'de', gloss: 'a unit that elects one member by plurality' },
   // seats
   Überhang: { concept: 'overhang', system: 'de', gloss: 'seats a party won in Wahlkreise beyond its proportional share' },
   Ausgleich: { concept: 'compensation', system: 'de', gloss: 'adding seats to the chamber until every party\'s Wahlkreis seats are covered proportionally' },
