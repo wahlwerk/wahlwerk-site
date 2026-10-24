@@ -197,7 +197,7 @@
           votes give another chamber: the rest of the law does not change.
         </p>
       </div>
-      <Plate plate={overhang} />
+      <Plate plate={overhang} isFull />
       <CodeRef names={[`${F}.overhang.RaiseByOverhang.rounds`, `${F}.overhang.RaiseUntilBalanced.rounds`]} />
     </section>
   {/if}
@@ -248,9 +248,11 @@
     margin: 0;
     overflow-x: auto;
   }
+  /* The drawing spans the column like the text, scaled to its width. */
   .drawing :global(svg) {
     display: block;
-    max-width: none;
+    width: 100%;
+    height: auto;
   }
   td small {
     display: block;

@@ -4,10 +4,13 @@
   import type { SketchPlate } from '../lib/types';
 
   export let plate: SketchPlate;
+  /** The panels fill the column, in equal columns, their art scaled up to the width:
+   * for a plate that is the figure of its section rather than a row of small sketches. */
+  export let isFull = false;
 </script>
 
 <figure class="plate" aria-label={plate.title}>
-  <div class="panels">
+  <div class="panels" class:full={isFull}>
     {#each plate.panels as p (p.name)}
       <figure class="panel" style="flex-basis:{Math.round(p.width * 0.85)}px">
         <div class="ptitle"><span class="n">{p.number}</span>{p.title}</div>
@@ -75,6 +78,15 @@
     width: 100%;
     display: flex;
     justify-content: center;
+  }
+  /* Full width: equal columns of at least 200 px, so three sit in a row of the column
+     and a phone shows one; the art fills its column, whatever its drawn width. */
+  .panels.full {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+  .panels.full .frame {
+    max-width: none;
   }
   .frame {
     position: relative;
