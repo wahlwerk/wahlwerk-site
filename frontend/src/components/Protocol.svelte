@@ -160,9 +160,12 @@
         matter, which the table above shows: the steps of one stage could trade places.
       </p>
       <p>
-        A <b>loop</b> holds the steps it repeats. When parties win more <Term t="Wahlkreis">Wahlkreise</Term>
-        than their share (<Term t="Überhang" />), the loop raises the size of the chamber and runs the
-        sequence again, so the sequence is written once even though it runs several times.
+        A <b>loop</b> holds the steps it repeats and checks, before each round, whether to run
+        one: its condition stands in its frame. The seats are allocated once; only when parties
+        won more <Term t="Wahlkreis">Wahlkreise</Term> than their share (<Term t="Überhang" />)
+        does the loop raise the size of the chamber and allocate again. With no overhang it does
+        nothing and the law goes straight on to fill the remaining seats from the lists. The
+        sequence is written once even though it runs several times.
       </p>
       <p>
         A number the statute states once is written once: "at least 83 seats" sets the size the
@@ -181,9 +184,9 @@
           A party can win more single-seat units than its share of the votes entitles it to;
           the difference is its <b>overhang</b> (<Term t="Überhang" />). It keeps those seats, so
           the law raises the size of the chamber and divides the seats again until the
-          others have caught up, or until its own limit. Each half circle is the chamber
-          after one run of the repeated block, from the engine's own rounds of this
-          election: as many seats as the chamber size, each party as many as it is entitled
+          others have caught up, or until its own limit. The first half circle is the chamber
+          as allocated before the loop, each next one the chamber after a round, from the
+          engine's own rounds of this election: as many seats as the chamber size, each party as many as it is entitled
           to, solid where a unit winner of the party fills it, open where a list seat is
           still to fill. Members a party won in units beyond its seats have no seat yet and
           stand below the floor: the overhang. The next round raises the size and divides

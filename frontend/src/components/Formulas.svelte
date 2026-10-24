@@ -35,11 +35,11 @@
       step in a law and a formula called by hand give the same seats.
     </p>
     <p>
-      A formula takes a table of keys and numbers (votes per party, seats per caucus) and returns
+      A formula takes a table of options and numbers (votes per party, seats per caucus) and returns
       one in the same shape, or one number. Whole numbers and fractions are computed exactly, as an
       electoral law requires; decimals in floating point, fast, for polls and sweeps over many
       scenarios at once. Where the law leaves a seat to the lot, a seat formula does not draw: it
-      returns the keys that are tied.
+      returns the options that are tied.
     </p>
   </div>
   <CodeRef names={['wahlwerk.calc.divisor.sainte_lague', 'wahlwerk.calc.result.SeatResult', 'wahlwerk.state.chamber.Chamber']} />

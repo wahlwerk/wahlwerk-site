@@ -110,8 +110,11 @@
   </p>
   {#if sketches}<Plate plate={sketches.plates.what} />{/if}
   <p>
-    In a tally, all but the ranking are counts per option: a person is a candidate's row, an option
-    a row for yes or for no, x out of y a row for each one chosen, and several marks a bigger count
+    In a tally, all but the ranking are counts per option, and the row names the option it
+    counts for, whatever it is: a party's list, a candidate, yes or no. Beside it stands the
+    party the option belongs to, if any: the party itself, a candidate's nominating party, none
+    for an independent candidate or an answer. So a person is a candidate's row, a question
+    a row for yes and one for no, x out of y a row for each one chosen, and several marks a bigger count
     (<Term t="Kumulieren" />) or more rows (<Term t="Panaschieren" />). A ranking is not. It needs
     one count for every distinct order, a ballot profile, which the tally does not hold yet. German
     public elections do not rank; the Irish <Term t="Dáil" />, elected by single transferable
@@ -131,7 +134,7 @@
     </li>
     <li><code>voters</code>: the people who voted, the <Term t="Wähler" />; the turnout.</li>
     <li><code>invalid</code>: the invalid votes, per section.</li>
-    <li><code>votes</code>: the valid votes for one party, candidate or option, per section.</li>
+    <li><code>votes</code>: the valid votes for one option, per section.</li>
   </ul>
   <p>
     Each count names its section, its channel (at the polling station, <code>urne</code>, or by

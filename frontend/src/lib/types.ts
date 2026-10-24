@@ -220,7 +220,7 @@ export interface Concept {
   /** Where it sits in the step: method, method.method. */
   field: string;
   kind: string;
-  /** What the step hands it, in words: votes=erststimme per nominee, seats=1. */
+  /** What the step hands it, in words: votes=erststimme per option, seats=1. */
   arguments: [string, string][];
   parameters: [string, string][];
   calls: FormulaCall[];

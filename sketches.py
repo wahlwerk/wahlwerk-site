@@ -24,7 +24,11 @@ from typing import Any
 from wahlwerk.law.base import Law
 from wahlwerk.process.allocation.allocate import allocate, derive
 from wahlwerk.process.allocation.base import Allocation
-from wahlwerk.process.allocation.overhang import RaiseByOverhang, RaiseUntilBalanced
+from wahlwerk.process.allocation.overhang import (
+    RaiseByOverhang,
+    RaiseChamberSize,
+    RaiseUntilBalanced,
+)
 from wahlwerk.vote.popular.popular_vote import PopularVote
 from wahlwerk.vote.popular.tally import TallyKind
 from wahlwerk_ui.plot.chamber.common import party_tones
@@ -484,7 +488,9 @@ def overhang_plate(vote: PopularVote, law: Law) -> Plate:
         size = result.chamber_size or 0
         later = every[every.index(result) + 1 :]
         if excess(result) and isinstance(loop, RaiseByOverhang):
-            note = (f"overhang {excess(result)}: next", f"{size} + {loop.factor} × {excess(result)} = {size + loop.factor * excess(result)}")
+            # The factor is the round's own first step's: RaiseChamberSize.
+            factor = next(s.factor for s in loop.protocol if isinstance(s, RaiseChamberSize))
+            note = (f"overhang {excess(result)}: next", f"{size} + {factor} × {excess(result)} = {size + factor * excess(result)}")
         elif excess(result):
             steps = next((i + 1 for i, r in enumerate(later) if excess(r) != excess(result)), len(later))
             note = (f"overhang {excess(result)}: a seat", f"at a time, {steps} more")

@@ -279,7 +279,7 @@
      ],
      "width": 300,
      "height": 196,
-     "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-d658d687\" class=\"ww\" width=\"300\" height=\"196\" viewBox=\"0 0 300 196\" role=\"img\" aria-label=\"the allocation\">\n  <style>#ww-d658d687{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-d658d687{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-d658d687{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-d658d687{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-d658d687 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-d658d687 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-d658d687 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-d658d687 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-d658d687 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-d658d687 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-d658d687 .subject-dot{fill:var(--ww-subject-line)}#ww-d658d687 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-d658d687 .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-d658d687 .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-d658d687 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-d658d687 .arrowhead{fill:var(--ww-content)}#ww-d658d687 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-d658d687 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-d658d687 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-d658d687 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-d658d687 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-d658d687 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-d658d687 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-d658d687 .name{font-weight:600}#ww-d658d687.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-d658d687 .card-title{margin-bottom:6px}#ww-d658d687 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-d658d687 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-d658d687 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-d658d687 .legend td.num{padding-right:0;text-align:right}#ww-d658d687 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-construction\" inkscape:groupmode=\"layer\" inkscape:label=\"construction\">\n    <rect class=\"construction\" x=\"1\" y=\"1\" width=\"298\" height=\"194\" />\n  </g>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"paper\" x=\"10\" y=\"24\" width=\"280\" height=\"29.6\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"57.6\" width=\"280\" height=\"29.6\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"91.2\" width=\"280\" height=\"29.6\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"124.8\" width=\"280\" height=\"29.6\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"158.4\" width=\"280\" height=\"29.6\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"5\" y=\"13\" text-anchor=\"start\">de.st.lwg.2021</text>\n    <text class=\"label strong name\" x=\"18\" y=\"42.3\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"282\" y=\"42.3\" text-anchor=\"end\">sec. 1 (1)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"75.9\" text-anchor=\"start\">StepSequence</text>\n    <text class=\"label faint\" x=\"282\" y=\"75.9\" text-anchor=\"end\">sec. 31, 32, 35 (2)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"109.5\" text-anchor=\"start\">StepSequence</text>\n    <text class=\"label faint\" x=\"282\" y=\"109.5\" text-anchor=\"end\">sec. 33, 35 (3)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"143.1\" text-anchor=\"start\">RaiseByOverhang</text>\n    <text class=\"label faint\" x=\"282\" y=\"143.1\" text-anchor=\"end\">sec. 35 (8), (8a)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"176.7\" text-anchor=\"start\">FormChamber</text>\n  </g>\n</svg>",
+     "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-d658d687\" class=\"ww\" width=\"300\" height=\"196\" viewBox=\"0 0 300 196\" role=\"img\" aria-label=\"the allocation\">\n  <style>#ww-d658d687{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-d658d687{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-d658d687{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-d658d687{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-d658d687 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-d658d687 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-d658d687 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-d658d687 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-d658d687 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-d658d687 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-d658d687 .subject-dot{fill:var(--ww-subject-line)}#ww-d658d687 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-d658d687 .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-d658d687 .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-d658d687 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-d658d687 .arrowhead{fill:var(--ww-content)}#ww-d658d687 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-d658d687 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-d658d687 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-d658d687 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-d658d687 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-d658d687 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-d658d687 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-d658d687 .name{font-weight:600}#ww-d658d687.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-d658d687 .card-title{margin-bottom:6px}#ww-d658d687 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-d658d687 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-d658d687 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-d658d687 .legend td.num{padding-right:0;text-align:right}#ww-d658d687 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-construction\" inkscape:groupmode=\"layer\" inkscape:label=\"construction\">\n    <rect class=\"construction\" x=\"1\" y=\"1\" width=\"298\" height=\"194\" />\n  </g>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"paper\" x=\"10\" y=\"24\" width=\"280\" height=\"20\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"48\" width=\"280\" height=\"20\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"72\" width=\"280\" height=\"20\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"96\" width=\"280\" height=\"20\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"120\" width=\"280\" height=\"20\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"144\" width=\"280\" height=\"20\" rx=\"2\" />\n    <rect class=\"paper\" x=\"10\" y=\"168\" width=\"280\" height=\"20\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"5\" y=\"13\" text-anchor=\"start\">de.st.lwg.2021</text>\n    <text class=\"label strong name\" x=\"18\" y=\"37.5\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"282\" y=\"37.5\" text-anchor=\"end\">sec. 1 (1)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"61.5\" text-anchor=\"start\">StepSequence</text>\n    <text class=\"label faint\" x=\"282\" y=\"61.5\" text-anchor=\"end\">sec. 31, 32, 35 (2)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"85.5\" text-anchor=\"start\">StepSequence</text>\n    <text class=\"label faint\" x=\"282\" y=\"85.5\" text-anchor=\"end\">sec. 33, 35 (3)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"109.5\" text-anchor=\"start\">StepSequence</text>\n    <text class=\"label faint\" x=\"282\" y=\"109.5\" text-anchor=\"end\">sec. 35 (4) to (7)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"133.5\" text-anchor=\"start\">SetCaucusSize</text>\n    <text class=\"label faint\" x=\"282\" y=\"133.5\" text-anchor=\"end\">sec. 35 (8a)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"157.5\" text-anchor=\"start\">RaiseByOverhang</text>\n    <text class=\"label faint\" x=\"282\" y=\"157.5\" text-anchor=\"end\">sec. 35 (8), (8a)</text>\n    <text class=\"label strong name\" x=\"18\" y=\"181.5\" text-anchor=\"start\">FillVacantSeatsFromLists</text>\n  </g>\n</svg>",
      "links": [
       {
        "href": "#/law/allocation",
@@ -295,39 +295,55 @@
        "x": 10,
        "y": 24.0,
        "w": 280,
-       "h": 29.6
+       "h": 20.0
       },
       {
        "href": "#/law/steps",
        "label": "step 2: StepSequence",
        "x": 10,
-       "y": 57.6,
+       "y": 48.0,
        "w": 280,
-       "h": 29.6
+       "h": 20.0
       },
       {
        "href": "#/law/steps",
        "label": "step 3: StepSequence",
        "x": 10,
-       "y": 91.2,
+       "y": 72.0,
        "w": 280,
-       "h": 29.6
+       "h": 20.0
       },
       {
        "href": "#/law/steps",
-       "label": "step 4: RaiseByOverhang",
+       "label": "step 4: StepSequence",
        "x": 10,
-       "y": 124.80000000000001,
+       "y": 96.0,
        "w": 280,
-       "h": 29.6
+       "h": 20.0
       },
       {
        "href": "#/law/steps",
-       "label": "step 5: FormChamber",
+       "label": "step 5: SetCaucusSize",
        "x": 10,
-       "y": 158.4,
+       "y": 120.0,
        "w": 280,
-       "h": 29.6
+       "h": 20.0
+      },
+      {
+       "href": "#/law/steps",
+       "label": "step 6: RaiseByOverhang",
+       "x": 10,
+       "y": 144.0,
+       "w": 280,
+       "h": 20.0
+      },
+      {
+       "href": "#/law/steps",
+       "label": "step 7: FillVacantSeatsFromLists",
+       "x": 10,
+       "y": 168.0,
+       "w": 280,
+       "h": 20.0
       }
      ]
     },

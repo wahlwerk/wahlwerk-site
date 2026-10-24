@@ -32,6 +32,7 @@
      "stage": 0,
      "depends_on": [],
      "holds": null,
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -60,6 +61,7 @@
      "stage": 0,
      "depends_on": [],
      "holds": "steps",
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -89,6 +91,7 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [],
        "calls": [],
        "arguments": [],
@@ -119,6 +122,7 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [],
        "calls": [],
        "arguments": [],
@@ -144,7 +148,7 @@
      ],
      "optional_reads": [],
      "writes": [
-      "eligible",
+      "eligible_options",
       "unit_mandates"
      ],
      "stage": 1,
@@ -152,6 +156,7 @@
       1
      ],
      "holds": "steps",
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -189,6 +194,7 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [
         {
          "field": "method",
@@ -196,7 +202,7 @@
          "arguments": [
           [
            "votes",
-           "erststimme per nominee"
+           "erststimme per option"
           ],
           [
            "seats",
@@ -222,8 +228,8 @@
         "steps",
         1
        ],
-       "kind": "ApplyThresholdToKeys",
-       "title": "Apply threshold to the keys, here the parties",
+       "kind": "ApplyThresholdToOptions",
+       "title": "Apply threshold to the options, here the parties",
        "parameters": [
         [
          "threshold",
@@ -244,18 +250,19 @@
        ],
        "optional_reads": [],
        "writes": [
-        "eligible"
+        "eligible_options"
        ],
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [
         {
          "field": "threshold",
          "kind": "RelativeThreshold",
          "arguments": [
           [
-           "keys",
+           "options",
            "parties"
           ],
           [
@@ -291,20 +298,18 @@
      "path": [
       3
      ],
-     "kind": "RaiseByOverhang",
-     "title": "Allocate the seats of the chamber size with protocol (the rules from the seat total to the list seats, usually one StepSequence); then, while a party holds overhang (Mehrsitze in the LWG LSA), raise the chamber_size and allocate again",
+     "kind": "AllocateSeats",
+     "title": "Several steps as one",
      "parameters": [],
-     "citation": "Sec. 35 (8), (8a)",
+     "citation": "Sec. 35 (4) to (7)",
      "reads": [
       "chamber_size",
-      "eligible",
+      "eligible_options",
       "total:land",
       "unit_mandates"
      ],
      "optional_reads": [],
      "writes": [
-      "caucus_size",
-      "chamber_size",
       "entitlement",
       "list_seats",
       "overhang",
@@ -316,7 +321,8 @@
       1,
       2
      ],
-     "holds": "protocol",
+     "holds": "steps",
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -324,8 +330,362 @@
       {
        "path": [
         3,
+        "steps",
+        0
+       ],
+       "kind": "SetSeatTotal",
+       "title": "The seats the proportional allocation divides",
+       "parameters": [],
+       "citation": "Sec. 35 (4)",
+       "reads": [
+        "chamber_size",
+        "eligible_options",
+        "unit_mandates"
+       ],
+       "optional_reads": [],
+       "writes": [
+        "seat_total"
+       ],
+       "stage": 0,
+       "depends_on": [],
+       "holds": null,
+       "condition": null,
+       "uses": [],
+       "calls": [
+        {
+         "formula": "wahlwerk.calc.compensation.remaining",
+         "call": "remaining(seats, won)"
+        }
+       ],
+       "arguments": [
+        [
+         "seats",
+         "chamber_size"
+        ],
+        [
+         "won",
+         "units won by Einzelbewerber and parties not eligible"
+        ]
+       ],
+       "children": []
+      },
+      {
+       "path": [
+        3,
+        "steps",
+        1
+       ],
+       "kind": "ApportionSeats",
+       "title": "Apportion seat_total among the eligible_options parties by method, on their valid votes in section summed at level",
+       "parameters": [
+        [
+         "method",
+         "MajorityFirst(HareNiemeyer)"
+        ],
+        [
+         "section",
+         "zweitstimme"
+        ],
+        [
+         "level",
+         "land"
+        ]
+       ],
+       "citation": "Sec. 35 (5), (6)",
+       "reads": [
+        "eligible_options",
+        "seat_total",
+        "total:land"
+       ],
+       "optional_reads": [],
+       "writes": [
+        "entitlement"
+       ],
+       "stage": 1,
+       "depends_on": [
+        0
+       ],
+       "holds": null,
+       "condition": null,
+       "uses": [
+        {
+         "field": "method",
+         "kind": "MajorityFirst",
+         "arguments": [
+          [
+           "votes",
+           "zweitstimme per eligible party"
+          ],
+          [
+           "seats",
+           "seat_total"
+          ]
+         ],
+         "parameters": [],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.majority.majority_first",
+           "call": "majority_first(votes, seats, quota=hare)"
+          }
+         ]
+        },
+        {
+         "field": "method.method",
+         "kind": "HareNiemeyer",
+         "arguments": [],
+         "parameters": [],
+         "calls": [
+          {
+           "formula": "wahlwerk.calc.remainder.largest_remainder",
+           "call": "largest_remainder(votes, seats, quota=hare, *, first=None)"
+          },
+          {
+           "formula": "wahlwerk.calc.quota.hare",
+           "call": "hare(votes, seats)"
+          }
+         ]
+        }
+       ],
+       "calls": [],
+       "arguments": [],
+       "children": []
+      },
+      {
+       "path": [
+        3,
+        "steps",
+        2
+       ],
+       "kind": "DeductUnitSeats",
+       "title": "Deduct each eligible party's Wahlkreis seats from its entitlement",
+       "parameters": [],
+       "citation": "Sec. 35 (7)",
+       "reads": [
+        "entitlement",
+        "unit_mandates"
+       ],
+       "optional_reads": [],
+       "writes": [
+        "list_seats",
+        "overhang"
+       ],
+       "stage": 2,
+       "depends_on": [
+        1
+       ],
+       "holds": null,
+       "condition": null,
+       "uses": [],
+       "calls": [
+        {
+         "formula": "wahlwerk.calc.compensation.remaining",
+         "call": "remaining(seats, won)"
+        },
+        {
+         "formula": "wahlwerk.calc.compensation.overhang",
+         "call": "overhang(seats, minimum)"
+        }
+       ],
+       "arguments": [
+        [
+         "seats",
+         "entitlement per party"
+        ],
+        [
+         "won",
+         "units won per party"
+        ]
+       ],
+       "children": []
+      }
+     ],
+     "movable": [
+      3,
+      3
+     ]
+    },
+    {
+     "path": [
+      4
+     ],
+     "kind": "SetCaucusSize",
+     "title": "Set caucus_size",
+     "parameters": [
+      [
+       "share",
+       "1/20"
+      ],
+      [
+       "section",
+       "zweitstimme"
+      ],
+      [
+       "level",
+       "land"
+      ],
+      [
+       "quota",
+       "HareQuota"
+      ]
+     ],
+     "citation": "Sec. 35 (8a)",
+     "reads": [
+      "eligible_options",
+      "seat_total",
+      "total:land"
+     ],
+     "optional_reads": [],
+     "writes": [
+      "caucus_size"
+     ],
+     "stage": 3,
+     "depends_on": [
+      1,
+      2,
+      3
+     ],
+     "holds": null,
+     "condition": null,
+     "uses": [
+      {
+       "field": "quota",
+       "kind": "HareQuota",
+       "arguments": [
+        [
+         "votes",
+         "zweitstimme of the eligible parties and the fictitious one"
+        ],
+        [
+         "seats",
+         "seat_total"
+        ]
+       ],
+       "parameters": [],
+       "calls": [
+        {
+         "formula": "wahlwerk.calc.quota.hare",
+         "call": "hare(votes, seats)"
+        }
+       ]
+      }
+     ],
+     "calls": [
+      {
+       "formula": "wahlwerk.calc.quota.whole_seats",
+       "call": "whole_seats(votes, quota)"
+      }
+     ],
+     "arguments": [
+      [
+       "votes",
+       "the fictitious party's"
+      ],
+      [
+       "quota",
+       "the quota"
+      ]
+     ],
+     "children": [],
+     "movable": [
+      4,
+      4
+     ]
+    },
+    {
+     "path": [
+      5
+     ],
+     "kind": "RaiseByOverhang",
+     "title": "While the allocation leaves overhang to balance, run protocol again",
+     "parameters": [],
+     "citation": "Sec. 35 (8), (8a)",
+     "reads": [
+      "chamber_size",
+      "eligible_options",
+      "overhang",
+      "total:land",
+      "unit_mandates"
+     ],
+     "optional_reads": [
+      "caucus_size"
+     ],
+     "writes": [
+      "caucus_size",
+      "chamber_size",
+      "entitlement",
+      "list_seats",
+      "overhang",
+      "seat_total"
+     ],
+     "stage": 4,
+     "depends_on": [
+      0,
+      1,
+      2,
+      3,
+      4
+     ],
+     "holds": "protocol",
+     "condition": "while overhang > 0; after 2 rounds, while 2 × overhang > caucus_size",
+     "uses": [],
+     "calls": [],
+     "arguments": [],
+     "children": [
+      {
+       "path": [
+        5,
         "protocol",
         0
+       ],
+       "kind": "RaiseChamberSize",
+       "title": "Raise the chamber_size by factor seats per seat of overhang (Sec",
+       "parameters": [
+        [
+         "factor",
+         "2"
+        ]
+       ],
+       "citation": "Sec. 35 (8)",
+       "reads": [
+        "chamber_size",
+        "overhang"
+       ],
+       "optional_reads": [],
+       "writes": [
+        "chamber_size"
+       ],
+       "stage": 0,
+       "depends_on": [],
+       "holds": null,
+       "condition": null,
+       "uses": [],
+       "calls": [
+        {
+         "formula": "wahlwerk.calc.compensation.raised",
+         "call": "raised(size, overhang, factor=1)"
+        }
+       ],
+       "arguments": [
+        [
+         "size",
+         "chamber_size"
+        ],
+        [
+         "overhang",
+         "per party"
+        ],
+        [
+         "factor",
+         "2"
+        ]
+       ],
+       "children": []
+      },
+      {
+       "path": [
+        5,
+        "protocol",
+        1
        ],
        "kind": "AllocateSeats",
        "title": "Several steps as one",
@@ -333,7 +693,7 @@
        "citation": "Sec. 35 (4) to (7)",
        "reads": [
         "chamber_size",
-        "eligible",
+        "eligible_options",
         "total:land",
         "unit_mandates"
        ],
@@ -344,18 +704,21 @@
         "overhang",
         "seat_total"
        ],
-       "stage": 0,
-       "depends_on": [],
+       "stage": 1,
+       "depends_on": [
+        0
+       ],
        "holds": "steps",
+       "condition": null,
        "uses": [],
        "calls": [],
        "arguments": [],
        "children": [
         {
          "path": [
-          3,
+          5,
           "protocol",
-          0,
+          1,
           "steps",
           0
          ],
@@ -365,7 +728,7 @@
          "citation": "Sec. 35 (4)",
          "reads": [
           "chamber_size",
-          "eligible",
+          "eligible_options",
           "unit_mandates"
          ],
          "optional_reads": [],
@@ -375,6 +738,7 @@
          "stage": 0,
          "depends_on": [],
          "holds": null,
+         "condition": null,
          "uses": [],
          "calls": [
           {
@@ -396,14 +760,14 @@
         },
         {
          "path": [
-          3,
+          5,
           "protocol",
-          0,
+          1,
           "steps",
           1
          ],
          "kind": "ApportionSeats",
-         "title": "Apportion seat_total among the eligible parties by method, on their valid votes in section summed at level",
+         "title": "Apportion seat_total among the eligible_options parties by method, on their valid votes in section summed at level",
          "parameters": [
           [
            "method",
@@ -420,7 +784,7 @@
          ],
          "citation": "Sec. 35 (5), (6)",
          "reads": [
-          "eligible",
+          "eligible_options",
           "seat_total",
           "total:land"
          ],
@@ -433,6 +797,7 @@
           0
          ],
          "holds": null,
+         "condition": null,
          "uses": [
           {
            "field": "method",
@@ -478,9 +843,9 @@
         },
         {
          "path": [
-          3,
+          5,
           "protocol",
-          0,
+          1,
           "steps",
           2
          ],
@@ -502,6 +867,7 @@
           1
          ],
          "holds": null,
+         "condition": null,
          "uses": [],
          "calls": [
           {
@@ -529,9 +895,9 @@
       },
       {
        "path": [
-        3,
+        5,
         "protocol",
-        1
+        2
        ],
        "kind": "SetCaucusSize",
        "title": "Set caucus_size",
@@ -555,7 +921,7 @@
        ],
        "citation": "Sec. 35 (8a)",
        "reads": [
-        "eligible",
+        "eligible_options",
         "seat_total",
         "total:land"
        ],
@@ -563,11 +929,12 @@
        "writes": [
         "caucus_size"
        ],
-       "stage": 1,
+       "stage": 2,
        "depends_on": [
-        0
+        1
        ],
        "holds": null,
+       "condition": null,
        "uses": [
         {
          "field": "quota",
@@ -611,15 +978,15 @@
       }
      ],
      "movable": [
-      3,
-      3
+      5,
+      5
      ]
     },
     {
      "path": [
-      4
+      6
      ],
-     "kind": "FormChamber",
+     "kind": "FillVacantSeatsFromLists",
      "title": "Form the chamber",
      "parameters": [],
      "citation": null,
@@ -633,20 +1000,21 @@
      "writes": [
       "chamber"
      ],
-     "stage": 3,
+     "stage": 5,
      "depends_on": [
       0,
       2,
-      3
+      5
      ],
      "holds": null,
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
      "children": [],
      "movable": [
-      4,
-      4
+      6,
+      6
      ]
     }
    ],
@@ -665,10 +1033,11 @@
      "fact": "chamber_size",
      "written": [
       "1 SetChamberSize",
-      "4 RaiseByOverhang"
+      "6 RaiseByOverhang"
      ],
      "read": [
-      "4 RaiseByOverhang"
+      "4 AllocateSeats",
+      "6 RaiseByOverhang"
      ]
     },
     {
@@ -677,7 +1046,7 @@
       "1 SetChamberSize"
      ],
      "read": [
-      "5 FormChamber"
+      "7 FillVacantSeatsFromLists"
      ]
     },
     {
@@ -687,7 +1056,9 @@
      ],
      "read": [
       "3 ElectAndQualify",
-      "4 RaiseByOverhang"
+      "4 AllocateSeats",
+      "5 SetCaucusSize",
+      "6 RaiseByOverhang"
      ]
     },
     {
@@ -700,12 +1071,14 @@
      ]
     },
     {
-     "fact": "eligible",
+     "fact": "eligible_options",
      "written": [
       "3 ElectAndQualify"
      ],
      "read": [
-      "4 RaiseByOverhang"
+      "4 AllocateSeats",
+      "5 SetCaucusSize",
+      "6 RaiseByOverhang"
      ]
     },
     {
@@ -714,56 +1087,68 @@
       "3 ElectAndQualify"
      ],
      "read": [
-      "4 RaiseByOverhang",
-      "5 FormChamber"
+      "4 AllocateSeats",
+      "6 RaiseByOverhang",
+      "7 FillVacantSeatsFromLists"
      ]
-    },
-    {
-     "fact": "caucus_size",
-     "written": [
-      "4 RaiseByOverhang"
-     ],
-     "read": []
     },
     {
      "fact": "entitlement",
      "written": [
-      "4 RaiseByOverhang"
+      "4 AllocateSeats",
+      "6 RaiseByOverhang"
      ],
      "read": []
     },
     {
      "fact": "list_seats",
      "written": [
-      "4 RaiseByOverhang"
+      "4 AllocateSeats",
+      "6 RaiseByOverhang"
      ],
      "read": [
-      "5 FormChamber"
+      "7 FillVacantSeatsFromLists"
      ]
     },
     {
      "fact": "overhang",
      "written": [
-      "4 RaiseByOverhang"
+      "4 AllocateSeats",
+      "6 RaiseByOverhang"
      ],
-     "read": []
+     "read": [
+      "6 RaiseByOverhang"
+     ]
     },
     {
      "fact": "seat_total",
      "written": [
-      "4 RaiseByOverhang"
+      "4 AllocateSeats",
+      "6 RaiseByOverhang"
      ],
-     "read": []
+     "read": [
+      "5 SetCaucusSize"
+     ]
+    },
+    {
+     "fact": "caucus_size",
+     "written": [
+      "5 SetCaucusSize",
+      "6 RaiseByOverhang"
+     ],
+     "read": [
+      "6 RaiseByOverhang"
+     ]
     },
     {
      "fact": "chamber",
      "written": [
-      "5 FormChamber"
+      "7 FillVacantSeatsFromLists"
      ],
      "read": []
     }
    ],
-   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-3400c84e\" class=\"ww\" width=\"640\" height=\"1162\" viewBox=\"0 0 640 1162\" role=\"img\" aria-label=\"Wahlgesetz des Landes Sachsen-Anhalt (LWG)\">\n  <style>#ww-3400c84e{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-3400c84e{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-3400c84e{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-3400c84e{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-3400c84e .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-3400c84e .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-3400c84e .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-3400c84e .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-3400c84e .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-3400c84e .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-3400c84e .subject-dot{fill:var(--ww-subject-line)}#ww-3400c84e .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-3400c84e .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-3400c84e .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-3400c84e .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-3400c84e .arrowhead{fill:var(--ww-content)}#ww-3400c84e .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-3400c84e .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-3400c84e .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-3400c84e .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-3400c84e .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-3400c84e .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-3400c84e .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-3400c84e .name{font-weight:600}#ww-3400c84e.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-3400c84e .card-title{margin-bottom:6px}#ww-3400c84e .card-body{display:flex;align-items:flex-end;gap:14px}#ww-3400c84e .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-3400c84e .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-3400c84e .legend td.num{padding-right:0;text-align:right}#ww-3400c84e .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"step\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"208\" width=\"402\" height=\"254\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"250\" width=\"386\" height=\"95\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"286\" width=\"370\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"346\" x2=\"231\" y2=\"353\" />\n      <polygon class=\"arrowhead\" points=\"231,358 228.75,353 233.25,353\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"359\" width=\"386\" height=\"95\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"395\" width=\"370\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"463\" x2=\"231\" y2=\"470\" />\n      <polygon class=\"arrowhead\" points=\"231,475 228.75,470 233.25,470\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"476\" width=\"402\" height=\"628\" rx=\"2\" />\n    <rect class=\"step-frame\" x=\"38\" y=\"518\" width=\"386\" height=\"424\" rx=\"2\" />\n    <rect class=\"step\" x=\"46\" y=\"560\" width=\"370\" height=\"96\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"657\" x2=\"231\" y2=\"664\" />\n      <polygon class=\"arrowhead\" points=\"231,669 228.75,664 233.25,664\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"670\" width=\"370\" height=\"169\" rx=\"2\" />\n    <rect class=\"paper\" x=\"54\" y=\"706\" width=\"354\" height=\"127\" rx=\"2\" />\n    <rect class=\"paper\" x=\"62\" y=\"772\" width=\"338\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"840\" x2=\"231\" y2=\"847\" />\n      <polygon class=\"arrowhead\" points=\"231,852 228.75,847 233.25,847\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"853\" width=\"370\" height=\"81\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"943\" x2=\"231\" y2=\"950\" />\n      <polygon class=\"arrowhead\" points=\"231,955 228.75,950 233.25,950\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"956\" width=\"386\" height=\"140\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"992\" width=\"370\" height=\"68\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"1105\" x2=\"231\" y2=\"1112\" />\n      <polygon class=\"arrowhead\" points=\"231,1117 228.75,1112 233.25,1112\" />\n    </g>\n    <rect class=\"step\" x=\"30\" y=\"1118\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→ chamber_size</text>\n    <text class=\"label plain\" x=\"442\" y=\"38\" text-anchor=\"start\">  minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Sec. 1 (1)</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=83</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">CountVotes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 31, 32, 35 (2)</text>\n    <text class=\"label plain\" x=\"434\" y=\"115\" text-anchor=\"start\">→ total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 31, 32</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"434\" y=\"165\" text-anchor=\"start\">→ total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 35 (2)</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">ElectAndQualify</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 33, 35 (3)</text>\n    <text class=\"label plain\" x=\"434\" y=\"265\" text-anchor=\"start\">→ unit_mandates</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">SingleMandatePerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 33</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">section=erststimme, level=wahlkreis</text>\n    <text class=\"label strong name\" x=\"52\" y=\"301\" text-anchor=\"start\">Plurality</text>\n    <text class=\"label faint\" x=\"52\" y=\"316\" text-anchor=\"start\">votes=erststimme per nominee, seats=1</text>\n    <text class=\"label plain\" x=\"52\" y=\"331\" text-anchor=\"start\">plurality.plurality</text>\n    <text class=\"label plain\" x=\"434\" y=\"374\" text-anchor=\"start\">→ eligible</text>\n    <text class=\"label strong name\" x=\"44\" y=\"374\" text-anchor=\"start\">ApplyThresholdToKeys</text>\n    <text class=\"label faint\" x=\"418\" y=\"374\" text-anchor=\"end\">Sec. 35 (3)</text>\n    <text class=\"label faint\" x=\"44\" y=\"389\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"410\" text-anchor=\"start\">RelativeThreshold</text>\n    <text class=\"label faint\" x=\"52\" y=\"425\" text-anchor=\"start\">keys=parties, votes=zweitstimme per party, share=1/20</text>\n    <text class=\"label plain\" x=\"52\" y=\"440\" text-anchor=\"start\">threshold.share_threshold</text>\n    <text class=\"label faint\" x=\"19\" y=\"491\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"491\" text-anchor=\"start\">RaiseByOverhang (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"506\" text-anchor=\"start\">Sec. 35 (8), (8a)</text>\n    <text class=\"label plain name\" x=\"44\" y=\"533\" text-anchor=\"start\">AllocateSeats</text>\n    <text class=\"label faint\" x=\"44\" y=\"548\" text-anchor=\"start\">Sec. 35 (4) to (7)</text>\n    <text class=\"label plain\" x=\"426\" y=\"575\" text-anchor=\"start\">→ seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"575\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"575\" text-anchor=\"end\">Sec. 35 (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"590\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label faint\" x=\"52\" y=\"605\" text-anchor=\"start\">seats=chamber_size,</text>\n    <text class=\"label faint\" x=\"52\" y=\"620\" text-anchor=\"start\">won=units won by Einzelbewerber and parties not</text>\n    <text class=\"label faint\" x=\"52\" y=\"635\" text-anchor=\"start\">  eligible</text>\n    <text class=\"label plain\" x=\"52\" y=\"650\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"426\" y=\"685\" text-anchor=\"start\">→ entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"685\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"685\" text-anchor=\"end\">Sec. 35 (5), (6)</text>\n    <text class=\"label faint\" x=\"52\" y=\"700\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"60\" y=\"721\" text-anchor=\"start\">MajorityFirst</text>\n    <text class=\"label faint\" x=\"60\" y=\"736\" text-anchor=\"start\">votes=zweitstimme per eligible party,</text>\n    <text class=\"label faint\" x=\"60\" y=\"751\" text-anchor=\"start\">seats=seat_total</text>\n    <text class=\"label plain\" x=\"60\" y=\"766\" text-anchor=\"start\">majority.majority_first</text>\n    <text class=\"label strong name\" x=\"68\" y=\"787\" text-anchor=\"start\">HareNiemeyer</text>\n    <text class=\"label plain\" x=\"68\" y=\"802\" text-anchor=\"start\">remainder.largest_remainder</text>\n    <text class=\"label plain\" x=\"68\" y=\"817\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label plain\" x=\"426\" y=\"868\" text-anchor=\"start\">→ list_seats, overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"868\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"868\" text-anchor=\"end\">Sec. 35 (7)</text>\n    <text class=\"label faint\" x=\"52\" y=\"883\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label faint\" x=\"52\" y=\"898\" text-anchor=\"start\">seats=entitlement per party, won=units won per party</text>\n    <text class=\"label plain\" x=\"52\" y=\"913\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"52\" y=\"928\" text-anchor=\"start\">compensation.overhang</text>\n    <text class=\"label plain\" x=\"434\" y=\"971\" text-anchor=\"start\">→ caucus_size</text>\n    <text class=\"label strong name\" x=\"44\" y=\"971\" text-anchor=\"start\">SetCaucusSize</text>\n    <text class=\"label faint\" x=\"418\" y=\"971\" text-anchor=\"end\">Sec. 35 (8a)</text>\n    <text class=\"label faint\" x=\"44\" y=\"986\" text-anchor=\"start\">share=1/20, section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"1007\" text-anchor=\"start\">HareQuota</text>\n    <text class=\"label faint\" x=\"52\" y=\"1022\" text-anchor=\"start\">votes=zweitstimme of the eligible parties and the</text>\n    <text class=\"label faint\" x=\"52\" y=\"1037\" text-anchor=\"start\">  fictitious one, seats=seat_total</text>\n    <text class=\"label plain\" x=\"52\" y=\"1052\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label faint\" x=\"44\" y=\"1075\" text-anchor=\"start\">votes=the fictitious party's, quota=the quota</text>\n    <text class=\"label plain\" x=\"44\" y=\"1090\" text-anchor=\"start\">quota.whole_seats</text>\n    <text class=\"label faint\" x=\"19\" y=\"1133\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"1133\" text-anchor=\"start\">→ chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"1133\" text-anchor=\"start\">FormChamber</text>\n    <text class=\"label faint\" x=\"36\" y=\"1148\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
+   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-00389264\" class=\"ww\" width=\"640\" height=\"1834\" viewBox=\"0 0 640 1834\" role=\"img\" aria-label=\"Wahlgesetz des Landes Sachsen-Anhalt (LWG)\">\n  <style>#ww-00389264{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-00389264{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-00389264{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-00389264{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-00389264 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-00389264 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-00389264 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-00389264 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-00389264 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-00389264 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-00389264 .subject-dot{fill:var(--ww-subject-line)}#ww-00389264 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-00389264 .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-00389264 .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-00389264 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-00389264 .arrowhead{fill:var(--ww-content)}#ww-00389264 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-00389264 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-00389264 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-00389264 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-00389264 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-00389264 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-00389264 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-00389264 .name{font-weight:600}#ww-00389264.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-00389264 .card-title{margin-bottom:6px}#ww-00389264 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-00389264 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-00389264 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-00389264 .legend td.num{padding-right:0;text-align:right}#ww-00389264 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"step\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"208\" width=\"402\" height=\"269\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"250\" width=\"386\" height=\"95\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"286\" width=\"370\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"346\" x2=\"231\" y2=\"353\" />\n      <polygon class=\"arrowhead\" points=\"231,358 228.75,353 233.25,353\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"359\" width=\"386\" height=\"110\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"395\" width=\"370\" height=\"68\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"478\" x2=\"231\" y2=\"485\" />\n      <polygon class=\"arrowhead\" points=\"231,490 228.75,485 233.25,485\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"491\" width=\"402\" height=\"394\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"533\" width=\"386\" height=\"81\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"615\" x2=\"231\" y2=\"622\" />\n      <polygon class=\"arrowhead\" points=\"231,627 228.75,622 233.25,622\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"628\" width=\"386\" height=\"154\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"664\" width=\"370\" height=\"112\" rx=\"2\" />\n    <rect class=\"paper\" x=\"54\" y=\"715\" width=\"354\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"783\" x2=\"231\" y2=\"790\" />\n      <polygon class=\"arrowhead\" points=\"231,795 228.75,790 233.25,790\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"796\" width=\"386\" height=\"81\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"886\" x2=\"231\" y2=\"893\" />\n      <polygon class=\"arrowhead\" points=\"231,898 228.75,893 233.25,893\" />\n    </g>\n    <rect class=\"step\" x=\"30\" y=\"899\" width=\"402\" height=\"140\" rx=\"2\" />\n    <rect class=\"paper\" x=\"38\" y=\"935\" width=\"386\" height=\"68\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"1040\" x2=\"231\" y2=\"1047\" />\n      <polygon class=\"arrowhead\" points=\"231,1052 228.75,1047 233.25,1047\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"1053\" width=\"402\" height=\"723\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"1110\" width=\"386\" height=\"66\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"1177\" x2=\"231\" y2=\"1184\" />\n      <polygon class=\"arrowhead\" points=\"231,1189 228.75,1184 233.25,1184\" />\n    </g>\n    <rect class=\"step-frame\" x=\"38\" y=\"1190\" width=\"386\" height=\"424\" rx=\"2\" />\n    <rect class=\"step\" x=\"46\" y=\"1232\" width=\"370\" height=\"96\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"1329\" x2=\"231\" y2=\"1336\" />\n      <polygon class=\"arrowhead\" points=\"231,1341 228.75,1336 233.25,1336\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"1342\" width=\"370\" height=\"169\" rx=\"2\" />\n    <rect class=\"paper\" x=\"54\" y=\"1378\" width=\"354\" height=\"127\" rx=\"2\" />\n    <rect class=\"paper\" x=\"62\" y=\"1444\" width=\"338\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"1512\" x2=\"231\" y2=\"1519\" />\n      <polygon class=\"arrowhead\" points=\"231,1524 228.75,1519 233.25,1519\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"1525\" width=\"370\" height=\"81\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"1615\" x2=\"231\" y2=\"1622\" />\n      <polygon class=\"arrowhead\" points=\"231,1627 228.75,1622 233.25,1622\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"1628\" width=\"386\" height=\"140\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"1664\" width=\"370\" height=\"68\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"1777\" x2=\"231\" y2=\"1784\" />\n      <polygon class=\"arrowhead\" points=\"231,1789 228.75,1784 233.25,1784\" />\n    </g>\n    <rect class=\"step\" x=\"30\" y=\"1790\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"23\" text-anchor=\"start\">chamber_size</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"38\" text-anchor=\"start\">minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Sec. 1 (1)</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=83</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">CountVotes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 31, 32, 35 (2)</text>\n    <text class=\"label plain\" x=\"442\" y=\"115\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"115\" text-anchor=\"start\">total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 31, 32</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"442\" y=\"165\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"165\" text-anchor=\"start\">total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 35 (2)</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">ElectAndQualify</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 33, 35 (3)</text>\n    <text class=\"label plain\" x=\"442\" y=\"265\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"265\" text-anchor=\"start\">unit_mandates</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">SingleMandatePerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 33</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">section=erststimme, level=wahlkreis</text>\n    <text class=\"label strong name\" x=\"52\" y=\"301\" text-anchor=\"start\">Plurality</text>\n    <text class=\"label faint\" x=\"52\" y=\"316\" text-anchor=\"start\">votes=erststimme per option, seats=1</text>\n    <text class=\"label plain\" x=\"52\" y=\"331\" text-anchor=\"start\">plurality.plurality</text>\n    <text class=\"label plain\" x=\"442\" y=\"374\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"374\" text-anchor=\"start\">eligible_options</text>\n    <text class=\"label strong name\" x=\"44\" y=\"374\" text-anchor=\"start\">ApplyThresholdToOptions</text>\n    <text class=\"label faint\" x=\"418\" y=\"374\" text-anchor=\"end\">Sec. 35 (3)</text>\n    <text class=\"label faint\" x=\"44\" y=\"389\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"410\" text-anchor=\"start\">RelativeThreshold</text>\n    <text class=\"label faint\" x=\"52\" y=\"425\" text-anchor=\"start\">options=parties, votes=zweitstimme per party,</text>\n    <text class=\"label faint\" x=\"52\" y=\"440\" text-anchor=\"start\">share=1/20</text>\n    <text class=\"label plain\" x=\"52\" y=\"455\" text-anchor=\"start\">threshold.share_threshold</text>\n    <text class=\"label faint\" x=\"19\" y=\"506\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"506\" text-anchor=\"start\">AllocateSeats</text>\n    <text class=\"label faint\" x=\"36\" y=\"521\" text-anchor=\"start\">Sec. 35 (4) to (7)</text>\n    <text class=\"label plain\" x=\"442\" y=\"548\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"548\" text-anchor=\"start\">seat_total</text>\n    <text class=\"label strong name\" x=\"44\" y=\"548\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"418\" y=\"548\" text-anchor=\"end\">Sec. 35 (4)</text>\n    <text class=\"label faint\" x=\"44\" y=\"563\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label faint\" x=\"44\" y=\"578\" text-anchor=\"start\">seats=chamber_size,</text>\n    <text class=\"label faint\" x=\"44\" y=\"593\" text-anchor=\"start\">won=units won by Einzelbewerber and parties not eligible</text>\n    <text class=\"label plain\" x=\"44\" y=\"608\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"442\" y=\"643\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"643\" text-anchor=\"start\">entitlement</text>\n    <text class=\"label strong name\" x=\"44\" y=\"643\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"418\" y=\"643\" text-anchor=\"end\">Sec. 35 (5), (6)</text>\n    <text class=\"label faint\" x=\"44\" y=\"658\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"679\" text-anchor=\"start\">MajorityFirst</text>\n    <text class=\"label faint\" x=\"52\" y=\"694\" text-anchor=\"start\">votes=zweitstimme per eligible party, seats=seat_total</text>\n    <text class=\"label plain\" x=\"52\" y=\"709\" text-anchor=\"start\">majority.majority_first</text>\n    <text class=\"label strong name\" x=\"60\" y=\"730\" text-anchor=\"start\">HareNiemeyer</text>\n    <text class=\"label plain\" x=\"60\" y=\"745\" text-anchor=\"start\">remainder.largest_remainder</text>\n    <text class=\"label plain\" x=\"60\" y=\"760\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label plain\" x=\"442\" y=\"811\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"811\" text-anchor=\"start\">list_seats</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"826\" text-anchor=\"start\">overhang</text>\n    <text class=\"label strong name\" x=\"44\" y=\"811\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"418\" y=\"811\" text-anchor=\"end\">Sec. 35 (7)</text>\n    <text class=\"label faint\" x=\"44\" y=\"826\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its e…</text>\n    <text class=\"label faint\" x=\"44\" y=\"841\" text-anchor=\"start\">seats=entitlement per party, won=units won per party</text>\n    <text class=\"label plain\" x=\"44\" y=\"856\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"44\" y=\"871\" text-anchor=\"start\">compensation.overhang</text>\n    <text class=\"label faint\" x=\"19\" y=\"914\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"914\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"914\" text-anchor=\"start\">caucus_size</text>\n    <text class=\"label strong name\" x=\"36\" y=\"914\" text-anchor=\"start\">SetCaucusSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"914\" text-anchor=\"end\">Sec. 35 (8a)</text>\n    <text class=\"label faint\" x=\"36\" y=\"929\" text-anchor=\"start\">share=1/20, section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"950\" text-anchor=\"start\">HareQuota</text>\n    <text class=\"label faint\" x=\"44\" y=\"965\" text-anchor=\"start\">votes=zweitstimme of the eligible parties and the</text>\n    <text class=\"label faint\" x=\"44\" y=\"980\" text-anchor=\"start\">  fictitious one, seats=seat_total</text>\n    <text class=\"label plain\" x=\"44\" y=\"995\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label faint\" x=\"36\" y=\"1018\" text-anchor=\"start\">votes=the fictitious party's, quota=the quota</text>\n    <text class=\"label plain\" x=\"36\" y=\"1033\" text-anchor=\"start\">quota.whole_seats</text>\n    <text class=\"label faint\" x=\"19\" y=\"1068\" text-anchor=\"middle\">4</text>\n    <text class=\"label plain name\" x=\"36\" y=\"1068\" text-anchor=\"start\">RaiseByOverhang (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"1083\" text-anchor=\"start\">Sec. 35 (8), (8a)</text>\n    <text class=\"label plain\" x=\"36\" y=\"1098\" text-anchor=\"start\">? while overhang &gt; 0; after 2 rounds, while 2 × overhang &gt;…</text>\n    <text class=\"label plain\" x=\"442\" y=\"1125\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"1125\" text-anchor=\"start\">chamber_size</text>\n    <text class=\"label strong name\" x=\"44\" y=\"1125\" text-anchor=\"start\">RaiseChamberSize</text>\n    <text class=\"label faint\" x=\"418\" y=\"1125\" text-anchor=\"end\">Sec. 35 (8)</text>\n    <text class=\"label faint\" x=\"44\" y=\"1140\" text-anchor=\"start\">factor=2</text>\n    <text class=\"label faint\" x=\"44\" y=\"1155\" text-anchor=\"start\">size=chamber_size, overhang=per party, factor=2</text>\n    <text class=\"label plain\" x=\"44\" y=\"1170\" text-anchor=\"start\">compensation.raised</text>\n    <text class=\"label plain name\" x=\"44\" y=\"1205\" text-anchor=\"start\">AllocateSeats</text>\n    <text class=\"label faint\" x=\"44\" y=\"1220\" text-anchor=\"start\">Sec. 35 (4) to (7)</text>\n    <text class=\"label plain\" x=\"442\" y=\"1247\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"1247\" text-anchor=\"start\">seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"1247\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"1247\" text-anchor=\"end\">Sec. 35 (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"1262\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label faint\" x=\"52\" y=\"1277\" text-anchor=\"start\">seats=chamber_size,</text>\n    <text class=\"label faint\" x=\"52\" y=\"1292\" text-anchor=\"start\">won=units won by Einzelbewerber and parties not</text>\n    <text class=\"label faint\" x=\"52\" y=\"1307\" text-anchor=\"start\">  eligible</text>\n    <text class=\"label plain\" x=\"52\" y=\"1322\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"442\" y=\"1357\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"1357\" text-anchor=\"start\">entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"1357\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"1357\" text-anchor=\"end\">Sec. 35 (5), (6)</text>\n    <text class=\"label faint\" x=\"52\" y=\"1372\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"60\" y=\"1393\" text-anchor=\"start\">MajorityFirst</text>\n    <text class=\"label faint\" x=\"60\" y=\"1408\" text-anchor=\"start\">votes=zweitstimme per eligible party,</text>\n    <text class=\"label faint\" x=\"60\" y=\"1423\" text-anchor=\"start\">seats=seat_total</text>\n    <text class=\"label plain\" x=\"60\" y=\"1438\" text-anchor=\"start\">majority.majority_first</text>\n    <text class=\"label strong name\" x=\"68\" y=\"1459\" text-anchor=\"start\">HareNiemeyer</text>\n    <text class=\"label plain\" x=\"68\" y=\"1474\" text-anchor=\"start\">remainder.largest_remainder</text>\n    <text class=\"label plain\" x=\"68\" y=\"1489\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label plain\" x=\"442\" y=\"1540\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"1540\" text-anchor=\"start\">list_seats</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"1555\" text-anchor=\"start\">overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"1540\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"1540\" text-anchor=\"end\">Sec. 35 (7)</text>\n    <text class=\"label faint\" x=\"52\" y=\"1555\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label faint\" x=\"52\" y=\"1570\" text-anchor=\"start\">seats=entitlement per party, won=units won per party</text>\n    <text class=\"label plain\" x=\"52\" y=\"1585\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"52\" y=\"1600\" text-anchor=\"start\">compensation.overhang</text>\n    <text class=\"label plain\" x=\"442\" y=\"1643\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"1643\" text-anchor=\"start\">caucus_size</text>\n    <text class=\"label strong name\" x=\"44\" y=\"1643\" text-anchor=\"start\">SetCaucusSize</text>\n    <text class=\"label faint\" x=\"418\" y=\"1643\" text-anchor=\"end\">Sec. 35 (8a)</text>\n    <text class=\"label faint\" x=\"44\" y=\"1658\" text-anchor=\"start\">share=1/20, section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"1679\" text-anchor=\"start\">HareQuota</text>\n    <text class=\"label faint\" x=\"52\" y=\"1694\" text-anchor=\"start\">votes=zweitstimme of the eligible parties and the</text>\n    <text class=\"label faint\" x=\"52\" y=\"1709\" text-anchor=\"start\">  fictitious one, seats=seat_total</text>\n    <text class=\"label plain\" x=\"52\" y=\"1724\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label faint\" x=\"44\" y=\"1747\" text-anchor=\"start\">votes=the fictitious party's, quota=the quota</text>\n    <text class=\"label plain\" x=\"44\" y=\"1762\" text-anchor=\"start\">quota.whole_seats</text>\n    <text class=\"label faint\" x=\"19\" y=\"1805\" text-anchor=\"middle\">5</text>\n    <text class=\"label plain\" x=\"442\" y=\"1805\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"1805\" text-anchor=\"start\">chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"1805\" text-anchor=\"start\">FillVacantSeatsFromLists</text>\n    <text class=\"label faint\" x=\"36\" y=\"1820\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
   },
   {
    "id": "de.mv.lkwg.2011",
@@ -797,6 +1182,7 @@
      "stage": 0,
      "depends_on": [],
      "holds": null,
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -825,6 +1211,7 @@
      "stage": 0,
      "depends_on": [],
      "holds": "steps",
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -854,6 +1241,7 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [],
        "calls": [],
        "arguments": [],
@@ -884,6 +1272,7 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [],
        "calls": [],
        "arguments": [],
@@ -909,7 +1298,7 @@
      ],
      "optional_reads": [],
      "writes": [
-      "eligible",
+      "eligible_options",
       "unit_mandates"
      ],
      "stage": 1,
@@ -917,6 +1306,7 @@
       1
      ],
      "holds": "steps",
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -954,6 +1344,7 @@
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [
         {
          "field": "method",
@@ -961,7 +1352,7 @@
          "arguments": [
           [
            "votes",
-           "erststimme per nominee"
+           "erststimme per option"
           ],
           [
            "seats",
@@ -987,8 +1378,8 @@
         "steps",
         1
        ],
-       "kind": "ApplyThresholdToKeys",
-       "title": "Apply threshold to the keys, here the parties",
+       "kind": "ApplyThresholdToOptions",
+       "title": "Apply threshold to the options, here the parties",
        "parameters": [
         [
          "threshold",
@@ -1009,18 +1400,19 @@
        ],
        "optional_reads": [],
        "writes": [
-        "eligible"
+        "eligible_options"
        ],
        "stage": 0,
        "depends_on": [],
        "holds": null,
+       "condition": null,
        "uses": [
         {
          "field": "threshold",
          "kind": "RelativeThreshold",
          "arguments": [
           [
-           "keys",
+           "options",
            "parties"
           ],
           [
@@ -1071,7 +1463,7 @@
      "citation": "Sec. 58 (6)",
      "reads": [
       "chamber_size",
-      "eligible",
+      "eligible_options",
       "total:land",
       "unit_mandates"
      ],
@@ -1090,6 +1482,7 @@
       2
      ],
      "holds": "protocol",
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -1106,7 +1499,7 @@
        "citation": "Sec. 58 (2) S. 3 to (5)",
        "reads": [
         "chamber_size",
-        "eligible",
+        "eligible_options",
         "total:land",
         "unit_mandates"
        ],
@@ -1120,6 +1513,7 @@
        "stage": 0,
        "depends_on": [],
        "holds": "steps",
+       "condition": null,
        "uses": [],
        "calls": [],
        "arguments": [],
@@ -1138,7 +1532,7 @@
          "citation": "Sec. 58 (2) S. 3",
          "reads": [
           "chamber_size",
-          "eligible",
+          "eligible_options",
           "unit_mandates"
          ],
          "optional_reads": [],
@@ -1148,6 +1542,7 @@
          "stage": 0,
          "depends_on": [],
          "holds": null,
+         "condition": null,
          "uses": [],
          "calls": [
           {
@@ -1176,7 +1571,7 @@
           1
          ],
          "kind": "ApportionSeats",
-         "title": "Apportion seat_total among the eligible parties by method, on their valid votes in section summed at level",
+         "title": "Apportion seat_total among the eligible_options parties by method, on their valid votes in section summed at level",
          "parameters": [
           [
            "method",
@@ -1193,7 +1588,7 @@
          ],
          "citation": "Sec. 58 (3), (4)",
          "reads": [
-          "eligible",
+          "eligible_options",
           "seat_total",
           "total:land"
          ],
@@ -1206,6 +1601,7 @@
           0
          ],
          "holds": null,
+         "condition": null,
          "uses": [
           {
            "field": "method",
@@ -1275,6 +1671,7 @@
           1
          ],
          "holds": null,
+         "condition": null,
          "uses": [],
          "calls": [
           {
@@ -1310,7 +1707,7 @@
      "path": [
       4
      ],
-     "kind": "FormChamber",
+     "kind": "FillVacantSeatsFromLists",
      "title": "Form the chamber",
      "parameters": [],
      "citation": null,
@@ -1331,6 +1728,7 @@
       3
      ],
      "holds": null,
+     "condition": null,
      "uses": [],
      "calls": [],
      "arguments": [],
@@ -1368,7 +1766,7 @@
       "1 SetChamberSize"
      ],
      "read": [
-      "5 FormChamber"
+      "5 FillVacantSeatsFromLists"
      ]
     },
     {
@@ -1391,7 +1789,7 @@
      ]
     },
     {
-     "fact": "eligible",
+     "fact": "eligible_options",
      "written": [
       "3 ElectAndQualify"
      ],
@@ -1406,7 +1804,7 @@
      ],
      "read": [
       "4 RaiseUntilBalanced",
-      "5 FormChamber"
+      "5 FillVacantSeatsFromLists"
      ]
     },
     {
@@ -1422,7 +1820,7 @@
       "4 RaiseUntilBalanced"
      ],
      "read": [
-      "5 FormChamber"
+      "5 FillVacantSeatsFromLists"
      ]
     },
     {
@@ -1442,12 +1840,12 @@
     {
      "fact": "chamber",
      "written": [
-      "5 FormChamber"
+      "5 FillVacantSeatsFromLists"
      ],
      "read": []
     }
    ],
-   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-1d7ad9f4\" class=\"ww\" width=\"640\" height=\"1008\" viewBox=\"0 0 640 1008\" role=\"img\" aria-label=\"Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)\">\n  <style>#ww-1d7ad9f4{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-1d7ad9f4{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-1d7ad9f4{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-1d7ad9f4{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-1d7ad9f4 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-1d7ad9f4 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-1d7ad9f4 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-1d7ad9f4 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-1d7ad9f4 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-1d7ad9f4 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-1d7ad9f4 .subject-dot{fill:var(--ww-subject-line)}#ww-1d7ad9f4 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-1d7ad9f4 .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-1d7ad9f4 .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-1d7ad9f4 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-1d7ad9f4 .arrowhead{fill:var(--ww-content)}#ww-1d7ad9f4 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-1d7ad9f4 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-1d7ad9f4 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-1d7ad9f4 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-1d7ad9f4 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-1d7ad9f4 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-1d7ad9f4 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-1d7ad9f4 .name{font-weight:600}#ww-1d7ad9f4.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-1d7ad9f4 .card-title{margin-bottom:6px}#ww-1d7ad9f4 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-1d7ad9f4 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-1d7ad9f4 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-1d7ad9f4 .legend td.num{padding-right:0;text-align:right}#ww-1d7ad9f4 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"step\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"208\" width=\"402\" height=\"254\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"250\" width=\"386\" height=\"95\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"286\" width=\"370\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"346\" x2=\"231\" y2=\"353\" />\n      <polygon class=\"arrowhead\" points=\"231,358 228.75,353 233.25,353\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"359\" width=\"386\" height=\"95\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"395\" width=\"370\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"463\" x2=\"231\" y2=\"470\" />\n      <polygon class=\"arrowhead\" points=\"231,475 228.75,470 233.25,470\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"476\" width=\"402\" height=\"474\" rx=\"2\" />\n    <rect class=\"step-frame\" x=\"38\" y=\"518\" width=\"386\" height=\"424\" rx=\"2\" />\n    <rect class=\"step\" x=\"46\" y=\"560\" width=\"370\" height=\"96\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"657\" x2=\"231\" y2=\"664\" />\n      <polygon class=\"arrowhead\" points=\"231,669 228.75,664 233.25,664\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"670\" width=\"370\" height=\"169\" rx=\"2\" />\n    <rect class=\"paper\" x=\"54\" y=\"706\" width=\"354\" height=\"127\" rx=\"2\" />\n    <rect class=\"paper\" x=\"62\" y=\"772\" width=\"338\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"840\" x2=\"231\" y2=\"847\" />\n      <polygon class=\"arrowhead\" points=\"231,852 228.75,847 233.25,847\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"853\" width=\"370\" height=\"81\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"951\" x2=\"231\" y2=\"958\" />\n      <polygon class=\"arrowhead\" points=\"231,963 228.75,958 233.25,958\" />\n    </g>\n    <rect class=\"step\" x=\"30\" y=\"964\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→ chamber_size</text>\n    <text class=\"label plain\" x=\"442\" y=\"38\" text-anchor=\"start\">  minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Art. 20 (2) Verf. M-V</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=71</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">CountVotes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 57, 58 (2) S. 1</text>\n    <text class=\"label plain\" x=\"434\" y=\"115\" text-anchor=\"start\">→ total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"434\" y=\"165\" text-anchor=\"start\">→ total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 58 (2) S. 1</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">ElectAndQualify</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 57, 58 (1)</text>\n    <text class=\"label plain\" x=\"434\" y=\"265\" text-anchor=\"start\">→ unit_mandates</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">SingleMandatePerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">section=erststimme, level=wahlkreis</text>\n    <text class=\"label strong name\" x=\"52\" y=\"301\" text-anchor=\"start\">Plurality</text>\n    <text class=\"label faint\" x=\"52\" y=\"316\" text-anchor=\"start\">votes=erststimme per nominee, seats=1</text>\n    <text class=\"label plain\" x=\"52\" y=\"331\" text-anchor=\"start\">plurality.plurality</text>\n    <text class=\"label plain\" x=\"434\" y=\"374\" text-anchor=\"start\">→ eligible</text>\n    <text class=\"label strong name\" x=\"44\" y=\"374\" text-anchor=\"start\">ApplyThresholdToKeys</text>\n    <text class=\"label faint\" x=\"418\" y=\"374\" text-anchor=\"end\">Sec. 58 (1)</text>\n    <text class=\"label faint\" x=\"44\" y=\"389\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"410\" text-anchor=\"start\">RelativeThreshold</text>\n    <text class=\"label faint\" x=\"52\" y=\"425\" text-anchor=\"start\">keys=parties, votes=zweitstimme per party, share=1/20</text>\n    <text class=\"label plain\" x=\"52\" y=\"440\" text-anchor=\"start\">threshold.share_threshold</text>\n    <text class=\"label faint\" x=\"19\" y=\"491\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"491\" text-anchor=\"start\">RaiseUntilBalanced (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"506\" text-anchor=\"start\">Sec. 58 (6) · limit=2, has_odd_size=True</text>\n    <text class=\"label plain name\" x=\"44\" y=\"533\" text-anchor=\"start\">AllocateSeats</text>\n    <text class=\"label faint\" x=\"44\" y=\"548\" text-anchor=\"start\">Sec. 58 (2) S. 3 to (5)</text>\n    <text class=\"label plain\" x=\"426\" y=\"575\" text-anchor=\"start\">→ seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"575\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"575\" text-anchor=\"end\">Sec. 58 (2) S. 3</text>\n    <text class=\"label faint\" x=\"52\" y=\"590\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label faint\" x=\"52\" y=\"605\" text-anchor=\"start\">seats=chamber_size,</text>\n    <text class=\"label faint\" x=\"52\" y=\"620\" text-anchor=\"start\">won=units won by Einzelbewerber and parties not</text>\n    <text class=\"label faint\" x=\"52\" y=\"635\" text-anchor=\"start\">  eligible</text>\n    <text class=\"label plain\" x=\"52\" y=\"650\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"426\" y=\"685\" text-anchor=\"start\">→ entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"685\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"685\" text-anchor=\"end\">Sec. 58 (3), (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"700\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"60\" y=\"721\" text-anchor=\"start\">MajorityFirst</text>\n    <text class=\"label faint\" x=\"60\" y=\"736\" text-anchor=\"start\">votes=zweitstimme per eligible party,</text>\n    <text class=\"label faint\" x=\"60\" y=\"751\" text-anchor=\"start\">seats=seat_total</text>\n    <text class=\"label plain\" x=\"60\" y=\"766\" text-anchor=\"start\">majority.majority_first</text>\n    <text class=\"label strong name\" x=\"68\" y=\"787\" text-anchor=\"start\">HareNiemeyer</text>\n    <text class=\"label plain\" x=\"68\" y=\"802\" text-anchor=\"start\">remainder.largest_remainder</text>\n    <text class=\"label plain\" x=\"68\" y=\"817\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label plain\" x=\"426\" y=\"868\" text-anchor=\"start\">→ list_seats, overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"868\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"868\" text-anchor=\"end\">Sec. 58 (5)</text>\n    <text class=\"label faint\" x=\"52\" y=\"883\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label faint\" x=\"52\" y=\"898\" text-anchor=\"start\">seats=entitlement per party, won=units won per party</text>\n    <text class=\"label plain\" x=\"52\" y=\"913\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"52\" y=\"928\" text-anchor=\"start\">compensation.overhang</text>\n    <text class=\"label faint\" x=\"19\" y=\"979\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"979\" text-anchor=\"start\">→ chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"979\" text-anchor=\"start\">FormChamber</text>\n    <text class=\"label faint\" x=\"36\" y=\"994\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
+   "drawing": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" id=\"ww-ae6975b2\" class=\"ww\" width=\"640\" height=\"1023\" viewBox=\"0 0 640 1023\" role=\"img\" aria-label=\"Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)\">\n  <style>#ww-ae6975b2{--ww-construction:#cdcac1;--ww-dimension:#a7a49b;--ww-structure:#8a8d96;--ww-content:#5d606a;--ww-faint:#a7a49b;--ww-plain:#5d606a;--ww-strong:#1d1f24;--ww-subject-fill:#cfe2f2;--ww-subject-line:#1d6fa8;--ww-step-fill:#f6efdc;--ww-step-line:#b8860b;--ww-surface:#ffffff;--ww-line:#dcd9d0;}@media (prefers-color-scheme: dark){:root:not([data-theme=\"light\"]) #ww-ae6975b2{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}}[data-jp-theme-light=\"false\"] #ww-ae6975b2{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}[data-theme=\"dark\"] #ww-ae6975b2{--ww-construction:#45474e;--ww-dimension:#6c6e76;--ww-structure:#7e818a;--ww-content:#a3a5ad;--ww-faint:#6c6e76;--ww-plain:#a3a5ad;--ww-strong:#e9e7e1;--ww-subject-fill:#1f3447;--ww-subject-line:#72b2e2;--ww-step-fill:#3a3222;--ww-step-line:#e0b54a;--ww-surface:#1d1f24;--ww-line:#34363d;}#ww-ae6975b2 .construction{fill:none;stroke:var(--ww-construction);stroke-width:1.0;stroke-dasharray:2 2}#ww-ae6975b2 .dimension{fill:none;stroke:var(--ww-dimension);stroke-width:1.0}#ww-ae6975b2 .structure{fill:none;stroke:var(--ww-structure);stroke-width:1.0}#ww-ae6975b2 .edged{stroke:var(--ww-content);stroke-width:0.6}#ww-ae6975b2 .subject{fill:var(--ww-subject-fill);stroke:var(--ww-subject-line);stroke-width:1.0}#ww-ae6975b2 .subject-line{fill:none;stroke:var(--ww-subject-line);stroke-width:1.4}#ww-ae6975b2 .subject-dot{fill:var(--ww-subject-line)}#ww-ae6975b2 .paper{fill:var(--ww-surface);stroke:var(--ww-structure);stroke-width:1.0}#ww-ae6975b2 .step{fill:var(--ww-step-fill);stroke:var(--ww-step-line);stroke-width:1.0}#ww-ae6975b2 .step-frame{fill:none;stroke:var(--ww-step-line);stroke-width:1.0;stroke-dasharray:2 2}#ww-ae6975b2 .arrow{fill:none;stroke:var(--ww-content);stroke-width:1.0}#ww-ae6975b2 .arrowhead{fill:var(--ww-content)}#ww-ae6975b2 .rule{fill:none;stroke:var(--ww-structure);stroke-width:0.6}#ww-ae6975b2 .hollow{fill:var(--ww-surface);stroke:var(--ww-content);stroke-width:0.6}#ww-ae6975b2 .neutral{fill:var(--ww-faint);stroke:var(--ww-content);stroke-width:0.6}#ww-ae6975b2 .label{font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px}#ww-ae6975b2 .faint{fill:var(--ww-faint);color:var(--ww-faint)}#ww-ae6975b2 .plain{fill:var(--ww-plain);color:var(--ww-plain)}#ww-ae6975b2 .strong{fill:var(--ww-strong);color:var(--ww-strong)}#ww-ae6975b2 .name{font-weight:600}#ww-ae6975b2.card{display:inline-block;font-family:\"IBM Plex Mono\", ui-monospace, \"Cascadia Mono\", Consolas, monospace;font-size:11px;color:var(--ww-plain);background:var(--ww-surface);border:1px solid var(--ww-line);border-radius:6px;padding:8px 12px;line-height:1.35}#ww-ae6975b2 .card-title{margin-bottom:6px}#ww-ae6975b2 .card-body{display:flex;align-items:flex-end;gap:14px}#ww-ae6975b2 .legend{border-collapse:collapse;font:inherit;color:inherit}#ww-ae6975b2 .legend td{padding:1px 8px 1px 0;vertical-align:middle}#ww-ae6975b2 .legend td.num{padding-right:0;text-align:right}#ww-ae6975b2 .swatch{display:inline-block;width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:0.6px solid var(--ww-content)}</style>\n  <g id=\"layer-structure\" inkscape:groupmode=\"layer\" inkscape:label=\"structure\">\n    <rect class=\"step\" x=\"30\" y=\"8\" width=\"402\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"45\" x2=\"231\" y2=\"52\" />\n      <polygon class=\"arrowhead\" points=\"231,57 228.75,52 233.25,52\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"58\" width=\"402\" height=\"136\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"100\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"137\" x2=\"231\" y2=\"144\" />\n      <polygon class=\"arrowhead\" points=\"231,149 228.75,144 233.25,144\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"150\" width=\"386\" height=\"36\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"195\" x2=\"231\" y2=\"202\" />\n      <polygon class=\"arrowhead\" points=\"231,207 228.75,202 233.25,202\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"208\" width=\"402\" height=\"269\" rx=\"2\" />\n    <rect class=\"step\" x=\"38\" y=\"250\" width=\"386\" height=\"95\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"286\" width=\"370\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"346\" x2=\"231\" y2=\"353\" />\n      <polygon class=\"arrowhead\" points=\"231,358 228.75,353 233.25,353\" />\n    </g>\n    <rect class=\"step\" x=\"38\" y=\"359\" width=\"386\" height=\"110\" rx=\"2\" />\n    <rect class=\"paper\" x=\"46\" y=\"395\" width=\"370\" height=\"68\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"478\" x2=\"231\" y2=\"485\" />\n      <polygon class=\"arrowhead\" points=\"231,490 228.75,485 233.25,485\" />\n    </g>\n    <rect class=\"step-frame\" x=\"30\" y=\"491\" width=\"402\" height=\"474\" rx=\"2\" />\n    <rect class=\"step-frame\" x=\"38\" y=\"533\" width=\"386\" height=\"424\" rx=\"2\" />\n    <rect class=\"step\" x=\"46\" y=\"575\" width=\"370\" height=\"96\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"672\" x2=\"231\" y2=\"679\" />\n      <polygon class=\"arrowhead\" points=\"231,684 228.75,679 233.25,679\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"685\" width=\"370\" height=\"169\" rx=\"2\" />\n    <rect class=\"paper\" x=\"54\" y=\"721\" width=\"354\" height=\"127\" rx=\"2\" />\n    <rect class=\"paper\" x=\"62\" y=\"787\" width=\"338\" height=\"53\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"855\" x2=\"231\" y2=\"862\" />\n      <polygon class=\"arrowhead\" points=\"231,867 228.75,862 233.25,862\" />\n    </g>\n    <rect class=\"step\" x=\"46\" y=\"868\" width=\"370\" height=\"81\" rx=\"2\" />\n    <g class=\"arrow-group\">\n      <line class=\"arrow\" x1=\"231\" y1=\"966\" x2=\"231\" y2=\"973\" />\n      <polygon class=\"arrowhead\" points=\"231,978 228.75,973 233.25,973\" />\n    </g>\n    <rect class=\"step\" x=\"30\" y=\"979\" width=\"402\" height=\"36\" rx=\"2\" />\n  </g>\n  <g id=\"layer-labels\" inkscape:groupmode=\"layer\" inkscape:label=\"labels\">\n    <text class=\"label faint\" x=\"19\" y=\"23\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain\" x=\"442\" y=\"23\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"23\" text-anchor=\"start\">chamber_size</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"38\" text-anchor=\"start\">minimum_mandates</text>\n    <text class=\"label strong name\" x=\"36\" y=\"23\" text-anchor=\"start\">SetChamberSize</text>\n    <text class=\"label faint\" x=\"426\" y=\"23\" text-anchor=\"end\">Art. 20 (2) Verf. M-V</text>\n    <text class=\"label faint\" x=\"36\" y=\"38\" text-anchor=\"start\">seats=71</text>\n    <text class=\"label faint\" x=\"19\" y=\"73\" text-anchor=\"middle\">0</text>\n    <text class=\"label plain name\" x=\"36\" y=\"73\" text-anchor=\"start\">CountVotes</text>\n    <text class=\"label faint\" x=\"36\" y=\"88\" text-anchor=\"start\">Sec. 57, 58 (2) S. 1</text>\n    <text class=\"label plain\" x=\"442\" y=\"115\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"115\" text-anchor=\"start\">total:wahlkreis</text>\n    <text class=\"label strong name\" x=\"44\" y=\"115\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"115\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"130\" text-anchor=\"start\">level=wahlkreis</text>\n    <text class=\"label plain\" x=\"442\" y=\"165\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"165\" text-anchor=\"start\">total:land</text>\n    <text class=\"label strong name\" x=\"44\" y=\"165\" text-anchor=\"start\">SumVotes</text>\n    <text class=\"label faint\" x=\"418\" y=\"165\" text-anchor=\"end\">Sec. 58 (2) S. 1</text>\n    <text class=\"label faint\" x=\"44\" y=\"180\" text-anchor=\"start\">level=land</text>\n    <text class=\"label faint\" x=\"19\" y=\"223\" text-anchor=\"middle\">1</text>\n    <text class=\"label plain name\" x=\"36\" y=\"223\" text-anchor=\"start\">ElectAndQualify</text>\n    <text class=\"label faint\" x=\"36\" y=\"238\" text-anchor=\"start\">Sec. 57, 58 (1)</text>\n    <text class=\"label plain\" x=\"442\" y=\"265\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"265\" text-anchor=\"start\">unit_mandates</text>\n    <text class=\"label strong name\" x=\"44\" y=\"265\" text-anchor=\"start\">SingleMandatePerUnit</text>\n    <text class=\"label faint\" x=\"418\" y=\"265\" text-anchor=\"end\">Sec. 57</text>\n    <text class=\"label faint\" x=\"44\" y=\"280\" text-anchor=\"start\">section=erststimme, level=wahlkreis</text>\n    <text class=\"label strong name\" x=\"52\" y=\"301\" text-anchor=\"start\">Plurality</text>\n    <text class=\"label faint\" x=\"52\" y=\"316\" text-anchor=\"start\">votes=erststimme per option, seats=1</text>\n    <text class=\"label plain\" x=\"52\" y=\"331\" text-anchor=\"start\">plurality.plurality</text>\n    <text class=\"label plain\" x=\"442\" y=\"374\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"374\" text-anchor=\"start\">eligible_options</text>\n    <text class=\"label strong name\" x=\"44\" y=\"374\" text-anchor=\"start\">ApplyThresholdToOptions</text>\n    <text class=\"label faint\" x=\"418\" y=\"374\" text-anchor=\"end\">Sec. 58 (1)</text>\n    <text class=\"label faint\" x=\"44\" y=\"389\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"52\" y=\"410\" text-anchor=\"start\">RelativeThreshold</text>\n    <text class=\"label faint\" x=\"52\" y=\"425\" text-anchor=\"start\">options=parties, votes=zweitstimme per party,</text>\n    <text class=\"label faint\" x=\"52\" y=\"440\" text-anchor=\"start\">share=1/20</text>\n    <text class=\"label plain\" x=\"52\" y=\"455\" text-anchor=\"start\">threshold.share_threshold</text>\n    <text class=\"label faint\" x=\"19\" y=\"506\" text-anchor=\"middle\">2</text>\n    <text class=\"label plain name\" x=\"36\" y=\"506\" text-anchor=\"start\">RaiseUntilBalanced (repeats)</text>\n    <text class=\"label faint\" x=\"36\" y=\"521\" text-anchor=\"start\">Sec. 58 (6) · limit=2, has_odd_size=True</text>\n    <text class=\"label plain name\" x=\"44\" y=\"548\" text-anchor=\"start\">AllocateSeats</text>\n    <text class=\"label faint\" x=\"44\" y=\"563\" text-anchor=\"start\">Sec. 58 (2) S. 3 to (5)</text>\n    <text class=\"label plain\" x=\"442\" y=\"590\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"590\" text-anchor=\"start\">seat_total</text>\n    <text class=\"label strong name\" x=\"52\" y=\"590\" text-anchor=\"start\">SetSeatTotal</text>\n    <text class=\"label faint\" x=\"410\" y=\"590\" text-anchor=\"end\">Sec. 58 (2) S. 3</text>\n    <text class=\"label faint\" x=\"52\" y=\"605\" text-anchor=\"start\">The seats the proportional allocation divides</text>\n    <text class=\"label faint\" x=\"52\" y=\"620\" text-anchor=\"start\">seats=chamber_size,</text>\n    <text class=\"label faint\" x=\"52\" y=\"635\" text-anchor=\"start\">won=units won by Einzelbewerber and parties not</text>\n    <text class=\"label faint\" x=\"52\" y=\"650\" text-anchor=\"start\">  eligible</text>\n    <text class=\"label plain\" x=\"52\" y=\"665\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"442\" y=\"700\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"700\" text-anchor=\"start\">entitlement</text>\n    <text class=\"label strong name\" x=\"52\" y=\"700\" text-anchor=\"start\">ApportionSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"700\" text-anchor=\"end\">Sec. 58 (3), (4)</text>\n    <text class=\"label faint\" x=\"52\" y=\"715\" text-anchor=\"start\">section=zweitstimme, level=land</text>\n    <text class=\"label strong name\" x=\"60\" y=\"736\" text-anchor=\"start\">MajorityFirst</text>\n    <text class=\"label faint\" x=\"60\" y=\"751\" text-anchor=\"start\">votes=zweitstimme per eligible party,</text>\n    <text class=\"label faint\" x=\"60\" y=\"766\" text-anchor=\"start\">seats=seat_total</text>\n    <text class=\"label plain\" x=\"60\" y=\"781\" text-anchor=\"start\">majority.majority_first</text>\n    <text class=\"label strong name\" x=\"68\" y=\"802\" text-anchor=\"start\">HareNiemeyer</text>\n    <text class=\"label plain\" x=\"68\" y=\"817\" text-anchor=\"start\">remainder.largest_remainder</text>\n    <text class=\"label plain\" x=\"68\" y=\"832\" text-anchor=\"start\">quota.hare</text>\n    <text class=\"label plain\" x=\"442\" y=\"883\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"883\" text-anchor=\"start\">list_seats</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"898\" text-anchor=\"start\">overhang</text>\n    <text class=\"label strong name\" x=\"52\" y=\"883\" text-anchor=\"start\">DeductUnitSeats</text>\n    <text class=\"label faint\" x=\"410\" y=\"883\" text-anchor=\"end\">Sec. 58 (5)</text>\n    <text class=\"label faint\" x=\"52\" y=\"898\" text-anchor=\"start\">Deduct each eligible party's Wahlkreis seats from its…</text>\n    <text class=\"label faint\" x=\"52\" y=\"913\" text-anchor=\"start\">seats=entitlement per party, won=units won per party</text>\n    <text class=\"label plain\" x=\"52\" y=\"928\" text-anchor=\"start\">compensation.remaining</text>\n    <text class=\"label plain\" x=\"52\" y=\"943\" text-anchor=\"start\">compensation.overhang</text>\n    <text class=\"label faint\" x=\"19\" y=\"994\" text-anchor=\"middle\">3</text>\n    <text class=\"label plain\" x=\"442\" y=\"994\" text-anchor=\"start\">→</text>\n    <text class=\"label plain\" x=\"455.2\" y=\"994\" text-anchor=\"start\">chamber</text>\n    <text class=\"label strong name\" x=\"36\" y=\"994\" text-anchor=\"start\">FillVacantSeatsFromLists</text>\n    <text class=\"label faint\" x=\"36\" y=\"1009\" text-anchor=\"start\">Form the chamber</text>\n  </g>\n</svg>"
   }
  ],
  "kinds": [
@@ -1533,9 +1931,17 @@
      "short": "LWG LSA",
      "citation": "Sec. 35 (4) to (7)",
      "path": [
-      3,
+      3
+     ]
+    },
+    {
+     "law": "de.st.lwg.2021",
+     "short": "LWG LSA",
+     "citation": "Sec. 35 (4) to (7)",
+     "path": [
+      5,
       "protocol",
-      0
+      1
      ]
     },
     {
@@ -1647,7 +2053,7 @@
    "qualname": "wahlwerk.process.allocation.elect.SingleMandatePerUnit",
    "summary": [
     {
-     "text": "One mandate per unit: elect one nominee in each unit of "
+     "text": "One mandate per unit: elect one option in each unit of "
     },
     {
      "code": "level"
@@ -1704,7 +2110,7 @@
      "arguments": [
       [
        "votes",
-       "erststimme per nominee"
+       "erststimme per option"
       ],
       [
        "seats",
@@ -1724,8 +2130,8 @@
    "order": 3
   },
   {
-   "kind": "ApplyThresholdToKeys",
-   "qualname": "wahlwerk.process.allocation.eligibility.ApplyThresholdToKeys",
+   "kind": "ApplyThresholdToOptions",
+   "qualname": "wahlwerk.process.allocation.eligibility.ApplyThresholdToOptions",
    "summary": [
     {
      "text": "Apply "
@@ -1734,7 +2140,7 @@
      "code": "threshold"
     },
     {
-     "text": " to the keys, here the parties: those that pass it on their valid votes in "
+     "text": " to the options, here the parties: those that pass it on their valid votes in "
     },
     {
      "code": "section"
@@ -1749,7 +2155,7 @@
      "text": ", become "
     },
     {
-     "code": "eligible"
+     "code": "eligible_options"
     },
     {
      "text": "."
@@ -1759,7 +2165,7 @@
     "total:land"
    ],
    "writes": [
-    "eligible"
+    "eligible_options"
    ],
    "holds": false,
    "uses": [
@@ -1790,7 +2196,7 @@
      "kind": "RelativeThreshold",
      "arguments": [
       [
-       "keys",
+       "options",
        "parties"
       ],
       [
@@ -1816,61 +2222,6 @@
    "order": 4
   },
   {
-   "kind": "RaiseByOverhang",
-   "qualname": "wahlwerk.process.allocation.overhang.RaiseByOverhang",
-   "summary": [
-    {
-     "text": "Allocate the seats of the chamber size with "
-    },
-    {
-     "code": "protocol"
-    },
-    {
-     "text": " (the rules from the seat total to the list seats, usually one "
-    },
-    {
-     "code": "StepSequence"
-    },
-    {
-     "text": "); then, while a party holds overhang (Mehrsitze in the LWG LSA), raise the "
-    },
-    {
-     "code": "chamber_size"
-    },
-    {
-     "text": " and allocate again. The loop holds its allocation, so a law writes it once."
-    }
-   ],
-   "reads": [
-    "chamber_size",
-    "eligible",
-    "total:land",
-    "unit_mandates"
-   ],
-   "writes": [
-    "caucus_size",
-    "chamber_size",
-    "entitlement",
-    "list_seats",
-    "overhang",
-    "seat_total"
-   ],
-   "holds": true,
-   "uses": [
-    {
-     "law": "de.st.lwg.2021",
-     "short": "LWG LSA",
-     "citation": "Sec. 35 (8), (8a)",
-     "path": [
-      3
-     ]
-    }
-   ],
-   "computes": [],
-   "calls": [],
-   "order": 5
-  },
-  {
    "kind": "SetSeatTotal",
    "qualname": "wahlwerk.process.allocation.eligibility.SetSeatTotal",
    "summary": [
@@ -1884,7 +2235,7 @@
      "text": " less the Wahlkreis seats of winners who take no part in it, i.e. Einzelbewerber and parties that are not "
     },
     {
-     "code": "eligible"
+     "code": "eligible_options"
     },
     {
      "text": "."
@@ -1892,7 +2243,7 @@
    ],
    "reads": [
     "chamber_size",
-    "eligible",
+    "eligible_options",
     "unit_mandates"
    ],
    "writes": [
@@ -1906,8 +2257,18 @@
      "citation": "Sec. 35 (4)",
      "path": [
       3,
+      "steps",
+      0
+     ]
+    },
+    {
+     "law": "de.st.lwg.2021",
+     "short": "LWG LSA",
+     "citation": "Sec. 35 (4)",
+     "path": [
+      5,
       "protocol",
-      0,
+      1,
       "steps",
       0
      ]
@@ -1932,7 +2293,7 @@
      "call": "remaining(seats, won)"
     }
    ],
-   "order": 6
+   "order": 5
   },
   {
    "kind": "ApportionSeats",
@@ -1948,7 +2309,7 @@
      "text": " among the "
     },
     {
-     "code": "eligible"
+     "code": "eligible_options"
     },
     {
      "text": " parties by "
@@ -1979,7 +2340,7 @@
     }
    ],
    "reads": [
-    "eligible",
+    "eligible_options",
     "seat_total",
     "total:land"
    ],
@@ -1994,8 +2355,18 @@
      "citation": "Sec. 35 (5), (6)",
      "path": [
       3,
+      "steps",
+      1
+     ]
+    },
+    {
+     "law": "de.st.lwg.2021",
+     "short": "LWG LSA",
+     "citation": "Sec. 35 (5), (6)",
+     "path": [
+      5,
       "protocol",
-      0,
+      1,
       "steps",
       1
      ]
@@ -2053,7 +2424,7 @@
     }
    ],
    "calls": [],
-   "order": 7
+   "order": 6
   },
   {
    "kind": "DeductUnitSeats",
@@ -2091,8 +2462,18 @@
      "citation": "Sec. 35 (7)",
      "path": [
       3,
+      "steps",
+      2
+     ]
+    },
+    {
+     "law": "de.st.lwg.2021",
+     "short": "LWG LSA",
+     "citation": "Sec. 35 (7)",
+     "path": [
+      5,
       "protocol",
-      0,
+      1,
       "steps",
       2
      ]
@@ -2121,7 +2502,7 @@
      "call": "overhang(seats, minimum)"
     }
    ],
-   "order": 8
+   "order": 7
   },
   {
    "kind": "SetCaucusSize",
@@ -2156,7 +2537,7 @@
     }
    ],
    "reads": [
-    "eligible",
+    "eligible_options",
     "seat_total",
     "total:land"
    ],
@@ -2170,9 +2551,17 @@
      "short": "LWG LSA",
      "citation": "Sec. 35 (8a)",
      "path": [
-      3,
+      4
+     ]
+    },
+    {
+     "law": "de.st.lwg.2021",
+     "short": "LWG LSA",
+     "citation": "Sec. 35 (8a)",
+     "path": [
+      5,
       "protocol",
-      1
+      2
      ]
     }
    ],
@@ -2205,11 +2594,122 @@
      "call": "whole_seats(votes, quota)"
     }
    ],
+   "order": 8
+  },
+  {
+   "kind": "RaiseByOverhang",
+   "qualname": "wahlwerk.process.allocation.overhang.RaiseByOverhang",
+   "summary": [
+    {
+     "text": "While the allocation leaves overhang to balance, run "
+    },
+    {
+     "code": "protocol"
+    },
+    {
+     "text": " again: usually raise the chamber size ("
+    },
+    {
+     "code": "RaiseChamberSize"
+    },
+    {
+     "text": "), allocate its seats, and measure the caucus size. A law runs the allocation once before it; with no overhang the loop does nothing, and the chamber is filled from the lists."
+    }
+   ],
+   "reads": [
+    "chamber_size",
+    "eligible_options",
+    "overhang",
+    "total:land",
+    "unit_mandates"
+   ],
+   "writes": [
+    "caucus_size",
+    "chamber_size",
+    "entitlement",
+    "list_seats",
+    "overhang",
+    "seat_total"
+   ],
+   "holds": true,
+   "uses": [
+    {
+     "law": "de.st.lwg.2021",
+     "short": "LWG LSA",
+     "citation": "Sec. 35 (8), (8a)",
+     "path": [
+      5
+     ]
+    }
+   ],
+   "computes": [],
+   "calls": [],
    "order": 9
   },
   {
-   "kind": "FormChamber",
-   "qualname": "wahlwerk.process.allocation.chamber.FormChamber",
+   "kind": "RaiseChamberSize",
+   "qualname": "wahlwerk.process.allocation.overhang.RaiseChamberSize",
+   "summary": [
+    {
+     "text": "Raise the "
+    },
+    {
+     "code": "chamber_size"
+    },
+    {
+     "text": " by "
+    },
+    {
+     "code": "factor"
+    },
+    {
+     "text": " seats per seat of "
+    },
+    {
+     "code": "overhang"
+    },
+    {
+     "text": " (Sec. 35 (8) LWG LSA: twice the Mehrsitze). The step a "
+    },
+    {
+     "code": "RaiseByOverhang"
+    },
+    {
+     "text": " takes each round, before it allocates again."
+    }
+   ],
+   "reads": [
+    "chamber_size",
+    "overhang"
+   ],
+   "writes": [
+    "chamber_size"
+   ],
+   "holds": false,
+   "uses": [
+    {
+     "law": "de.st.lwg.2021",
+     "short": "LWG LSA",
+     "citation": "Sec. 35 (8)",
+     "path": [
+      5,
+      "protocol",
+      0
+     ]
+    }
+   ],
+   "computes": [],
+   "calls": [
+    {
+     "formula": "wahlwerk.calc.compensation.raised",
+     "call": "raised(size, overhang, factor=1)"
+    }
+   ],
+   "order": 10
+  },
+  {
+   "kind": "FillVacantSeatsFromLists",
+   "qualname": "wahlwerk.process.allocation.chamber.FillVacantSeatsFromLists",
    "summary": [
     {
      "text": "Form the chamber: a mandate for each Wahlkreis won, then each party's list seats."
@@ -2229,7 +2729,7 @@
      "short": "LWG LSA",
      "citation": null,
      "path": [
-      4
+      6
      ]
     },
     {
@@ -2243,7 +2743,7 @@
    ],
    "computes": [],
    "calls": [],
-   "order": 10
+   "order": 11
   },
   {
    "kind": "RaiseUntilBalanced",
@@ -2273,7 +2773,7 @@
    ],
    "reads": [
     "chamber_size",
-    "eligible",
+    "eligible_options",
     "total:land",
     "unit_mandates"
    ],
@@ -2297,7 +2797,7 @@
    ],
    "computes": [],
    "calls": [],
-   "order": 11
+   "order": 12
   }
  ]
 }

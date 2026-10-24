@@ -3,17 +3,17 @@
  "symbols": [
   {
    "latex": "i, j",
-   "meaning": "a key: a party, a caucus, a Land; whatever is apportioned to",
-   "group": "keys"
+   "meaning": "an option: what is voted for or apportioned to; a party, a candidate, a caucus, a Land",
+   "group": "options"
   },
   {
    "latex": "n",
-   "meaning": "the number of keys",
-   "group": "keys"
+   "meaning": "the number of options",
+   "group": "options"
   },
   {
    "latex": "v_i",
-   "meaning": "the votes (or any weight) of key i",
+   "meaning": "the votes (or any weight) of option i",
    "group": "votes"
   },
   {
@@ -23,12 +23,12 @@
   },
   {
    "latex": "p_i = v_i / V",
-   "meaning": "the vote share of key i",
+   "meaning": "the vote share of option i",
    "group": "votes"
   },
   {
    "latex": "s_i",
-   "meaning": "the seats of key i",
+   "meaning": "the seats of option i",
    "group": "seats"
   },
   {
@@ -38,12 +38,12 @@
   },
   {
    "latex": "q_i = s_i / S",
-   "meaning": "the seat share of key i",
+   "meaning": "the seat share of option i",
    "group": "seats"
   },
   {
    "latex": "m_i",
-   "meaning": "the minimum seats of key i, e.g. Wahlkreise won outright",
+   "meaning": "the minimum seats of option i, e.g. Wahlkreise won outright",
    "group": "seats"
   },
   {
@@ -78,7 +78,7 @@
   },
   {
    "latex": "C",
-   "meaning": "a coalition: a set of keys",
+   "meaning": "a coalition: a set of options",
    "group": "majorities"
   },
   {
@@ -93,17 +93,17 @@
   },
   {
    "latex": "\\eta_i",
-   "meaning": "the coalitions for which key i is pivotal (swings)",
+   "meaning": "the coalitions for which option i is pivotal (swings)",
    "group": "power"
   },
   {
    "latex": "\\beta_i, \\phi_i",
-   "meaning": "the Banzhaf and Shapley-Shubik indices of key i",
+   "meaning": "the Banzhaf and Shapley-Shubik indices of option i",
    "group": "power"
   },
   {
    "latex": "H, N",
-   "meaning": "concentration (Herfindahl) and the effective number of keys",
+   "meaning": "concentration (Herfindahl) and the effective number of options",
    "group": "measures"
   }
  ],
@@ -116,7 +116,7 @@
      "qualname": "wahlwerk.calc.share",
      "title": [
       {
-       "text": "Shares: each key's part of the whole, the first step of most formulas."
+       "text": "Shares: each option's part of the whole, the first step of most formulas."
       }
      ],
      "body": [
@@ -129,7 +129,7 @@
          "math": "v_i"
         },
         {
-         "text": " the votes of key "
+         "text": " the votes of option "
         },
         {
          "math": "i"
@@ -242,7 +242,7 @@
        "kind": "function",
        "summary": [
         {
-         "text": "The shares of checked input, keys on the last axis (exact or float)."
+         "text": "The shares of checked input, options on the last axis (exact or float)."
         }
        ]
       },
@@ -252,7 +252,7 @@
        "kind": "function",
        "summary": [
         {
-         "text": "Each key's share of the total, "
+         "text": "Each option's share of the total, "
         },
         {
          "math": "p_i = v_i / V"
@@ -447,7 +447,7 @@
          "math": "S"
         },
         {
-         "text": " keys can reach."
+         "text": " options can reach."
         }
        ]
       },
@@ -530,7 +530,7 @@
       {
        "p": [
         {
-         "text": "A seat formula never lets order decide equal claims. Where the claims for the last seats are exactly equal, it decides what it can and reports the rest: which keys are tied and how many seats they share, one each. That is a result, not an error; a law that cannot go on without the lot raises on it, a person exploring a formula reads it."
+         "text": "A seat formula never lets order decide equal claims. Where the claims for the last seats are exactly equal, it decides what it can and reports the rest: which options are tied and how many seats they share, one each. That is a result, not an error; a law that cannot go on without the lot raises on it, a person exploring a formula reads it."
         }
        ]
       }
@@ -542,7 +542,7 @@
        "kind": "class",
        "summary": [
         {
-         "text": "Seats per key, shaped like the input of the formula that made it."
+         "text": "Seats per option, shaped like the input of the formula that made it."
         }
        ]
       }
@@ -566,7 +566,7 @@
       {
        "p": [
         {
-         "text": "A divisor method gives key "
+         "text": "A divisor method gives option "
         },
         {
          "math": "i"
@@ -594,7 +594,7 @@
          "math": "\\sum_i s_i = S"
         },
         {
-         "text": ": each key's votes over the divisor, rounded by the method's "
+         "text": ": each option's votes over the divisor, rounded by the method's "
         },
         {
          "strong": "signposts"
@@ -636,7 +636,7 @@
          "math": "k+1"
         },
         {
-         "text": " of key "
+         "text": " of option "
         },
         {
          "math": "i"
@@ -888,7 +888,7 @@
          "math": "\\sigma(k) = k"
         },
         {
-         "text": ", rounding up. Favours smaller keys."
+         "text": ", rounding up. Favours smaller options."
         }
        ]
       },
@@ -904,7 +904,7 @@
          "math": "\\sigma(k) = k + 1"
         },
         {
-         "text": ". Favours larger keys."
+         "text": ". Favours larger options."
         }
        ]
       },
@@ -1012,7 +1012,7 @@
          "math": "\\sigma(k) = k + 2"
         },
         {
-         "text": ". Favours larger keys more than D'Hondt."
+         "text": ". Favours larger options more than D'Hondt."
         }
        ]
       },
@@ -1050,7 +1050,7 @@
          "math": "\\sigma(k) = k + \\tfrac12"
         },
         {
-         "text": ", standard rounding. Neutral between large and small keys."
+         "text": ", standard rounding. Neutral between large and small options."
         }
        ]
       },
@@ -1094,7 +1094,7 @@
       {
        "p": [
         {
-         "text": "Each key first gets the whole part of its votes over the quota "
+         "text": "Each option first gets the whole part of its votes over the quota "
         },
         {
          "math": "Q"
@@ -1178,14 +1178,14 @@
      "qualname": "wahlwerk.calc.plurality",
      "title": [
       {
-       "text": "Plurality: the keys with the most votes win, one seat each."
+       "text": "Plurality: the options with the most votes win, one seat each."
       }
      ],
      "body": [
       {
        "p": [
         {
-         "text": "With one seat this is first past the post, the rule of a Wahlkreis: the key with the most votes wins, "
+         "text": "With one seat this is first past the post, the rule of a Wahlkreis: the option with the most votes wins, "
         },
         {
          "math": "\\arg\\max_i v_i"
@@ -1203,7 +1203,7 @@
          "math": "S"
         },
         {
-         "text": " keys with the most votes."
+         "text": " options with the most votes."
         }
        ]
       }
@@ -1221,13 +1221,13 @@
          "code": "seats"
         },
         {
-         "text": " keys with the most votes, one seat each; a key without votes wins nothing. Raises "
+         "text": " options with the most votes, one seat each; an option without votes wins nothing. Raises "
         },
         {
          "code": "ValueError"
         },
         {
-         "text": " for more seats than keys with votes."
+         "text": " for more seats than options with votes."
         }
        ]
       }
@@ -1337,7 +1337,7 @@
        "kind": "function",
        "summary": [
         {
-         "text": "Largest remainder with a majority clause: a key with more than half the votes, left with no more than half the seats, takes one of the remainder seats first (e.g. Sec. 35 (6) LWG LSA). The total stays "
+         "text": "Largest remainder with a majority clause: an option with more than half the votes, left with no more than half the seats, takes one of the remainder seats first (e.g. Sec. 35 (6) LWG LSA). The total stays "
         },
         {
          "math": "S"
@@ -1417,14 +1417,14 @@
      "qualname": "wahlwerk.calc.threshold",
      "title": [
       {
-       "text": "Thresholds: which keys take part at all."
+       "text": "Thresholds: which options take part at all."
       }
      ],
      "body": [
       {
        "p": [
         {
-         "text": "Each returns, per key, whether it passes: a "
+         "text": "Each returns, per option, whether it passes: a "
         },
         {
          "code": "dict"
@@ -1436,7 +1436,7 @@
          "math": "\\theta"
         },
         {
-         "text": " (five percent) passes key "
+         "text": " (five percent) passes option "
         },
         {
          "math": "i"
@@ -1454,7 +1454,7 @@
          "math": "v_i \\ge \\theta V"
         },
         {
-         "text": "; a Grundmandatsklausel passes keys that won at least so many seats outright. Combine masks with "
+         "text": "; a Grundmandatsklausel passes options that won at least so many seats outright. Combine masks with "
         },
         {
          "code": "|"
@@ -1478,7 +1478,7 @@
        "kind": "function",
        "summary": [
         {
-         "text": "Passes keys with "
+         "text": "Passes options with "
         },
         {
          "math": "v_i \\ge"
@@ -1524,7 +1524,7 @@
          "math": "T_{\\text{eff}} = \\tfrac{3}{4} / (m + 1)"
         },
         {
-         "text": ", the vote share at which a key tends to win its first seat "
+         "text": ", the vote share at which an option tends to win its first seat "
         },
         {
          "cite": [
@@ -1542,7 +1542,7 @@
        "kind": "function",
        "summary": [
         {
-         "text": "Passes keys that already won at least "
+         "text": "Passes options that already won at least "
         },
         {
          "code": "seats"
@@ -1558,7 +1558,7 @@
        "kind": "function",
        "summary": [
         {
-         "text": "Passes keys with "
+         "text": "Passes options with "
         },
         {
          "math": "v_i \\ge \\theta V"
@@ -1590,14 +1590,14 @@
      "qualname": "wahlwerk.calc.compensation",
      "title": [
       {
-       "text": "Überhang and Ausgleich: when keys hold more seats than their proportional share."
+       "text": "Überhang and Ausgleich: when options hold more seats than their proportional share."
       }
      ],
      "body": [
       {
        "p": [
         {
-         "text": "In mixed systems a key may win more seats outright, in Wahlkreise, than the apportionment gives it: its Überhang, "
+         "text": "In mixed systems an option may win more seats outright, in Wahlkreise, than the apportionment gives it: its Überhang, "
         },
         {
          "math": "\\max(0, m_i - s_i)"
@@ -1627,13 +1627,35 @@
        "kind": "function",
        "summary": [
         {
-         "text": "Each key's Überhang "
+         "text": "Each option's Überhang "
         },
         {
          "math": "\\max(0, m_i - s_i)"
         },
         {
-         "text": "; keys missing on one side count 0."
+         "text": "; options missing on one side count 0."
+        }
+       ]
+      },
+      {
+       "name": "raised",
+       "qualname": "wahlwerk.calc.compensation.raised",
+       "kind": "function",
+       "summary": [
+        {
+         "text": "The size raised for an Überhang: "
+        },
+        {
+         "math": "S + f \\sum_i u_i"
+        },
+        {
+         "text": ", "
+        },
+        {
+         "code": "factor"
+        },
+        {
+         "text": " seats more per seat of Überhang (Sec. 35 (8) LWG LSA: twice)."
         }
        ]
       },
@@ -1649,7 +1671,7 @@
          "math": "\\max(0, s_i - m_i)"
         },
         {
-         "text": ": a key's list seats. Keys missing on one side count 0."
+         "text": ": a option's list seats. Options missing on one side count 0."
         }
        ]
       },
@@ -1665,7 +1687,7 @@
          "math": "S' \\ge S"
         },
         {
-         "text": " in which every key gets at least "
+         "text": " in which every option gets at least "
         },
         {
          "math": "m_i"
@@ -1713,7 +1735,7 @@
       {
        "p": [
         {
-         "text": "Each index compares the two over the keys of both sides (a key missing on one side has 0 there) and returns one number per scenario, exact for exact input "
+         "text": "Each index compares the two over the options of both sides (an option missing on one side has 0 there) and returns one number per scenario, exact for exact input "
         },
         {
          "cite": [
@@ -1905,7 +1927,7 @@
          "code": "advantage_ratio()"
         },
         {
-         "text": " is per key."
+         "text": " is per option."
         }
        ]
       }
@@ -1917,13 +1939,13 @@
        "kind": "function",
        "summary": [
         {
-         "text": "Per key, "
+         "text": "Per option, "
         },
         {
          "math": "q_i / p_i"
         },
         {
-         "text": ": above 1 a key holds more seats than votes. A key without votes and without seats has 0; without votes but with seats, infinity ("
+         "text": ": above 1 an option holds more seats than votes. An option without votes and without seats has 0; without votes but with seats, infinity ("
         },
         {
          "code": "ValueError"
@@ -1951,7 +1973,7 @@
          "code": "ValueError"
         },
         {
-         "text": " if a key without votes won seats (infinite)."
+         "text": " if an option without votes won seats (infinite)."
         }
        ]
       },
@@ -2045,7 +2067,7 @@
          "math": "n"
         },
         {
-         "text": " keys."
+         "text": " options."
         }
        ]
       },
@@ -2061,7 +2083,7 @@
          "math": "\\sum_i p_i q_i / \\sum_i p_i^2"
         },
         {
-         "text": ", the slope of seat shares on vote shares through the origin: above 1 favours large keys."
+         "text": ", the slope of seat shares on vote shares through the origin: above 1 favours large options."
         }
        ]
       },
@@ -2099,7 +2121,7 @@
          "code": "ValueError"
         },
         {
-         "text": " if a key without votes won seats (infinite)."
+         "text": " if an option without votes won seats (infinite)."
         }
        ]
       }
@@ -2113,7 +2135,7 @@
      "qualname": "wahlwerk.calc.fragmentation",
      "title": [
       {
-       "text": "Fragmentation: how many keys matter, from their shares "
+       "text": "Fragmentation: how many options matter, from their shares "
       },
       {
        "math": "p_i"
@@ -2272,7 +2294,7 @@
          "math": "N_G = \\sum_i p_i / (p_i + p_1^2 - p_i^2)"
         },
         {
-         "text": ", less sensitive to the largest key than "
+         "text": ", less sensitive to the largest option than "
         },
         {
          "math": "N"
@@ -2294,7 +2316,7 @@
          "math": "H = \\sum_i p_i^2"
         },
         {
-         "text": "; 1 for a single key."
+         "text": "; 1 for a single option."
         }
        ]
       },
@@ -2304,7 +2326,7 @@
        "kind": "function",
        "summary": [
         {
-         "text": "The share of the largest key, "
+         "text": "The share of the largest option, "
         },
         {
          "math": "p_1 = \\max_i p_i"
@@ -2330,7 +2352,7 @@
      "qualname": "wahlwerk.calc.coalition",
      "title": [
       {
-       "text": "Coalitions: which groups of keys (caucuses) hold a majority of the seats."
+       "text": "Coalitions: which groups of options (caucuses) hold a majority of the seats."
       }
      ],
      "body": [
@@ -2343,7 +2365,7 @@
          "math": "C"
         },
         {
-         "text": " of keys with seats "
+         "text": " of options with seats "
         },
         {
          "math": "s_i"
@@ -2418,7 +2440,7 @@
          "code": "frozenset"
         },
         {
-         "text": " of keys (indices for array input), heaviest first, then by their members. Every subset is checked, so this is for chambers of up to about twenty caucuses."
+         "text": " of options (indices for array input), heaviest first, then by their members. Every subset is checked, so this is for chambers of up to about twenty caucuses."
         }
        ]
       }
@@ -2515,7 +2537,7 @@
      "qualname": "wahlwerk.calc.power",
      "title": [
       {
-       "text": "Power indices: how often a key decides, in a weighted vote with quota "
+       "text": "Power indices: how often an option decides, in a weighted vote with quota "
       },
       {
        "math": "T"
@@ -2528,7 +2550,7 @@
       {
        "p": [
         {
-         "text": "Key "
+         "text": "Option "
         },
         {
          "math": "i"
@@ -2564,7 +2586,7 @@
          "math": "n"
         },
         {
-         "text": " keys:"
+         "text": " options:"
         }
        ]
       },
@@ -2694,7 +2716,7 @@
          "math": "\\eta_i"
         },
         {
-         "text": ", the coalitions for which key "
+         "text": ", the coalitions for which option "
         },
         {
          "math": "i"
