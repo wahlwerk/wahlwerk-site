@@ -1,30 +1,35 @@
 <script lang="ts">
-  // How a unit id carries the electoral hierarchy, and the administrative
-  // one that sits beside it as an explicit tree.
+  // A unit id names its unit only; every grouping of units, the electoral one
+  // included, is an explicit tree beside the rows (bundle schema 4, decision 0009).
+  import Term from './Term.svelte';
   const segments = [
-    { text: 'de.st', label: 'Land · 2', color: 'var(--accent)' },
-    { text: 'wk.035', label: 'Wahlkreis · 4', color: 'var(--party-afd)' },
-    { text: 'gem.15002000.wbz.000001', label: 'Wahlbezirk · 8', color: 'var(--party-linke)' },
+    { text: 'de.st', label: 'Land', color: 'var(--accent)' },
+    { text: 'gem.15002000', label: 'Gemeinde', color: 'var(--party-afd)' },
+    { text: 'wbz.000001', label: 'Wahlbezirk', color: 'var(--party-linke)' },
   ];
 
   const electionToml = `# election.toml
-schema = 2
+schema = 4
 
-[levels]
-land = 2
-wahlkreis = 4
-wahlbezirk = 8
-briefwahlbezirk = 8
+[hierarchies.electoral]
+levels = ["land", "wahlkreis"]
 
 [hierarchies.administrative]
 levels = ["land", "kreis", "gemeinde"]`;
 
-  const administrativeCsv = `# administrative.csv
+  const trees = `# electoral.csv
+unit,level,parent
+de.st,land,
+de.st.wk.035,wahlkreis,de.st
+de.st.gem.15002000.wbz.000001,
+  wahlbezirk,de.st.wk.035
+
+# administrative.csv
 unit,level,parent
 de.st,land,
 de.st.krs.15002,kreis,de.st
 de.st.gem.15002000,gemeinde,de.st.krs.15002
-de.st.wk.035.gem.15002000.wbz.000001,
+de.st.gem.15002000.wbz.000001,
   wahlbezirk,de.st.gem.15002000`;
 </script>
 
@@ -32,13 +37,12 @@ de.st.wk.035.gem.15002000.wbz.000001,
   <h2>Two hierarchies</h2>
   <p>
     The units of a tally belong to two hierarchies that cross. The <b>electoral</b> one (Land,
-    Wahlkreis, Wahlbezirk) is what the law counts along, so it is the main one and the unit ids
-    follow it. The <b>administrative</b> one (Land, Kreis, Gemeinde, Wahlbezirk) is for analysis.
-    Halle, Magdeburg and Dessau-Roßlau each lie in several Wahlkreise, so it cannot be read off
-    the ids, and it sits beside the main one as its own tree.
+    Wahlkreis, Wahlbezirk) is what the law counts along. The <b>administrative</b> one (Land,
+    Kreis, Gemeinde, Wahlbezirk) is for analysis: Halle, Magdeburg and Dessau-Roßlau each lie in
+    several Wahlkreise, so neither tree can be read off the other.
   </p>
 
-  <h3>Main: in the ids</h3>
+  <h3>An id names its unit</h3>
   <div class="uid" aria-label={segments.map((s) => s.text).join('.')}>
     {#each segments as seg, i}
       {#if i > 0}<span class="dot">.</span>{/if}
@@ -49,21 +53,25 @@ de.st.wk.035.gem.15002000.wbz.000001,
     {/each}
   </div>
   <p>
-    The unit a row lies in is a prefix of its id, so summing up means cutting the id. The
-    Gemeindeschlüssel is part of the Wahlbezirk's id because Wahlbezirk numbers are only unique
-    within a Gemeinde. <code>tally.sum_to("wahlkreis")</code> takes the depth from
-    <code>[levels]</code>.
+    The id says which unit a row was counted in and nothing about what it lies in. The
+    Gemeindeschlüssel is part of it because Wahlbezirk numbers are only unique within a
+    Gemeinde. The <Term t="Wahlkreis" /> is not: the Wahlkreise are drawn by the law, in an annex
+    that changes between versions, so the same votes can be counted along the Wahlkreise of
+    another version without touching the rows.
   </p>
 
-  <h3>Beside it: an explicit tree</h3>
+  <h3>Every grouping a tree</h3>
   <div class="two">
     <pre><code>{electionToml}</code></pre>
-    <pre><code>{administrativeCsv}</code></pre>
+    <pre><code>{trees}</code></pre>
   </div>
   <p>
+    A law names the tree it counts along, by default <code>electoral</code>:
+    <code>tally.sum_to("wahlkreis", hierarchy=electoral)</code> gives its Wahlkreise, and
     <code>tally.sum_to("gemeinde", hierarchy=admin)</code> sums Halle's Wahlbezirke in four
-    Wahlkreise into one Gemeinde. The hierarchy is checked to be a tree and to cover every counted
-    unit. The law is never evaluated along an alternative hierarchy.
+    Wahlkreise into one Gemeinde. Each tree is checked to be a tree and to cover every counted
+    unit. Which party an option stands for sits beside the rows in the same way, once per
+    option, in <code>options.csv</code>.
   </p>
 </section>
 

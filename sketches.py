@@ -41,10 +41,10 @@ from wahlwerk_ui.style import CHAR_WIDTH_PX, FONT_SIZE_PX
 KEY = "de.landtag.st.2026"
 """The bundle the numbers come from."""
 
-UNIT = "de.st.wk.001.gem.15081026.wbz.000001"
+UNIT = "de.st.gem.15081026.wbz.000001"
 """The Wahlbezirk the tally sketches show."""
 
-FIELDS = ("unit", "level", "kind", "section", "channel", "option", "party", "count")
+FIELDS = ("unit", "level", "kind", "section", "channel", "option", "count")
 
 
 def _short(unit: str) -> str:
@@ -133,7 +133,7 @@ def vote_plate(vote: PopularVote) -> Plate:
             r.kind.value,
             r.section or "",
             r.channel or "",
-            r.party or "",
+            r.option or "",
             str(r.count),
         )
         for r in shown
@@ -142,7 +142,7 @@ def vote_plate(vote: PopularVote) -> Plate:
         a,
         1,
         FONT_SIZE_PX + 6,
-        ("kind", "section", "channel", "party", "count"),
+        ("kind", "section", "channel", "option", "count"),
         table_rows,
         numeric=(False, False, False, False, True),
     )
@@ -290,7 +290,7 @@ def recorded_plate(vote: PopularVote) -> Plate:
         "one row",
         width=250,
         height=170,
-        caption=("one tally row", "eight fields; blank is absent,", "never zero"),
+        caption=("one tally row", "seven fields; blank is absent,", "never zero"),
     )
     a = p.art
     for i, field in enumerate(FIELDS):
@@ -367,7 +367,7 @@ def recorded_plate(vote: PopularVote) -> Plate:
     sk.unit(a, 96, 102, 108, 50, "municipality")
     sk.axis(a, 110, 92, 110, 102)
     sk.axis(a, 190, 92, 190, 102)
-    sk.text(a, 150, 166, "administrative, beside the ids", ink="faint")
+    sk.text(a, 150, 166, "both trees beside the rows", ink="faint")
     return plate
 
 
@@ -399,8 +399,14 @@ def home_plate(vote: PopularVote, law: Law) -> tuple[Plate, dict[str, list[Link]
     p = plate.panel("tally", "the tally", width=190, height=height,
                     caption=("what is recorded", "votes per unit, summed up"))
     a = p.art
-    land = vote.tally.sum_to("land").filter(kind=TallyKind.VOTES, section="zweitstimme")
-    totals = sorted(land.sum_by("party").items(), key=lambda kv: -kv[1])
+    electoral = vote.hierarchy("electoral")
+    land = vote.tally.sum_to("land", hierarchy=electoral).filter(kind=TallyKind.VOTES, section="zweitstimme")
+    by_party: dict[str, int] = {}
+    for option, count in land.sum_by("option").items():
+        party = land.party_of(option)
+        if party is not None:
+            by_party[party] = by_party.get(party, 0) + count
+    totals = sorted(by_party.items(), key=lambda kv: -kv[1])
     rows = [(str(party), f"{count:,}".replace(",", " ")) for party, count in totals[:6]]
     rows.append(("…", ""))
     sk.box(a, 1, 1, 188, height - 2)

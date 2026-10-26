@@ -140,7 +140,7 @@ def asides(vote: PopularVote, law: Law) -> tuple[list[str | None], list[dict[str
     """
     check_protocol(law.protocol)
     results = []
-    allocation = Allocation(tally=vote.tally)
+    allocation = Allocation.from_vote(vote)
     for step in law.protocol:
         allocation = step.apply(allocation)
         results.append(allocation)
