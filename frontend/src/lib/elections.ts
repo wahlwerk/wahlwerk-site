@@ -21,6 +21,11 @@ export const ELECTION_TEXT: Record<string, ElectionText> = {
     note:
       'The CDU won 40 of 41 Wahlkreise, so § 35 (8) raised the chamber size from 83 to 97 in two rounds and balanced every Mehrsitz. All 40 CDU seats are Wahlkreis seats.',
   },
+  'de.landtag.mv.2026': {
+    label: 'Mecklenburg-Vorpommern 2026',
+    note:
+      'No Überhang: the AfD won 22 of 36 Wahlkreise, the SPD 14, both fewer than their 32 and 29 seats of 71. The final result of 29 September 2026.',
+  },
   'de.landtag.mv.2021': {
     label: 'Mecklenburg-Vorpommern 2021',
     note:

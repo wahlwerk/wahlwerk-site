@@ -56,6 +56,7 @@ PARTIES = Path("parties") / "de" / "de.bund.json"
 ELECTIONS: tuple[tuple[str, str, date], ...] = (
     ("de.landtag.st.2026", "de.st.landtag", date(2026, 9, 6)),
     ("de.landtag.st.2021", "de.st.landtag", date(2021, 6, 6)),
+    ("de.landtag.mv.2026", "de.mv.landtag", date(2026, 9, 20)),
     ("de.landtag.mv.2021", "de.mv.landtag", date(2021, 9, 26)),
     ("de.landtag.mv.2016", "de.mv.landtag", date(2016, 9, 4)),
     ("de.landtag.mv.2011", "de.mv.landtag", date(2011, 9, 4)),

@@ -152,6 +152,63 @@
    ]
   },
   {
+   "key": "de.landtag.mv.2026",
+   "body": "de.mv.landtag",
+   "date": "2026-09-20",
+   "law": {
+    "id": "de.mv.lkwg.2011",
+    "title": "Gesetz über die Wahlen im Land Mecklenburg-Vorpommern (Landes- und Kommunalwahlgesetz - LKWG M-V)",
+    "citation": "LKWG M-V vom 16. Dezember 2010 (GVOBl. M-V S. 690), Fassung gültig vom 1. September 2026 bis 31. Dezember 2028, zuletzt geändert durch Artikel 12 des Gesetzes vom 8. Juli 2026 (GVOBl. M-V S. 719, 731); Sec. 54, 57, 58 unchanged since 1 January 2011"
+   },
+   "source": {
+    "publisher": "Der Landeswahlleiter Mecklenburg-Vorpommern",
+    "title": "Wahl zum Landtag von Mecklenburg-Vorpommern am 20. September 2026: endgültiges Ergebnis der Wahlbezirke (29.09.2026, 12:11:18 Uhr)",
+    "url": "https://wahlen.mvnet.de/dateien/ergebnisse.2026/landtagswahl/csv/l_wahlbezirke.csv",
+    "licence": "keine Lizenz angegeben",
+    "attribution": "(c) Der Landeswahlleiter Mecklenburg-Vorpommern; Datensatz: https://wahlen.mvnet.de/dateien/ergebnisse.2026/landtagswahl/csv/l_wahlbezirke.csv; die Daten wurden geändert (in eine lange Tabelle je Wahlbezirk umgeformt)."
+   },
+   "seats": 71,
+   "valid_votes": 1015323,
+   "parties": [
+    {
+     "id": "afd",
+     "name": "Alternative für Deutschland",
+     "short_name": "AfD",
+     "votes": 388050,
+     "seats": 32,
+     "wahlkreis": 22,
+     "list": 10
+    },
+    {
+     "id": "spd",
+     "name": "Sozialdemokratische Partei Deutschlands",
+     "short_name": "SPD",
+     "votes": 360396,
+     "seats": 29,
+     "wahlkreis": 14,
+     "list": 15
+    },
+    {
+     "id": "linke",
+     "name": "Die Linke",
+     "short_name": "Die Linke",
+     "votes": 66381,
+     "seats": 5,
+     "wahlkreis": 0,
+     "list": 5
+    },
+    {
+     "id": "gruene",
+     "name": "BÜNDNIS 90/DIE GRÜNEN",
+     "short_name": "GRÜNE",
+     "votes": 57577,
+     "seats": 5,
+     "wahlkreis": 0,
+     "list": 5
+    }
+   ]
+  },
+  {
    "key": "de.landtag.mv.2021",
    "body": "de.mv.landtag",
    "date": "2021-09-26",
