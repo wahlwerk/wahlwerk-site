@@ -14,6 +14,9 @@
   import Results from './components/Results.svelte';
   import Formulas from './components/Formulas.svelte';
   import Steps from './components/Steps.svelte';
+  import Tally from './components/Tally.svelte';
+  import Hierarchies from './components/Hierarchies.svelte';
+  import Lot from './components/Lot.svelte';
   import Impressum from './components/Impressum.svelte';
   import StyleGuide from './components/StyleGuide.svelte';
 
@@ -153,7 +156,13 @@
         <h1>{subpage.title}</h1>
         <p class="lede">{subpage.lede}</p>
       </header>
-      {#if page === 'law-allocation'}
+      {#if page === 'vote-tally'}
+        <Tally {sketches} {references} />
+      {:else if page === 'vote-hierarchies'}
+        <Hierarchies {references} />
+      {:else if page === 'vote-lot'}
+        <Lot {references} />
+      {:else if page === 'law-allocation'}
         <Pieces />
       {:else if page === 'law-steps'}
         <Steps {laws} {references} />

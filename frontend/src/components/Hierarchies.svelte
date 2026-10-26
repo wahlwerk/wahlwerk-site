@@ -1,7 +1,15 @@
 <script lang="ts">
   // A unit id names its unit only; every grouping of units, the electoral one
   // included, is an explicit tree beside the rows (bundle schema 4, decision 0009).
+  import type { References } from '../lib/types';
+  import CodeRef from './CodeRef.svelte';
+  import RefList from './RefList.svelte';
   import Term from './Term.svelte';
+
+  export let references: References | null;
+
+  const DATA = ['de.landtag.st.2026'] as const;
+  const H = 'wahlwerk.vote.popular.hierarchy';
   const segments = [
     { text: 'de.st', label: 'Land', color: 'var(--accent)' },
     { text: 'gem.15002000', label: 'Gemeinde', color: 'var(--party-afd)' },
@@ -34,7 +42,7 @@ de.st.gem.15002000.wbz.000001,
 </script>
 
 <section>
-  <h2>Two hierarchies</h2>
+  <h2>Trees that cross</h2>
   <p>
     The units of a tally belong to two hierarchies that cross. The <b>electoral</b> one (Land,
     Wahlkreis, Wahlbezirk) is what the law counts along. The <b>administrative</b> one (Land,
@@ -42,7 +50,11 @@ de.st.gem.15002000.wbz.000001,
     several Wahlkreise, so neither tree can be read off the other.
   </p>
 
-  <h3>An id names its unit</h3>
+  <CodeRef names={[`${H}.Hierarchy`, `${H}.HierarchyUnit`]} />
+</section>
+
+<section>
+  <h2>An id names its unit</h2>
   <div class="uid" aria-label={segments.map((s) => s.text).join('.')}>
     {#each segments as seg, i}
       {#if i > 0}<span class="dot">.</span>{/if}
@@ -60,7 +72,10 @@ de.st.gem.15002000.wbz.000001,
     another version without touching the rows.
   </p>
 
-  <h3>Every grouping a tree</h3>
+</section>
+
+<section>
+  <h2>Every grouping a tree</h2>
   <div class="two">
     <pre><code>{electionToml}</code></pre>
     <pre><code>{trees}</code></pre>
@@ -73,7 +88,34 @@ de.st.gem.15002000.wbz.000001,
     unit. Which party an option stands for sits beside the rows in the same way, once per
     option, in <code>options.csv</code>.
   </p>
+  <p>
+    Any further tree is one more file. The archive's bundle of the Berlin
+    <Term t="Abgeordnetenhaus" /> election of 2026 carries two besides its electoral one, the halves of the city and the <Term t="Bundestag" /> constituencies, so
+    the same rows can be summed along either; the Wahlkreise of another version of a law would be
+    one more tree over the same rows, and a law that names it counts along it.
+  </p>
+  <CodeRef
+    names={[
+      `${H}.Hierarchy.units_at`,
+      'wahlwerk.vote.popular.tally.Tally.sum_to',
+      'wahlwerk.process.allocation.count.SumGroupBy',
+    ]}
+  />
 </section>
+
+<section>
+  <h2>What a tree cannot do</h2>
+  <p>
+    Every unit has one parent, so a unit lies wholly in one larger unit. A unit cut in two by a
+    new boundary, a <Term t="Wahlbezirk" /> split between two Wahlkreise, would need part of
+    its count on each side: a weighted map, whose sums are estimates, fit for an analysis and
+    never for a result. Neither that nor a unit counted in two districts at once is held yet. One
+    unit in the archive keeps its <Term t="Wahlkreis" /> in its id: where the source numbers a
+    unit only within its Wahlkreis, two units would otherwise share one id.
+  </p>
+</section>
+
+<RefList {references} data={DATA} />
 
 <style>
   .uid {

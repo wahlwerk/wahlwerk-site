@@ -10,7 +10,7 @@
   import Law from './Law.svelte';
   import RefList from './RefList.svelte';
   import Term from './Term.svelte';
-  import Hierarchies from './Hierarchies.svelte';
+  import { href } from '../lib/pages';
 
   export let sketches: Sketches | null;
   export let references: References | null;
@@ -111,14 +111,14 @@
   {#if sketches}<Plate plate={sketches.plates.what} />{/if}
   <p>
     In a tally, all but the ranking are counts per option, and the row names the option it
-    counts for, whatever it is: a party's list, a candidate, yes or no. Beside it stands the
-    party the option belongs to, if any: the party itself, a candidate's nominating party, none
-    for an independent candidate or an answer. So a person is a candidate's row, a question
-    a row for yes and one for no, x out of y a row for each one chosen, and several marks a bigger count
-    (<Term t="Kumulieren" />) or more rows (<Term t="Panaschieren" />). A ranking is not. It needs
-    one count for every distinct order, a ballot profile, which the tally does not hold yet. German
-    public elections do not rank; the Irish <Term t="Dáil" />, elected by single transferable
-    vote, does.
+    counts for, whatever it is: a party's list, a candidate, yes or no. The party an option
+    belongs to, if any, is written once beside the rows, not on them: the party itself, a
+    candidate's nominating party, none for an independent candidate or an answer. So a person is
+    a candidate's row, a question a row for yes and one for no, x out of y a row for each one
+    chosen, and several marks a bigger count (<Term t="Kumulieren" />) or more rows
+    (<Term t="Panaschieren" />). A ranking is not. It needs one count for every distinct order,
+    which the tally does not hold yet. German public elections do not rank; the Irish
+    <Term t="Dáil" />, elected by single transferable vote, does.
   </p>
   <CodeRef names={[`${T}.TallyRow`]} />
 </section>
@@ -144,16 +144,26 @@
     nothing has a row with 0.
   </p>
   {#if sketches}<Plate plate={sketches.plates.recorded} />{/if}
-  <CodeRef
-    names={[
-      `${T}.TallyKind`,
-      `${T}.TallyRow`,
-      `${T}.Level`,
-      'wahlwerk.vote.popular.hierarchy.Hierarchy',
-    ]}
-  />
+  <CodeRef names={[`${T}.TallyKind`, `${T}.TallyRow`, 'wahlwerk.vote.popular.hierarchy.Hierarchy']} />
 </section>
 
-<Hierarchies />
+<section>
+  <h2>Its parts</h2>
+  <p>Three parts of a popular vote have a page of their own:</p>
+  <ul>
+    <li>
+      <a href={href('vote-tally')}>Tally</a>: the long table of counts, the kinds of count, the
+      options beside the rows, and the four operations that sum it up to what a law decides on.
+    </li>
+    <li>
+      <a href={href('vote-hierarchies')}>Hierarchies</a>: how units group into larger ones,
+      the electoral and the administrative tree, and why an id names only its unit.
+    </li>
+    <li>
+      <a href={href('vote-lot')}>Lot</a>: ties as results, and the lot actually drawn, recorded
+      with the vote.
+    </li>
+  </ul>
+</section>
 
 <RefList {references} statutes={STATUTES} data={DATA} />

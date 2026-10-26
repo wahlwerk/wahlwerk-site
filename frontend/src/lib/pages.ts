@@ -5,10 +5,40 @@
  */
 
 export type ComponentId = 'vote' | 'law' | 'chamber' | 'formulas';
-export type PageId = 'home' | ComponentId | 'law-allocation' | 'law-steps' | 'impressum' | 'style';
+export type PageId =
+  | 'home'
+  | ComponentId
+  | 'vote-tally'
+  | 'vote-hierarchies'
+  | 'vote-lot'
+  | 'law-allocation'
+  | 'law-steps'
+  | 'impressum'
+  | 'style';
 
 /** Pages under a component page: shown under it in the side panel, reached by a path. */
 export const SUBPAGES: { id: PageId; parent: ComponentId; title: string; path: string; lede: string }[] = [
+  {
+    id: 'vote-tally',
+    parent: 'vote',
+    title: 'Tally',
+    path: 'vote/tally',
+    lede: 'The record a popular vote leaves: one long table of counts, the options beside it, and the few operations that sum it up to what a law decides on.',
+  },
+  {
+    id: 'vote-hierarchies',
+    parent: 'vote',
+    title: 'Hierarchies',
+    path: 'vote/hierarchies',
+    lede: 'How the units of a tally group into larger ones: every grouping is a tree beside the rows, and a law names the one it counts along.',
+  },
+  {
+    id: 'vote-lot',
+    parent: 'vote',
+    title: 'Lot',
+    path: 'vote/lot',
+    lede: 'Where equal claims are decided by lot, the engine never draws: a tie is a result, and the lot actually drawn is recorded with the vote.',
+  },
   {
     id: 'law-allocation',
     parent: 'law',

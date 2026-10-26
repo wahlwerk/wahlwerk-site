@@ -28,6 +28,7 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
   // bodies and offices
   Bundestag: { concept: 'chamber', system: 'de.bund', gloss: 'the federal parliament of Germany' },
   Landtag: { concept: 'chamber', system: 'de', gloss: 'the parliament of a German Land' },
+  Abgeordnetenhaus: { concept: 'chamber', system: 'de.be', gloss: 'the parliament of Berlin, its Landtag' },
   Gemeinderat: { concept: 'chamber', system: 'de', gloss: 'the council of a German municipality' },
   Bundesrat: {
     concept: 'body',
@@ -58,6 +59,8 @@ export const GLOSSARY: Record<string, GlossaryEntry> = {
   // kinds of count
   Wahlberechtigte: { concept: 'eligible', system: 'de', gloss: 'the people eligible to vote' },
   Wähler: { concept: 'voters', system: 'de', gloss: 'the people who voted' },
+  Einzelbewerber: { concept: 'candidate', system: 'de', gloss: 'a candidate put up by voters, not by a party; stands for no party' },
+  Losentscheid: { concept: 'lot', system: 'de', gloss: 'a decision by lot where claims are exactly equal, drawn by an electoral official' },
   Gültige: { concept: 'valid votes', system: 'de', gloss: 'the valid votes; in a tally a sum, never stored' },
   // options
   Kumulieren: { concept: 'several marks', system: 'de', gloss: 'giving one candidate more than one vote' },
